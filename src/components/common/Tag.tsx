@@ -15,7 +15,7 @@ const variantStyles = {
   purple: 'bg-purple-50 text-purple-600',
   cyan: 'bg-cyan-50 text-cyan-600',
   green: 'bg-green-50 text-green-600',
-  pink : 'bg-pink-50 text-pink-400'
+  pink : 'bg-pink-50 text-pink-600'
 };
 
 export default function Tags({

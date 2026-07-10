@@ -1,8 +1,18 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Mail } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  Mail,
+  Gem,
+  Image as ImageIcon,
+  Smile,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 import Image from "next/image";
 
 const menuGroups = [
@@ -16,6 +26,7 @@ const menuGroups = [
       },
     ],
   },
+
   {
     heading: "USER MANAGEMENT",
     items: [
@@ -24,19 +35,169 @@ const menuGroups = [
         href: "/users",
         icon: Users,
       },
+
       {
         name: "Newsletter List",
         href: "/newsletters",
         icon: Mail,
       },
+
+      {
+        name: "Plan & XP",
+        href: "/plans",
+        icon: Gem,
+      },
     ],
   },
 ];
-
 type SidebarProps = {
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+function EmojiCategoryMenu() {
+  const pathname = usePathname();
+  const [open, setOpen] = React.useState(true);
+  const active = pathname.startsWith("/emoji-categories");
+
+  return (
+    <div>
+      <button
+        onClick={() => setOpen(!open)}
+        className={`relative flex w-full items-center justify-between px-6 py-3 text-sm font-medium transition-all ${
+          active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <Smile size={20} className={active ? "text-[#2563EB]" : "text-gray-500"} />
+          Emoji Categories
+        </div>
+        {open ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+      </button>
+      {open && (
+        <div className="ml-9 border-l border-gray-200">
+          <Link
+            href="/emoji-categories"
+            className={`block py-2 pl-6 text-sm ${
+              pathname === "/emoji-categories" ? "font-semibold text-[#2563EB]" : "text-[#374151]"
+            }`}
+          >
+            All Categories
+          </Link>
+          <Link
+            href="/emoji-categories/add"
+            className={`block py-2 pl-6 text-sm ${
+              pathname === "/emoji-categories/add" ? "font-semibold text-[#2563EB]" : "text-[#374151]"
+            }`}
+          >
+            Add Category
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AvatarMenu() {
+
+  const pathname = usePathname();
+
+  const [open, setOpen] = React.useState(true);
+
+  const active =
+    pathname.startsWith("/avatar");
+
+  return (
+
+    <div>
+
+      <button
+        onClick={() => setOpen(!open)}
+        className={`
+        relative
+        flex
+        w-full
+        items-center
+        justify-between
+        px-6
+        py-3
+        text-sm
+        font-medium
+        transition-all
+        ${active
+            ? "bg-[#EEF4FF] text-[#2563EB]"
+            : "text-[#374151] hover:bg-gray-50"
+          }
+      `}
+      >
+
+        <div className="flex items-center gap-3">
+
+          <ImageIcon
+            size={20}
+            className={
+              active
+                ? "text-[#2563EB]"
+                : "text-gray-500"
+            }
+          />
+
+          Avatar
+
+        </div>
+
+        {open ? (
+          <ChevronDown size={18} />
+        ) : (
+          <ChevronRight size={18} />
+        )}
+
+      </button>
+
+      {open && (
+
+        <div className="ml-9 border-l border-gray-200">
+
+          <Link
+            href="/avatar"
+            className={`
+            block
+            py-2
+            pl-6
+            text-sm
+            ${pathname === "/avatar"
+                ? "font-semibold text-[#2563EB]"
+                : "text-[#374151]"
+              }
+          `}
+          >
+            Avatar List
+          </Link>
+
+          <Link
+            href="/avatar/add"
+            className={`
+            block
+            py-2
+            pl-6
+            text-sm
+            ${pathname === "/avatar/add"
+                ? "font-semibold text-[#2563EB]"
+                : "text-[#374151]"
+              }
+          `}
+          >
+            Add Avatar
+          </Link>
+
+        </div>
+
+      )}
+
+    </div>
+
+  );
+
+}
 const Sidebar = ({
   sidebarOpen,
   setSidebarOpen,
@@ -138,6 +299,19 @@ const Sidebar = ({
                 </div>
               </div>
             ))}
+            <div>
+              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">
+                AVATAR
+              </p>
+              <AvatarMenu />
+            </div>
+
+            <div>
+              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">
+                EMOJI
+              </p>
+              <EmojiCategoryMenu />
+            </div>
           </nav>
         </div>
 

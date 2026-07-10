@@ -34,7 +34,7 @@ export default function AllUsers() {
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(20);
     const [exportOpen, setExportOpen] = useState(false);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
