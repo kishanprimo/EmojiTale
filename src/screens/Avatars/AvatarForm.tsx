@@ -10,22 +10,12 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Loader2 } from "lucide-react";
 
-import {
-    resetAddAvatar,
-} from "@/store/slices/AvatarSlices/addAvatarSlice";
-
-import {
-    addAvatar,
-} from "@/store/slices/AvatarSlices/addAvatarThunk";
-import {
-    updateAvatar,
-} from "@/store/slices/AvatarSlices/updateAvatarThunk";
-import {
-    resetUpdateAvatar,
-} from "@/store/slices/AvatarSlices/updateAvatarSlice";
-import {
-    clearSelectedAvatar,
-} from "@/store/slices/AvatarSlices/selectedAvatarSlice";
+import { resetAddAvatar } from "@/store/slices/AvatarSlices/addAvatarSlice";
+import { addAvatar } from "@/store/slices/AvatarSlices/addAvatarThunk";
+import { updateAvatar } from "@/store/slices/AvatarSlices/updateAvatarThunk";
+import { resetUpdateAvatar } from "@/store/slices/AvatarSlices/updateAvatarSlice";
+import { clearSelectedAvatar } from "@/store/slices/AvatarSlices/selectedAvatarSlice";
+import { resolveImageUrl } from "@/lib/resolveImageUrl";
 
 type AvatarFormProps = {
     mode?: "add" | "edit";
@@ -96,7 +86,7 @@ export default function AvatarForm({
         );
 
         setPreview(
-            selectedAvatar.avatar_media ?? ""
+            resolveImageUrl(selectedAvatar.avatar_media ?? "") ?? ""
         );
 
         setFileName(
@@ -372,19 +362,13 @@ export default function AvatarForm({
                         </div>
 
                         {preview && (
-
                             <div className="mt-4">
-
                                 <img
                                     src={preview}
                                     alt="Avatar"
-                                    referrerPolicy="no-referrer"
-                                    crossOrigin="anonymous"
                                     className="h-28 w-28 rounded-xl border object-cover"
                                 />
-
                             </div>
-
                         )}
 
                     </div>

@@ -11,13 +11,14 @@ import DateTime from "@/components/common/DateTime";
 import Action from "@/components/common/Action";
 import { Download, ChevronDown, SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getEmojiCategories } from "@/store/slices/EmojiCategorySlices/emojiCategoryThunk";
-import { setSelectedEmojiCategory } from "@/store/slices/EmojiCategorySlices/selectedEmojiCategorySlice";
+import { getEmojis } from "@/store/slices/EmojiSlices/emojiThunk";
+import { setSelectedEmoji } from "@/store/slices/EmojiSlices/selectedEmojiSlice";
+import { resolveImageUrl } from "@/lib/resolveImageUrl";
 
-export default function AllEmojiCategories() {
+export default function AllEmojis() {
     const dispatch = useAppDispatch();
     const router = useRouter();
-    const { categories, pagination, loading } = useAppSelector((state) => state.emojiCategories);
+    const { emojis, pagination, loading } = useAppSelector((state) => state.emojis);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -31,20 +32,18 @@ export default function AllEmojiCategories() {
     }, [searchTerm]);
 
     useEffect(() => {
-        setPage(1);
-    }, [debouncedSearch]);
-
-    useEffect(() => {
-        dispatch(getEmojiCategories({ page, limit, search: debouncedSearch }));
+        dispatch(getEmojis({ page, limit, search: debouncedSearch }));
     }, [dispatch, page, limit, debouncedSearch]);
 
     const handleExportCSV = () => {
-        const headers = ["Category ID", "Name", "Created At", "Updated At"];
-        const rows = categories.map((c) => [
-            c.emoji_category_id,
-            c.name,
-            new Date(c.createdAt).toLocaleString(),
-            new Date(c.updatedAt).toLocaleString(),
+        const headers = ["Emoji ID", "Emoji URL", "Category ID", "Category Name", "Created At", "Updated At"];
+        const rows = emojis.map((e) => [
+            e.emoji_id,
+            e.emoji_url,
+            e.emoji_category_id,
+            e.category?.name ?? "—",
+            new Date(e.createdAt).toLocaleString(),
+            new Date(e.updatedAt).toLocaleString(),
         ]);
         const csv = [headers, ...rows]
             .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
@@ -53,7 +52,7 @@ export default function AllEmojiCategories() {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "Emoji_Categories.csv";
+        link.download = "Emojis.csv";
         link.click();
         window.URL.revokeObjectURL(url);
     };
@@ -64,15 +63,13 @@ export default function AllEmojiCategories() {
 
                 {/* Header */}
                 <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">
-                        Emoji Categories
-                    </h1>
+                    <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Emoji List</h1>
                     <div className="flex items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl lg:justify-end">
                         <div className="flex-1 lg:max-w-sm">
                             <Search
                                 searchTerm={searchTerm}
                                 setSearchTerm={setSearchTerm}
-                                placeholder="Search categories..."
+                                placeholder="Search emojis..."
                             />
                         </div>
                         <div className="relative shrink-0">
@@ -105,8 +102,8 @@ export default function AllEmojiCategories() {
                         <TableHeader
                             showCheckbox={false}
                             columns={[
-                                { label: "Cat ID" },
-                                { label: "Name" },
+                                { label: "Emoji" },
+                                { label: "Category Name" },
                                 { label: "Created At" },
                                 { label: "Updated At" },
                                 { label: "Action", className: "text-center" },
@@ -115,40 +112,44 @@ export default function AllEmojiCategories() {
                         <tbody className="divide-y divide-gray-100">
                             {loading ? (
                                 <TableSkeleton rows={limit} />
-                            ) : categories.length > 0 ? (
-                                categories.map((cat) => (
-                                    <tr key={cat.emoji_category_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
-                                        <td className="px-6 py-5 text-sm font-semibold text-[#101828]">
-                                            #{cat.emoji_category_id}
-                                        </td>
-                                        <td className="px-6 py-5 text-sm font-medium text-[#101828]">
-                                            {cat.name}
-                                        </td>
-                                        <td className="px-6 py-5">
-                                            <DateTime
-                                                date={new Date(cat.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                time={new Date(cat.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+                            ) : emojis.length > 0 ? (
+                                emojis.map((emoji) => (
+                                    <tr key={emoji.emoji_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
+                                        <td className="px-6 py-4">
+                                            <img
+                                                src={resolveImageUrl(emoji.emoji_url) ?? undefined}
+                                                alt={`emoji-${emoji.emoji_id}`}
+                                                className="h-10 w-10 rounded-lg object-cover border border-gray-200"
                                             />
                                         </td>
-                                        <td className="px-6 py-5">
+                                        <td className="px-6 py-4 text-sm font-medium text-[#101828]">
+                                            {emoji.category?.name ?? "—"}
+                                        </td>
+                                        <td className="px-6 py-4">
                                             <DateTime
-                                                date={new Date(cat.updatedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                time={new Date(cat.updatedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+                                                date={new Date(emoji.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
+                                                time={new Date(emoji.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
                                             />
                                         </td>
-                                        <td className="px-6 py-5 text-center">
+                                        <td className="px-6 py-4">
+                                            <DateTime
+                                                date={new Date(emoji.updatedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
+                                                time={new Date(emoji.updatedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+                                            />
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
                                             <Action
                                                 showEdit
                                                 showDelete={false}
                                                 showView={false}
                                                 onEdit={() => {
-                                            dispatch(setSelectedEmojiCategory({
-                                                emoji_category_id: cat.emoji_category_id,
-                                                name: cat.name,
-                                            }));
-                                            router.push(`/emoji-categories/edit/${cat.emoji_category_id}`);
-                                        }}
-                                                onDelete={() => { }}
+                                                    dispatch(setSelectedEmoji({
+                                                        emoji_id: emoji.emoji_id,
+                                                        emoji_url: emoji.emoji_url,
+                                                        emoji_category_id: emoji.emoji_category_id,
+                                                    }));
+                                                    router.push(`/emojis/edit/${emoji.emoji_id}`);
+                                                }}
                                             />
                                         </td>
                                     </tr>
@@ -160,9 +161,9 @@ export default function AllEmojiCategories() {
                                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                 <SearchX size={30} className="text-[#2563EB]" />
                                             </div>
-                                            <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Categories Found</h3>
+                                            <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Emojis Found</h3>
                                             <p className="mt-2 max-w-sm text-center text-[15px] text-[#667085]">
-                                                {debouncedSearch ? `No results for "${debouncedSearch}"` : "No emoji categories yet."}
+                                                No emojis have been added yet.
                                             </p>
                                         </div>
                                     </td>

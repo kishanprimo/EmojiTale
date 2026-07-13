@@ -28,6 +28,7 @@ import axios from "@/lib/axiosConfiguration";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getAvatars } from "@/store/slices/AvatarSlices/avatarThunk";
+import { resolveImageUrl } from "@/lib/resolveImageUrl";
 
 export default function AllAvatar() {
 
@@ -471,34 +472,18 @@ export default function AllAvatar() {
                                             className="transition-all duration-200 hover:bg-[#F9FAFB]"
                                         >
 
-                                            {/* Avatar */}
-
                                             <td className="px-4 py-5">
-
                                                 {avatar.avatar_media ? (
-
                                                     <img
-                                                        src={avatar.avatar_media}
+                                                        src={resolveImageUrl(avatar.avatar_media) ?? undefined}
                                                         alt={avatar.name}
-                                                        referrerPolicy="no-referrer"
-                                                        crossOrigin="anonymous"
                                                         className="h-10 w-10 rounded-full object-cover border border-gray-200"
-                                                        onError={(e) => {
-                                                            const target = e.currentTarget;
-                                                            target.style.display = "none";
-                                                            const fallback = target.nextElementSibling as HTMLElement;
-                                                            if (fallback) fallback.style.display = "flex";
-                                                        }}
                                                     />
-
-                                                ) : null}
-                                                <div
-                                                    className="h-10 w-10 items-center justify-center rounded-full bg-[#2563EB] text-sm font-semibold text-white"
-                                                    style={{ display: avatar.avatar_media ? "none" : "flex" }}
-                                                >
-                                                    {avatar.name?.charAt(0).toUpperCase()}
-                                                </div>
-
+                                                ) : (
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2563EB] text-sm font-semibold text-white">
+                                                        {avatar.name?.charAt(0).toUpperCase()}
+                                                    </div>
+                                                )}
                                             </td>
 
                                             {/* Name */}

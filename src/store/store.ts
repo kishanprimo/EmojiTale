@@ -1,4 +1,18 @@
 import authReducer from "./slices/AuthSlice/loginSlice";
+import emojiReducer from "./slices/EmojiSlices/emojiSlice";
+import addEmojiReducer from "./slices/EmojiSlices/addEmojiSlice";
+import updateEmojiReducer from "./slices/EmojiSlices/updateEmojiSlice";
+import selectedEmojiReducer from "./slices/EmojiSlices/selectedEmojiSlice";
+import themeReducer from "./slices/ThemeSlices/themeSlice";
+import addThemeReducer from "./slices/ThemeSlices/addThemeSlice";
+import updateThemeReducer from "./slices/ThemeSlices/updateThemeSlice";
+import selectedThemeReducer from "./slices/ThemeSlices/selectedThemeSlice";
+import adminStoryReducer from "./slices/AdminStorySlices/adminStorySlice";
+import generateStoryReducer from "./slices/AdminStorySlices/generateStorySlice";
+import storyCategoryReducer from "./slices/StoryCategorySlices/storyCategorySlice";
+import addStoryCategoryReducer from "./slices/StoryCategorySlices/addStoryCategorySlice";
+import notificationReducer from "./slices/NotificationSlices/notificationSlice";
+import addNotificationReducer from "./slices/NotificationSlices/addNotificationSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/UserSlice/userSlice";
 import userDetailsReducer from "./slices/UserSlice/userDetailsSlice";
@@ -36,6 +50,23 @@ export const store = configureStore({
     addAvatar: addAvatarReducer,
     updateAvatar: updateAvatarReducer,
     selectedAvatar: selectedAvatarReducer,
+
+    emojis: emojiReducer,
+    addEmoji: addEmojiReducer,
+    updateEmoji: updateEmojiReducer,
+    selectedEmoji: selectedEmojiReducer,
+
+    themes: themeReducer,
+    addTheme: addThemeReducer,
+    updateTheme: updateThemeReducer,
+    selectedTheme: selectedThemeReducer,
+
+    adminStory: adminStoryReducer,
+    generateStory: generateStoryReducer,
+    storyCategory: storyCategoryReducer,
+    addStoryCategory: addStoryCategoryReducer,
+    notifications: notificationReducer,
+    addNotification: addNotificationReducer,
   },
 });
 

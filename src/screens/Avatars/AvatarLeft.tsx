@@ -7,6 +7,7 @@ import Search from "@/components/common/Search";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getAvatars } from "@/store/slices/AvatarSlices/avatarThunk";
+import { resolveImageUrl } from "@/lib/resolveImageUrl";
 
 export default function AvatarLeft() {
 
@@ -112,29 +113,13 @@ export default function AvatarLeft() {
                         >
 
                             {avatar.avatar_media ? (
-                                <>
                                 <img
-                                    src={avatar.avatar_media}
+                                    src={resolveImageUrl(avatar.avatar_media) ?? undefined}
                                     alt={avatar.name}
-                                    referrerPolicy="no-referrer"
-                                    crossOrigin="anonymous"
-                                    className="h-10 w-10 rounded-full object-cover border border-gray-200"
-                                    onError={(e) => {
-                                        const target = e.currentTarget;
-                                        target.style.display = "none";
-                                        const fallback = target.nextElementSibling as HTMLElement;
-                                        if (fallback) fallback.style.display = "flex";
-                                    }}
+                                    className="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0"
                                 />
-                                <div
-                                    className="h-10 w-10 items-center justify-center rounded-full bg-[#2563EB] text-white font-semibold"
-                                    style={{ display: "none" }}
-                                >
-                                    {avatar.name.charAt(0).toUpperCase()}
-                                </div>
-                                </>
                             ) : (
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2563EB] text-white font-semibold">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2563EB] text-white font-semibold shrink-0">
                                     {avatar.name.charAt(0).toUpperCase()}
                                 </div>
                             )}
