@@ -8,6 +8,7 @@ export interface EmojiPayload {
 export interface EmojiCategory {
     emoji_category_id: number;
     name: string;
+    is_premium: boolean;
 }
 
 export interface EmojiItem {

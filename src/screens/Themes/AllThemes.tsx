@@ -12,7 +12,7 @@ import { Download, ChevronDown, SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getThemes } from "@/store/slices/ThemeSlices/themeThunk";
 import { setSelectedTheme } from "@/store/slices/ThemeSlices/selectedThemeSlice";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 export default function AllThemes() {
     const dispatch = useAppDispatch();
@@ -102,7 +102,7 @@ export default function AllThemes() {
                                     <tr key={theme.theme_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
                                             <img
-                                                src={resolveImageUrl(theme.theme_image) ?? undefined}
+                                                src={(theme.theme_image) ?? undefined}
                                                 alt={theme.theme_name}
                                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200"
                                             />

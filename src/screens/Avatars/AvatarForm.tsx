@@ -15,7 +15,7 @@ import { addAvatar } from "@/store/slices/AvatarSlices/addAvatarThunk";
 import { updateAvatar } from "@/store/slices/AvatarSlices/updateAvatarThunk";
 import { resetUpdateAvatar } from "@/store/slices/AvatarSlices/updateAvatarSlice";
 import { clearSelectedAvatar } from "@/store/slices/AvatarSlices/selectedAvatarSlice";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 type AvatarFormProps = {
     mode?: "add" | "edit";
@@ -86,7 +86,7 @@ export default function AvatarForm({
         );
 
         setPreview(
-            resolveImageUrl(selectedAvatar.avatar_media ?? "") ?? ""
+            (selectedAvatar.avatar_media ?? "") ?? ""
         );
 
         setFileName(

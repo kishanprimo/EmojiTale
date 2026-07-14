@@ -10,7 +10,7 @@ import { resetAddTheme } from "@/store/slices/ThemeSlices/addThemeSlice";
 import { updateTheme } from "@/store/slices/ThemeSlices/updateThemeThunk";
 import { resetUpdateTheme } from "@/store/slices/ThemeSlices/updateThemeSlice";
 import { clearSelectedTheme } from "@/store/slices/ThemeSlices/selectedThemeSlice";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 type ThemeFormProps = {
     mode?: "add" | "edit";
@@ -38,7 +38,7 @@ export default function ThemeForm({ mode = "add" }: ThemeFormProps) {
         if (mode !== "edit" || !selectedTheme) return;
         setName(selectedTheme.theme_name);
         setSubtitle(selectedTheme.theme_name_subtitle);
-        setPreview(resolveImageUrl(selectedTheme.theme_image) ?? "");
+        setPreview((selectedTheme.theme_image) ?? "");
         setFileName("Current Image");
     }, [mode, selectedTheme]);
 

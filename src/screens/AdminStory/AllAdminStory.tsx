@@ -11,7 +11,7 @@ import Tags from "@/components/common/Tag";
 import { SearchX, X } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminStories } from "@/store/slices/AdminStorySlices/adminStoryThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 import { AdminStoryItem } from "@/types/AdminStoryTypes/adminStoryTypes";
 
 export default function AllAdminStory() {
@@ -38,89 +38,95 @@ export default function AllAdminStory() {
                 {/* Table */}
                 <div className="overflow-hidden rounded-[10px] border border-gray-200 bg-white">
                     <div className="w-full overflow-x-auto">
-                    <table className="min-w-[900px] w-full border-collapse text-left">
-                        <TableHeader
-                            showCheckbox={false}
-                            columns={[
-                                { label: "Image" },
-                                { label: "ID" },
-                                { label: "Title" },
-                                { label: "Category" },
-                                { label: "Content" },
-                                { label: "Status" },
-                                { label: "Created At" },
-                                { label: "Updated At" },
-                                { label: "Action", className: "text-center" },
-                            ]}
-                        />
-                        <tbody className="divide-y divide-gray-100">
-                            {loading ? (
-                                <TableSkeleton rows={limit} />
-                            ) : stories.length > 0 ? (
-                                stories.map((story) => (
-                                    <tr key={story.adminstory_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
-                                        <td className="px-6 py-4">
-                                            <img
-                                                src={resolveImageUrl(story.image) ?? undefined}
-                                                alt={story.title}
-                                                className="h-12 w-12 rounded-xl object-cover border border-gray-200"
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4 text-sm font-semibold text-[#101828]">
-                                            #{story.adminstory_id}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm font-medium text-[#101828] max-w-[160px]">
-                                            <p className="line-clamp-2">{story.title}</p>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-[#667085] whitespace-nowrap">
-                                            {story.category?.storycategory_name ?? "—"}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-[#667085] max-w-[260px]">
-                                            <p className="line-clamp-2 leading-relaxed">{story.content}</p>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <Tags
-                                                text={story.is_active ? "Active" : "Inactive"}
-                                                variant={story.is_active ? "green" : "red"}
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <DateTime
-                                                date={new Date(story.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                time={new Date(story.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <DateTime
-                                                date={new Date(story.updatedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                time={new Date(story.updatedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <Action
-                                                showView
-                                                showEdit={false}
-                                                showDelete={false}
-                                                onView={() => setViewStory(story)}
-                                            />
+                        <table className="min-w-[900px] w-full border-collapse text-left">
+                            <TableHeader
+                                showCheckbox={false}
+                                columns={[
+                                    { label: "Image" },
+                                    { label: "ID" },
+                                    { label: "Title" },
+                                    { label: "Category" },
+                                    { label: "Content" },
+                                    { label: "Status" },
+                                    { label: "Created At" },
+                                    { label: "Updated At" },
+                                    { label: "Action", className: "text-center" },
+                                ]}
+                            />
+                            <tbody className="divide-y divide-gray-100">
+                                {loading ? (
+                                    <TableSkeleton rows={limit} />
+                                ) : stories.length > 0 ? (
+                                    stories.map((story) => (
+                                        <tr key={story.adminstory_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
+                                            <td className="px-6 py-4">
+                                                {story.image ? (
+                                                    <img
+                                                        src={story.image}
+                                                        alt={story.title}
+                                                        className="h-12 w-12 rounded-xl object-cover border border-gray-200"
+                                                    />
+                                                ) : (
+                                                    <div className="h-12 w-12 rounded-xl border border-gray-200 bg-gray-100 flex items-center justify-center text-xs text-gray-500">
+                                                        —
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-semibold text-[#101828]">
+                                                #{story.adminstory_id}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-medium text-[#101828] max-w-[160px]">
+                                                <p className="line-clamp-2">{story.title}</p>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-[#667085] whitespace-nowrap">
+                                                {story.category?.storycategory_name ?? "—"}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-[#667085] max-w-[260px]">
+                                                <p className="line-clamp-2 leading-relaxed">{story.content}</p>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <Tags
+                                                    text={story.is_active ? "Active" : "Inactive"}
+                                                    variant={story.is_active ? "green" : "red"}
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <DateTime
+                                                    date={new Date(story.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
+                                                    time={new Date(story.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <DateTime
+                                                    date={new Date(story.updatedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
+                                                    time={new Date(story.updatedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <Action
+                                                    showView
+                                                    showEdit={false}
+                                                    showDelete={false}
+                                                    onView={() => setViewStory(story)}
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={9} className="py-20">
+                                            <div className="flex flex-col items-center justify-center">
+                                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
+                                                    <SearchX size={30} className="text-[#2563EB]" />
+                                                </div>
+                                                <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Stories Found</h3>
+                                                <p className="mt-2 text-[15px] text-[#667085]">No admin stories have been generated yet.</p>
+                                            </div>
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={9} className="py-20">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
-                                                <SearchX size={30} className="text-[#2563EB]" />
-                                            </div>
-                                            <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Stories Found</h3>
-                                            <p className="mt-2 text-[15px] text-[#667085]">No admin stories have been generated yet.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -153,7 +159,7 @@ export default function AllAdminStory() {
                         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
                             <div className="flex items-center gap-3">
                                 <img
-                                    src={resolveImageUrl(viewStory.image) ?? undefined}
+                                    src={(viewStory.image) ?? undefined}
                                     alt={viewStory.title}
                                     className="h-10 w-10 rounded-xl object-cover border border-gray-200"
                                 />

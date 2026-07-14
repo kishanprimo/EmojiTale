@@ -9,7 +9,7 @@ import DateTime from "@/components/common/DateTime";
 import { SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCategoryThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 export default function AllStoryCategory() {
     const dispatch = useAppDispatch();
@@ -52,7 +52,7 @@ export default function AllStoryCategory() {
                                     <tr key={cat.storycategory_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
                                             <img
-                                                src={resolveImageUrl(cat.storycategory_image) ?? undefined}
+                                                src={(cat.storycategory_image) ?? undefined}
                                                 alt={cat.storycategory_name}
                                                 className="h-12 w-12 rounded-xl object-cover border border-gray-200"
                                             />

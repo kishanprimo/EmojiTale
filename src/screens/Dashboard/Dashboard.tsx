@@ -1,18 +1,55 @@
 "use client";
-import DashboardLayout from "@/layouts/DashboardLayout";
-//import DashboardUsers from "@/components/dashboard/DashboardUsers";
-import ActiveUsersChart from "@/components/dashboard/LiveUsersChart";
+
 import { useEffect } from "react";
 
-import { useAppDispatch } from "@/store/hooks";
+import DashboardLayout from "@/layouts/DashboardLayout";
+import StatsCards from "@/components/common/StatsCard";
 
-import { getDashboard } from "@/store/slices/DashboardSlice/liveusers_thunk";
+import {
+  Users,
+  BookOpen,
+  IndianRupee,
+} from "lucide-react";
+
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/hooks";
+
+import { getDashboardStats } from "@/store/slices/DashboardSlice/dashboardThunk";
+
 const Dashboard = () => {
   const dispatch = useAppDispatch();
 
+  const { stats, loading } = useAppSelector(
+    (state) => state.dashboard
+  );
   useEffect(() => {
-    dispatch(getDashboard());
+    dispatch(getDashboardStats());
   }, [dispatch]);
+  const dashboardStats = [
+    {
+      label: "Total Users",
+      value: stats.total_users,
+      change: 0,
+      icon: <Users size={24} className="text-[#2563EB]" />,
+      bg: "bg-[#EEF4FF]",
+    },
+    {
+      label: "Total Stories",
+      value: stats.total_stories,
+      change: 0,
+      icon: <BookOpen size={24} className="text-[#12B76A]" />,
+      bg: "bg-[#ECFDF3]",
+    },
+    {
+      label: "Total Revenue",
+      value: `₹${stats.total_revenue}`,
+      change: 0,
+      icon: <IndianRupee size={24} className="text-[#F97316]" />,
+      bg: "bg-[#FFF7ED]",
+    },
+  ];
   return (
     <DashboardLayout>
       <div className="px-4 md:px-6 lg:px-8 py-5 md:py-6">
@@ -28,7 +65,11 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <ActiveUsersChart />
+        <StatsCards
+          stats={dashboardStats}
+          cols={3}
+          loading={loading}
+        />
 
       </div>
     </DashboardLayout>

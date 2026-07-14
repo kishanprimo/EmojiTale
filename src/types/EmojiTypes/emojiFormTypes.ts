@@ -9,6 +9,7 @@ export interface AddEmojiResponse {
         emoji_id: number;
         emoji_url: string;
         emoji_category_id: number;
+        emoji_name: string;
         createdAt: string;
         updatedAt: string;
     };
@@ -26,6 +27,7 @@ export interface UpdateEmojiResponse {
         emoji_id: number;
         emoji_url: string;
         emoji_category_id: number;
+        emoji_name: string;
         createdAt: string;
         updatedAt: string;
     };
@@ -35,4 +37,5 @@ export interface SelectedEmoji {
     emoji_id: number;
     emoji_url: string;
     emoji_category_id: number;
+    emoji_name: string;
 }

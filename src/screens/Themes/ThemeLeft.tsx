@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getThemes } from "@/store/slices/ThemeSlices/themeThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
 
 export default function ThemeLeft() {
     const dispatch = useAppDispatch();
@@ -33,7 +32,7 @@ export default function ThemeLeft() {
                                 }`}
                         >
                             <img
-                                src={resolveImageUrl(theme.theme_image) ?? undefined}
+                                src={(theme.theme_image) ?? undefined}
                                 alt={theme.theme_name}
                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200 shrink-0"
                             />

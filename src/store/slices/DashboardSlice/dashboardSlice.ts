@@ -1,39 +1,54 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDashboard } from "./liveusers_thunk";
-import { DashboardData } from "@/types/DashboardTypes/liveusers_types";
+
+import { getDashboardStats } from "./dashboardThunk";
+
+import { DashboardStats } from "@/types/DashboardTypes/dashboardTypes";
 
 interface DashboardState {
-    data: DashboardData;
+    stats: DashboardStats;
+
     loading: boolean;
+
     error: string | null;
 }
 
 const initialState: DashboardState = {
-    data: {
-        daywise_active_users: {
-            chart: [],
-        },
+    stats: {
+        total_users: 0,
+        total_stories: 0,
+        total_revenue: 0,
     },
+
     loading: false,
+
     error: null,
 };
 
 const dashboardSlice = createSlice({
     name: "dashboard",
+
     initialState,
+
     reducers: {},
+
     extraReducers: (builder) => {
         builder
-            .addCase(getDashboard.pending, (state) => {
+
+            .addCase(getDashboardStats.pending, (state) => {
                 state.loading = true;
+
                 state.error = null;
             })
-            .addCase(getDashboard.fulfilled, (state, action) => {
+
+            .addCase(getDashboardStats.fulfilled, (state, action) => {
                 state.loading = false;
-                state.data = action.payload.data;
+
+                state.stats = action.payload.data;
             })
-            .addCase(getDashboard.rejected, (state, action) => {
+
+            .addCase(getDashboardStats.rejected, (state, action) => {
                 state.loading = false;
+
                 state.error = action.payload || "Something went wrong";
             });
     },
