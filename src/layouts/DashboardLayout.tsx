@@ -44,6 +44,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     }
 
   }, [router]);
+  // useEffect(() => {
+  //   setAuthorized(true);
+  // }, []);
 
   if (!authorized) {
     return (

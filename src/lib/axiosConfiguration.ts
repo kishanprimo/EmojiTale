@@ -49,23 +49,31 @@ api.interceptors.response.use(
         console.log("STATUS :", error.response?.status);
         console.log("DATA :", error.response?.data);
 
+        // if (error.response?.status === 401) {
+
+        //     console.log(
+        //         "401 RECEIVED - REMOVING COOKIE"
+        //     );
+
+        //     Cookies.remove("emotale_admin_token");
+
+        //     localStorage.removeItem("emotale_admin");
+
+        //     if (!window.location.pathname.startsWith("/login")) {
+
+        //         window.location.replace("/login");
+
+        //     }
+        // }
         if (error.response?.status === 401) {
+            console.log("========== 401 RECEIVED ==========");
+            console.log("URL:", error.config?.url);
+            console.log("Response:", error.response?.data);
 
-            console.log(
-                "401 RECEIVED - REMOVING COOKIE"
-            );
-
-            Cookies.remove("emotale_admin_token");
-
-            localStorage.removeItem("emotale_admin");
-
-            if (!window.location.pathname.startsWith("/login")) {
-
-                window.location.replace("/login");
-
-            }
+            // DO NOTHING
+            // DON'T REMOVE COOKIE
+            // DON'T REDIRECT
         }
-
         return Promise.reject(error);
     }
 
