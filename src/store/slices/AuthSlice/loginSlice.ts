@@ -35,6 +35,10 @@ const loginSlice = createSlice({
       .addCase(loginAdmin.fulfilled, (state, action) => {
         state.loading = false;
 
+        console.log("========== LOGIN SUCCESS ==========");
+        console.log("Login Response:", action.payload);
+        console.log("JWT Token:", action.payload.data.token);
+
         state.token = action.payload.data.token;
         state.admin = action.payload.data.admin;
 
@@ -46,6 +50,11 @@ const loginSlice = createSlice({
             sameSite: "Strict",
             secure: process.env.NODE_ENV === "production",
           }
+        );
+
+        console.log(
+          "Cookie After Set:",
+          Cookies.get("emotale_admin_token")
         );
 
         localStorage.setItem(

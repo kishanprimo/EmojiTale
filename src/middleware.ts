@@ -4,7 +4,12 @@ const PUBLIC_PATHS = ["/login"];
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const token = request.cookies.get("emotale_admin_token")?.value;
+    const token =
+        request.cookies.get("emotale_admin_token")?.value;
+
+    console.log("========== MIDDLEWARE ==========");
+    console.log("PATH :", pathname);
+    console.log("TOKEN :", token);
     const isPublic = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
 
     if (!token && !isPublic) {
