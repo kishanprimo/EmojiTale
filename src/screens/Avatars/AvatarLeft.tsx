@@ -7,7 +7,7 @@ import Search from "@/components/common/Search";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getAvatars } from "@/store/slices/AvatarSlices/avatarThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 export default function AvatarLeft() {
 
@@ -114,7 +114,7 @@ export default function AvatarLeft() {
 
                             {avatar.avatar_media ? (
                                 <img
-                                    src={resolveImageUrl(avatar.avatar_media) ?? undefined}
+                                    src={(avatar.avatar_media) ?? undefined}
                                     alt={avatar.name}
                                     className="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0"
                                 />

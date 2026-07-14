@@ -13,7 +13,7 @@ import { Download, ChevronDown, SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getEmojis } from "@/store/slices/EmojiSlices/emojiThunk";
 import { setSelectedEmoji } from "@/store/slices/EmojiSlices/selectedEmojiSlice";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllEmojis() {
@@ -99,6 +99,7 @@ export default function AllEmojis() {
                             showCheckbox={false}
                             columns={[
                                 { label: "Emoji" },
+                                { label: "Emoji Name" },
                                 { label: "Category Name" },
                                 { label: "Created At" },
                                 { label: "Updated At" },
@@ -113,10 +114,13 @@ export default function AllEmojis() {
                                     <tr key={emoji.emoji_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
                                             <img
-                                                src={resolveImageUrl(emoji.emoji_url) ?? undefined}
+                                                src={(emoji.emoji_url) ?? undefined}
                                                 alt={`emoji-${emoji.emoji_id}`}
                                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200"
                                             />
+                                        </td>
+                                        <td className="px-6 py-4 text-sm font-medium text-[#101828]">
+                                            {emoji.emoji_name ?? "N/A"}
                                         </td>
                                         <td className="px-6 py-4 text-sm font-medium text-[#101828]">
                                             {emoji.category?.name ?? "—"}
@@ -143,6 +147,7 @@ export default function AllEmojis() {
                                                         emoji_id: emoji.emoji_id,
                                                         emoji_url: emoji.emoji_url,
                                                         emoji_category_id: emoji.emoji_category_id,
+                                                        emoji_name: emoji.emoji_name ?? "",
                                                     }));
                                                     router.push(`/emojis/edit/${emoji.emoji_id}`);
                                                 }}
@@ -152,7 +157,7 @@ export default function AllEmojis() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="py-20">
+                                    <td colSpan={6} className="py-20">
                                         <div className="flex flex-col items-center justify-center">
                                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                 <SearchX size={30} className="text-[#2563EB]" />

@@ -11,7 +11,6 @@ import { updateEmoji } from "@/store/slices/EmojiSlices/updateEmojiThunk";
 import { resetUpdateEmoji } from "@/store/slices/EmojiSlices/updateEmojiSlice";
 import { clearSelectedEmoji } from "@/store/slices/EmojiSlices/selectedEmojiSlice";
 import { getEmojiCategories } from "@/store/slices/EmojiCategorySlices/emojiCategoryThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
 
 type EmojiFormProps = {
     mode?: "add" | "edit";
@@ -30,6 +29,7 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
     const success = mode === "edit" ? updateState.success : addState.success;
 
     const [categoryId, setCategoryId] = useState<number | "">("");
+    const [emojiName, setEmojiName] = useState("");
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState("");
     const [fileName, setFileName] = useState("No file chosen");
@@ -38,15 +38,14 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
         dispatch(getEmojiCategories({ page: 1, limit: 100 }));
     }, [dispatch]);
 
-    // Prefill on edit
     useEffect(() => {
         if (mode !== "edit" || !selectedEmoji) return;
         setCategoryId(selectedEmoji.emoji_category_id);
-        setPreview(resolveImageUrl(selectedEmoji.emoji_url) ?? "");
+        setEmojiName(selectedEmoji.emoji_name ?? "");
+        setPreview(selectedEmoji.emoji_url ?? "");
         setFileName("Current Image");
     }, [mode, selectedEmoji]);
 
-    // Handle success
     useEffect(() => {
         if (!success) return;
         toast.success(mode === "edit" ? "Emoji updated successfully!" : "Emoji created successfully!");
@@ -64,17 +63,13 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
     };
 
     const handleSubmit = async () => {
-        if (!categoryId) {
-            toast.error("Please select a category");
-            return;
-        }
-        if (mode === "add" && !selectedImage) {
-            toast.error("Please choose an emoji image");
-            return;
-        }
+        if (!categoryId) { toast.error("Please select a category"); return; }
+        if (!emojiName.trim()) { toast.error("Please enter an emoji name"); return; }
+        if (mode === "add" && !selectedImage) { toast.error("Please choose an emoji image"); return; }
 
         const formData = new FormData();
         formData.append("emoji_category_id", String(categoryId));
+        formData.append("emoji_name", emojiName.trim());
         if (selectedImage) formData.append("emoji", selectedImage);
 
         try {
@@ -93,7 +88,7 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
     }, [preview]);
 
     return (
-        <div className="bg-white border border-gray-200 rounded-[12px] flex flex-col h-full">
+        <div className="bg-white border border-gray-200 rounded-[12px] flex flex-col">
 
             {/* Header */}
             <div className="border-b border-gray-200 px-6 py-5">
@@ -103,8 +98,8 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
             </div>
 
             {/* Body */}
-            <div className="flex-1 p-6">
-                <div className="space-y-7">
+            <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                     {/* Category */}
                     <div>
@@ -128,8 +123,22 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
                         </div>
                     </div>
 
-                    {/* Emoji Image */}
+                    {/* Emoji Name */}
                     <div>
+                        <label className="block mb-2 text-[15px] font-semibold text-gray-700">
+                            Emoji Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            value={emojiName}
+                            onChange={(e) => setEmojiName(e.target.value.trimStart())}
+                            placeholder="Enter emoji name"
+                            className="w-full h-12 rounded-[10px] border border-gray-300 px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500"
+                        />
+                    </div>
+
+                    {/* Emoji Image */}
+                    <div className="lg:col-span-2">
                         <label className="block mb-2 text-[15px] font-semibold text-gray-700">
                             Emoji Image <span className="text-red-500">*</span>
                         </label>
@@ -157,10 +166,7 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
             <div className="border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
                 <button
                     type="button"
-                    onClick={() => {
-                        dispatch(clearSelectedEmoji());
-                        router.push("/emojis");
-                    }}
+                    onClick={() => { dispatch(clearSelectedEmoji()); router.push("/emojis"); }}
                     className="rounded-[10px] border border-gray-300 px-5 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50"
                 >
                     Cancel

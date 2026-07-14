@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getEmojis } from "@/store/slices/EmojiSlices/emojiThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 export default function EmojiLeft() {
     const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ export default function EmojiLeft() {
                                 }`}
                         >
                             <img
-                                src={resolveImageUrl(emoji.emoji_url) ?? undefined}
+                                src={(emoji.emoji_url) ?? undefined}
                                 alt={`emoji-${emoji.emoji_id}`}
                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200 shrink-0"
                             />

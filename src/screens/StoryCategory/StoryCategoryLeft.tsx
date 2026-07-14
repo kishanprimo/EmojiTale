@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Search from "@/components/common/Search";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCategoryThunk";
-import { resolveImageUrl } from "@/lib/resolveImageUrl";
+
 
 export default function StoryCategoryLeft() {
     const dispatch = useAppDispatch();
@@ -50,7 +50,7 @@ export default function StoryCategoryLeft() {
                         >
                             {cat.storycategory_image ? (
                                 <img
-                                    src={resolveImageUrl(cat.storycategory_image) ?? undefined}
+                                    src={(cat.storycategory_image) ?? undefined}
                                     alt={cat.storycategory_name}
                                     className="h-10 w-10 rounded-full object-cover shrink-0 border border-gray-200"
                                 />
