@@ -43,46 +43,27 @@ export default function AllPlan() {
 
     const [limit, setLimit] = useState(20);
 
-    const [exportOpen, setExportOpen] =
-        useState(false);
+    const [exportOpen, setExportOpen] = useState(false);
 
     // ----------------------------
     // Fetch Plans
     // ----------------------------
 
     useEffect(() => {
-
-        dispatch(
-            getPlans({
-                product_type: "subscription",
-                page,
-                limit,
-            })
-        );
-
-    }, [
-        dispatch,
-        page,
-        limit,
-    ]);
+        dispatch(getPlans({ product_type: "subscription", page, limit }));
+    }, [dispatch, page, limit]);
 
     // ----------------------------
     // Fetch All Plans (Export)
     // ----------------------------
 
     const fetchAllPlans = async () => {
-
-        const response = await axios.post(
-            "/admin/xp-store",
-            {
-                product_type: "subscription",
-                page: 1,
-                limit: pagination.total,
-            }
-        );
-
+        const response = await axios.post("/admin/xp-store", {
+            product_type: "subscription",
+            page: 1,
+            limit: pagination.total,
+        });
         return response.data.data.records;
-
     };
 
     // ----------------------------
@@ -100,7 +81,7 @@ export default function AllPlan() {
         doc.setFontSize(18);
 
         doc.text(
-            "Plan & XP Report",
+            "Subscription plan Report",
             14,
             18
         );
@@ -120,50 +101,21 @@ export default function AllPlan() {
             head: [[
                 "Plan ID",
                 "Plan Type",
-                "Price",
-                "Features",
                 "XP Reward",
                 "RevenueCat ID",
-                "Product Type",
-                "RevenueCat Managed",
-                "Platform",
                 "Status",
                 "Created At",
                 "Updated At",
             ]],
 
             body: allPlans.map((plan: any) => [
-
                 plan.plan_id,
-
                 plan.plan_type,
-
-                `${plan.currency} ${plan.price}`,
-
-                plan.features.join(", "),
-
                 plan.xp_reward,
-
                 plan.revenuecat_product_id,
-
-                plan.product_type,
-
-                plan.is_revenuecat_managed
-                    ? "Yes"
-                    : "No",
-
-                plan.platform,
-
-                plan.is_deleted
-                    ? "Deleted"
-                    : plan.is_active
-                        ? "Active"
-                        : "Inactive",
-
+                plan.is_deleted ? "Deleted" : plan.is_active ? "Active" : "Inactive",
                 new Date(plan.createdAt).toLocaleString(),
-
                 new Date(plan.updatedAt).toLocaleString(),
-
             ]),
             headStyles: {
 
@@ -197,37 +149,22 @@ export default function AllPlan() {
         const headers = [
             "Plan ID",
             "Plan Type",
-            "Price",
-            "Features",
             "XP Reward",
             "RevenueCat ID",
-            "Product Type",
-            "RevenueCat Managed",
-            "Platform",
             "Status",
             "Created At",
             "Updated At",
         ];
 
-        const rows =
-            allPlans.map((plan: any) => [
-                plan.plan_id,
-                plan.plan_type,
-                `${plan.currency} ${plan.price}`,
-                plan.features.join(", "),
-                plan.xp_reward,
-                plan.revenuecat_product_id,
-                plan.product_type,
-                plan.is_revenuecat_managed ? "Yes" : "No",
-                plan.platform,
-                plan.is_deleted
-                    ? "Deleted"
-                    : plan.is_active
-                        ? "Active"
-                        : "Inactive",
-                new Date(plan.createdAt).toLocaleString(),
-                new Date(plan.updatedAt).toLocaleString(),
-            ]);
+        const rows = allPlans.map((plan: any) => [
+            plan.plan_id,
+            plan.plan_type,
+            plan.xp_reward,
+            plan.revenuecat_product_id,
+            plan.is_deleted ? "Deleted" : plan.is_active ? "Active" : "Inactive",
+            new Date(plan.createdAt).toLocaleString(),
+            new Date(plan.updatedAt).toLocaleString(),
+        ]);
 
         const csvContent = [
 
@@ -276,39 +213,14 @@ export default function AllPlan() {
     // (Remove when backend supports search)
     // ----------------------------
 
-    const filteredPlans = plans.filter((plan) => {
-
-        if (!debouncedSearch)
-            return true;
-
-        const search =
-            debouncedSearch.toLowerCase();
-
+        const filteredPlans = plans.filter((plan) => {
+        if (!debouncedSearch) return true;
+        const search = debouncedSearch.toLowerCase();
         return (
-
-            plan.plan_type
-                .toLowerCase()
-                .includes(search)
-
-            ||
-
-            plan.revenuecat_product_id
-                .toLowerCase()
-                .includes(search)
-
-            ||
-
-            plan.platform
-                .toLowerCase()
-                .includes(search)
-
-            ||
-
-            String(plan.plan_id)
-                .includes(search)
-
+            plan.plan_type.toLowerCase().includes(search) ||
+            plan.revenuecat_product_id.toLowerCase().includes(search) ||
+            String(plan.plan_id).includes(search)
         );
-
     });
 
     return (
@@ -321,7 +233,7 @@ export default function AllPlan() {
                 <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
                     <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">
-                        Plan & XP
+                        Subscription Plan
                     </h1>
 
                     <div className="flex items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl lg:justify-end">
@@ -407,19 +319,14 @@ export default function AllPlan() {
 
                     <div className="w-full overflow-x-auto">
 
-                        <table className="min-w-[1700px] w-full border-collapse text-left">
+                        <table className="min-w-[1100px] w-full border-collapse text-left">
 
                             <TableHeader
                                 columns={[
                                     { label: "Plan ID" },
                                     { label: "Plan Type" },
-                                    { label: "Price" },
-                                    { label: "Features" },
                                     { label: "XP Reward" },
                                     { label: "RevenueCat ID" },
-                                    { label: "Product Type" },
-                                    { label: "RevenueCat Managed" },
-                                    { label: "Platform" },
                                     { label: "Status" },
                                     { label: "Created At" },
                                     { label: "Updated At" },
@@ -463,28 +370,6 @@ export default function AllPlan() {
 
                                             </td>
 
-                                            {/* Price */}
-
-                                            <td className="px-4 py-5">
-
-                                                <span className="text-sm font-medium text-[#101828]">
-
-                                                    {plan.currency} {plan.price}
-
-                                                </span>
-
-                                            </td>
-                                            {/* Features */}
-
-                                            <td className="px-4 py-5">
-
-                                                <span className="text-sm text-[#475467]">
-
-                                                    {plan.features?.join(", ") || "N/A"}
-
-                                                </span>
-
-                                            </td>
                                             {/* XP Reward */}
 
                                             <td className="pl-10 px-4 py-5">
@@ -508,46 +393,6 @@ export default function AllPlan() {
                                                 </span>
 
                                             </td>
-                                            {/* Product Type */}
-
-                                            <td className="px-4 py-5">
-
-                                                <Tags
-                                                    text={plan.product_type}
-                                                    variant="blue"
-                                                />
-
-                                            </td>
-                                            {/* RevenueCat Managed */}
-
-                                            <td className="pl-16 px-4 py-5">
-
-                                                <Tags
-                                                    text={
-                                                        plan.is_revenuecat_managed
-                                                            ? "Yes"
-                                                            : "No"
-                                                    }
-                                                    variant={
-                                                        plan.is_revenuecat_managed
-                                                            ? "green"
-                                                            : "red"
-                                                    }
-                                                />
-
-                                            </td>
-
-                                            {/* Platform */}
-
-                                            <td className="px-4 py-5">
-
-                                                <Tags
-                                                    text={plan.platform}
-                                                    variant="purple"
-                                                />
-
-                                            </td>
-
                                             {/* Status */}
 
                                             <td className="px-4 py-5">
@@ -638,7 +483,7 @@ export default function AllPlan() {
                                     <tr>
 
                                         <td
-                                            colSpan={9}
+                                            colSpan={7}
                                             className="py-20"
                                         >
 

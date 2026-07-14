@@ -10,22 +10,16 @@ api.interceptors.request.use((config) => {
 
     const token = Cookies.get("emotale_admin_token");
 
-    console.log("================================");
-    console.log("REQUEST URL :", config.url);
-    console.log("TOKEN FROM COOKIE :", token);
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
 
-        console.log(
-            "AUTH HEADER :",
-            config.headers.Authorization
-        );
+
     } else {
         console.log("NO TOKEN FOUND");
     }
 
-    console.log("================================");
+
 
     return config;
 });

@@ -13,6 +13,8 @@ import storyCategoryReducer from "./slices/StoryCategorySlices/storyCategorySlic
 import addStoryCategoryReducer from "./slices/StoryCategorySlices/addStoryCategorySlice";
 import notificationReducer from "./slices/NotificationSlices/notificationSlice";
 import addNotificationReducer from "./slices/NotificationSlices/addNotificationSlice";
+import adminConfigReducer from "./slices/AdminConfigSlices/adminConfigSlice";
+import updateAdminConfigReducer from "./slices/AdminConfigSlices/updateAdminConfigSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/UserSlice/userSlice";
 import userDetailsReducer from "./slices/UserSlice/userDetailsSlice";
@@ -70,6 +72,8 @@ export const store = configureStore({
     addStoryCategory: addStoryCategoryReducer,
     notifications: notificationReducer,
     addNotification: addNotificationReducer,
+    adminConfig: adminConfigReducer,
+    updateAdminConfig: updateAdminConfigReducer,
   },
 });
 

@@ -70,9 +70,7 @@ export default function AllUsers() {
                 "Plan",
                 "Status",
                 "XP",
-                "RevenueCat ID",
                 "Created At",
-                "Expires At",
             ]],
             body: allUsers.map((user: {
                 fullname: string | null;
@@ -82,9 +80,7 @@ export default function AllUsers() {
                 is_premium: boolean;
                 is_deleted: boolean;
                 xp: number;
-                revenuecat_customer_id: string | null;
                 createdAt: string | null;
-                subscription_expires_at: string | null;
             }) => [
                     user.fullname || "N/A",
                     user.username || "—",
@@ -93,15 +89,8 @@ export default function AllUsers() {
                     user.is_premium ? "Premium" : "Free",
                     user.is_deleted ? "Inactive" : "Active",
                     user.xp,
-                    user.revenuecat_customer_id ?? "N/A",
                     user.createdAt
                         ? new Date(user.createdAt).toLocaleString("en-US", {
-                            day: "2-digit", month: "short", year: "numeric",
-                            hour: "numeric", minute: "2-digit", hour12: true,
-                        })
-                        : "-",
-                    user.subscription_expires_at
-                        ? new Date(user.subscription_expires_at).toLocaleString("en-US", {
                             day: "2-digit", month: "short", year: "numeric",
                             hour: "numeric", minute: "2-digit", hour12: true,
                         })
@@ -123,9 +112,7 @@ export default function AllUsers() {
             "Plan",
             "Status",
             "XP",
-            "RevenueCat ID",
             "Created At",
-            "Expires At",
         ];
 
         const rows = allUsers.map((user: {
@@ -136,9 +123,7 @@ export default function AllUsers() {
             is_premium: boolean;
             is_deleted: boolean;
             xp: number;
-            revenuecat_customer_id: string | null;
             createdAt: string | null;
-            subscription_expires_at: string | null;
         }) => [
                 user.fullname || "N/A",
                 user.username || "—",
@@ -147,9 +132,7 @@ export default function AllUsers() {
                 user.is_premium ? "Premium" : "Free",
                 user.is_deleted ? "Inactive" : "Active",
                 user.xp,
-                user.revenuecat_customer_id ?? "N/A",
                 user.createdAt ? new Date(user.createdAt).toLocaleString() : "-",
-                user.subscription_expires_at ? new Date(user.subscription_expires_at).toLocaleString() : "-",
             ]);
 
         const csvContent = [
@@ -457,9 +440,7 @@ export default function AllUsers() {
                                     { label: "Plan" },
                                     { label: "Status" },
                                     { label: "XP" },
-                                    { label: "RevenueCat ID" },
                                     { label: "Created At" },
-                                    { label: "Expires At" },
                                     { label: "Action", className: "text-center" },
                                 ]}
                                 isAllSelected={isAllSelected}
@@ -562,11 +543,6 @@ export default function AllUsers() {
                                                     {user.xp}
                                                 </td>
 
-                                                {/* RevenueCat */}
-                                                <td className="pl-14 px-4 py-5 text-sm text-[#667085]">
-                                                    {user.revenuecat_customer_id ?? "N/A"}
-                                                </td>
-
                                                 {/* Created At */}
                                                 <td className="px-4 py-5">
                                                     {user.createdAt ? (
@@ -595,35 +571,13 @@ export default function AllUsers() {
                                                     )}
                                                 </td>
 
-                                                {/* Expires At */}
-                                                <td className="pl-10 px-4 py-5 text-sm text-[#98A2B3]">
-                                                    {user.subscription_expires_at ? (
-                                                        <DateTime
-                                                            date={new Date(user.subscription_expires_at).toLocaleDateString("en-US", {
-                                                                month: "short",
-                                                                day: "2-digit",
-                                                                year: "numeric",
-                                                            })}
-                                                            time={new Date(user.subscription_expires_at).toLocaleTimeString("en-US", {
-                                                                hour: "numeric",
-                                                                minute: "2-digit",
-                                                                hour12: true,
-                                                            })}
-                                                        />
-                                                    ) : (
-                                                        <span className="text-[#98A2B3]">N/A</span>
-                                                    )}
-                                                </td>
-
                                                 {/* Action */}
                                                 <td className="px-4 py-5 text-center">
                                                     <Action
                                                         showView
                                                         showDelete
                                                         showEdit={false}
-                                                        onView={() =>
-                                                            router.push(`/user-view?user_id=${user.user_id}`)
-                                                        }
+                                                        onView={() => { }}
                                                         onDelete={() => { }}
                                                     />
                                                 </td>

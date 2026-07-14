@@ -18,35 +18,28 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   useEffect(() => {
 
-    console.log("========== DASHBOARD LAYOUT ==========");
+  
 
     const token =
       Cookies.get("emotale_admin_token");
 
-    console.log("COOKIE :", token);
 
     if (!token) {
 
-      console.log(
-        "NO COOKIE -> REDIRECT LOGIN"
-      );
+
 
       router.replace("/login");
 
     } else {
 
-      console.log(
-        "COOKIE FOUND -> AUTHORIZED"
-      );
+
 
       setAuthorized(true);
 
     }
 
   }, [router]);
-  // useEffect(() => {
-  //   setAuthorized(true);
-  // }, []);
+
 
   if (!authorized) {
     return (

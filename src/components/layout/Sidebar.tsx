@@ -14,6 +14,7 @@ import {
   BookOpen,
   FolderOpen,
   Bell,
+  Settings,
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
@@ -47,7 +48,7 @@ const menuGroups = [
       },
 
       {
-        name: "Plan & XP",
+        name: "Subscription Plan",
         href: "/plans",
         icon: Gem,
       },
@@ -58,6 +59,24 @@ type SidebarProps = {
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+function AdminConfigMenu() {
+  const pathname = usePathname();
+  const active = pathname.startsWith("/admin-config");
+
+  return (
+    <Link
+      href="/admin-config/all"
+      className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
+        active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+      }`}
+    >
+      {active && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
+      <Settings size={20} className={active ? "text-[#2563EB]" : "text-gray-500"} />
+      Admin Configurations
+    </Link>
+  );
+}
+
 function NotificationMenu() {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(true);
@@ -520,6 +539,7 @@ const Sidebar = ({
               <StoryCategoryMenu />
               <AdminStoryMenu />
               <NotificationMenu />
+              <AdminConfigMenu />
             </div>
           </nav>
         </div>
