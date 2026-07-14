@@ -11,20 +11,16 @@ import Tags from "@/components/common/Tag";
 import { SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getNotifications } from "@/store/slices/NotificationSlices/notificationThunk";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllNotifications() {
     const dispatch = useAppDispatch();
     const { notifications, pagination, loading } = useAppSelector((state) => state.notifications);
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setDebouncedSearch(searchTerm), 1000);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     useEffect(() => {
         setPage(1);

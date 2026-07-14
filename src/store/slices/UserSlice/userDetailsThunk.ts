@@ -1,40 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/lib/axiosConfiguration";
+import { createApiThunk } from "@/store/createApiThunk";
+import { UserDetailsPayload, UserDetailsResponse } from "@/types/UserTypes/userDetailsTypes";
 
-import {
-    UserDetailsPayload,
-    UserDetailsResponse,
-} from "@/types/UserTypes/userDetailsTypes";
-
-export const getUserDetails = createAsyncThunk<
-    UserDetailsResponse,
-    UserDetailsPayload,
-    {
-        rejectValue: string;
-    }
->(
+export const getUserDetails = createApiThunk<UserDetailsResponse, UserDetailsPayload>(
     "userDetails/getUserDetails",
-
-    async (payload, { rejectWithValue }) => {
-         console.log("Users Details API Called");
-        try {
-
-            const response = await axios.post(
-                "/admin/user-details",
-                payload
-            );
-
-            return response.data;
-
-        } catch (error: any) {
-
-            const message = error.response?.data?.message;
-
-            if (typeof message === "string") {
-                return rejectWithValue(message);
-            }
-
-            return rejectWithValue("Something went wrong");
-        }
-    }
+    (payload) => axios.post("/admin/user-details", payload),
 );

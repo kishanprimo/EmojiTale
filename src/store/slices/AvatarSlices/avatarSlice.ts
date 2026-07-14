@@ -2,84 +2,63 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { getAvatars } from "./avatarThunk";
 
-import {
-    AvatarItem,
-    AvatarPagination,
-} from "@/types/AvatarTypes/avatarTypes";
+import { AvatarItem, AvatarPagination } from "@/types/AvatarTypes/avatarTypes";
 
 interface AvatarState {
+  avatars: AvatarItem[];
 
-    avatars: AvatarItem[];
+  pagination: AvatarPagination;
 
-    pagination: AvatarPagination;
+  loading: boolean;
 
-    loading: boolean;
-
-    error: string | null;
-
+  error: string | null;
 }
 
 const initialState: AvatarState = {
+  avatars: [],
 
-    avatars: [],
+  pagination: {
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 1,
+  },
 
-    pagination: {
-        page: 1,
-        limit: 10,
-        total: 0,
-        totalPages: 1,
-    },
+  loading: false,
 
-    loading: false,
-
-    error: null,
-
+  error: null,
 };
 
 const avatarSlice = createSlice({
+  name: "avatars",
 
-    name: "avatars",
+  initialState,
 
-    initialState,
+  reducers: {},
 
-    reducers: {},
+  extraReducers: (builder) => {
+    builder
 
-    extraReducers: (builder) => {
+      .addCase(getAvatars.pending, (state) => {
+        state.loading = true;
 
-        builder
+        state.error = null;
+      })
 
-            .addCase(getAvatars.pending, (state) => {
+      .addCase(getAvatars.fulfilled, (state, action) => {
+        state.loading = false;
 
-                state.loading = true;
+        state.avatars = action.payload.data.records;
 
-                state.error = null;
+        state.pagination = action.payload.data.pagination;
+      })
 
-            })
+      .addCase(getAvatars.rejected, (state, action) => {
+        state.loading = false;
 
-            .addCase(getAvatars.fulfilled, (state, action) => {
-
-                state.loading = false;
-
-                state.avatars =
-                    action.payload.data.records;
-
-                state.pagination =
-                    action.payload.data.pagination;
-
-            })
-
-            .addCase(getAvatars.rejected, (state, action) => {
-
-                state.loading = false;
-
-                state.error =
-                    action.payload ||
-                    "Something went wrong";
-
-            });
-
-    },
-
+        state.error = action.payload || "Something went wrong";
+      });
+  },
 });
 
 export default avatarSlice.reducer;

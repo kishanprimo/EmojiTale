@@ -1,23 +1,11 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/lib/axiosConfiguration";
+import { createApiThunk } from "@/store/createApiThunk";
 import { UpdateThemePayload, UpdateThemeResponse } from "@/types/ThemeTypes/themeFormTypes";
 
-export const updateTheme = createAsyncThunk<
-    UpdateThemeResponse,
-    UpdateThemePayload,
-    { rejectValue: string }
->(
+export const updateTheme = createApiThunk<UpdateThemeResponse, UpdateThemePayload>(
     "theme/updateTheme",
-    async ({ themeId, formData }, { rejectWithValue }) => {
-        try {
-            const response = await axios.put(`/admin/themes/${themeId}`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            return response.data;
-        } catch (error: any) {
-            const message = error.response?.data?.message;
-            if (typeof message === "string") return rejectWithValue(message);
-            return rejectWithValue("Something went wrong");
-        }
-    }
+    ({ themeId, formData }) =>
+        axios.put(`/admin/themes/${themeId}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        }),
 );

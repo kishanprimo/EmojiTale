@@ -23,7 +23,6 @@ const LoginForm = () => {
 
     const loading = useAppSelector((state) => state.auth.loading);
 
-    const error = useAppSelector((state) => state.auth.error);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +30,7 @@ const LoginForm = () => {
     const [passwordError, setPasswordError] = useState("");
 
     const handleLogin = async (e: React.FormEvent) => {
-        console.log("Login clicked");
+        
         e.preventDefault();
 
         setEmailError("");

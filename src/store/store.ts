@@ -16,7 +16,7 @@ import addNotificationReducer from "./slices/NotificationSlices/addNotificationS
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/UserSlice/userSlice";
 import userDetailsReducer from "./slices/UserSlice/userDetailsSlice";
-//import dashboardReducer from "./slices/DashboardSlice/liveusers_slice";
+import dashboardReducer from "./slices/DashboardSlice/liveusers_slice";
 import memberReducer from "./slices/UserSlice/memberSlice";
 import newsLetterReducer from "./slices/NewsLetterSlice/newsLetterSlice";
 import emojiCategoryReducer from "./slices/EmojiCategorySlices/emojiCategorySlice";
@@ -37,7 +37,7 @@ export const store = configureStore({
     members: memberReducer,
     userDetails: userDetailsReducer,
 
-    //dashboard: dashboardReducer,
+    dashboard: dashboardReducer,
     newsletter: newsLetterReducer,
     emojiCategories: emojiCategoryReducer,
     addEmojiCategory: addEmojiCategoryReducer,

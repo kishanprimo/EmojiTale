@@ -9,21 +9,17 @@ import TableSkeleton from "@/components/common/TableSkeleton";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getNewsLetters } from "@/store/slices/NewsLetterSlice/newsLetterThunk";
 import { Download, ChevronDown, SearchX } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function NewsLetter() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(20);
     const [exportOpen, setExportOpen] = useState(false);
 
     const dispatch = useAppDispatch();
     const { subscribers, pagination, loading } = useAppSelector((state) => state.newsletter);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setDebouncedSearch(searchTerm), 1000);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     useEffect(() => {
         dispatch(getNewsLetters({ page, limit, search: debouncedSearch }));

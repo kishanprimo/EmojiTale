@@ -1,21 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/lib/axiosConfiguration";
+import { createApiThunk } from "@/store/createApiThunk";
 import { EmojiCategoryPayload, EmojiCategoryResponse } from "@/types/EmojiCategoryTypes/emojiCategoryTypes";
 
-export const getEmojiCategories = createAsyncThunk<
-    EmojiCategoryResponse,
-    EmojiCategoryPayload,
-    { rejectValue: string }
->(
+export const getEmojiCategories = createApiThunk<EmojiCategoryResponse, EmojiCategoryPayload>(
     "emojiCategories/getEmojiCategories",
-    async (payload, { rejectWithValue }) => {
-        try {
-            const response = await axios.get("/admin/emoji-category", { params: payload });
-            return response.data;
-        } catch (error: any) {
-            const message = error.response?.data?.message;
-            if (typeof message === "string") return rejectWithValue(message);
-            return rejectWithValue("Something went wrong");
-        }
-    }
+    (payload) => axios.get("/admin/emoji-category", { params: payload }),
 );

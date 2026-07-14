@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getEmojis } from "@/store/slices/EmojiSlices/emojiThunk";
 import { setSelectedEmoji } from "@/store/slices/EmojiSlices/selectedEmojiSlice";
 import { resolveImageUrl } from "@/lib/resolveImageUrl";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllEmojis() {
     const dispatch = useAppDispatch();
@@ -21,15 +22,10 @@ export default function AllEmojis() {
     const { emojis, pagination, loading } = useAppSelector((state) => state.emojis);
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [exportOpen, setExportOpen] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setDebouncedSearch(searchTerm), 1000);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     useEffect(() => {
         dispatch(getEmojis({ page, limit, search: debouncedSearch }));

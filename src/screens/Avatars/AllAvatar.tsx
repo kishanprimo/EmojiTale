@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getAvatars } from "@/store/slices/AvatarSlices/avatarThunk";
 import { resolveImageUrl } from "@/lib/resolveImageUrl";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllAvatar() {
 
@@ -43,8 +44,7 @@ export default function AllAvatar() {
     const [searchTerm, setSearchTerm] =
         useState("");
 
-    const [debouncedSearch, setDebouncedSearch] =
-        useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
 
     const [page, setPage] =
         useState(1);
@@ -54,22 +54,6 @@ export default function AllAvatar() {
 
     const [exportOpen, setExportOpen] =
         useState(false);
-
-    // -----------------------------------
-    // Search Debounce
-    // -----------------------------------
-
-    useEffect(() => {
-
-        const timer = setTimeout(() => {
-
-            setDebouncedSearch(searchTerm);
-
-        }, 1000);
-
-        return () => clearTimeout(timer);
-
-    }, [searchTerm]);
 
     // -----------------------------------
     // Fetch Avatars

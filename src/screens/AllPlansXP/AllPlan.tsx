@@ -23,6 +23,7 @@ import axios from "@/lib/axiosConfiguration";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getPlans } from "@/store/slices/PlanSlices/planThunk";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllPlan() {
 
@@ -36,8 +37,7 @@ export default function AllPlan() {
 
     const [searchTerm, setSearchTerm] = useState("");
 
-    const [debouncedSearch, setDebouncedSearch] =
-        useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
 
     const [page, setPage] = useState(1);
 
@@ -45,22 +45,6 @@ export default function AllPlan() {
 
     const [exportOpen, setExportOpen] =
         useState(false);
-
-    // ----------------------------
-    // Debounce Search
-    // ----------------------------
-
-    useEffect(() => {
-
-        const timer = setTimeout(() => {
-
-            setDebouncedSearch(searchTerm);
-
-        }, 1000);
-
-        return () => clearTimeout(timer);
-
-    }, [searchTerm]);
 
     // ----------------------------
     // Fetch Plans

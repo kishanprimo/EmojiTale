@@ -29,10 +29,11 @@ import InfoModal from "@/components/common/InfoModal";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getMembers } from "@/store/slices/UserSlice/memberThunk";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllUsers() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(20);
     const [exportOpen, setExportOpen] = useState(false);
@@ -221,13 +222,6 @@ export default function AllUsers() {
             bg: "bg-[#FFF7ED]",
         },
     ];
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearch(searchTerm);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
     useEffect(() => {
         setSelectedUsers([]);
 

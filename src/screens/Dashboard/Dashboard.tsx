@@ -6,14 +6,13 @@ import { useEffect } from "react";
 
 import { useAppDispatch } from "@/store/hooks";
 
-//import { getDashboard } from "@/store/slices/DashboardSlice/liveusers_thunk";
+import { getDashboard } from "@/store/slices/DashboardSlice/liveusers_thunk";
 const Dashboard = () => {
   const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   dispatch(getDashboard());
-
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(getDashboard());
+  }, [dispatch]);
   return (
     <DashboardLayout>
       <div className="px-4 md:px-6 lg:px-8 py-5 md:py-6">
@@ -29,6 +28,7 @@ const Dashboard = () => {
           </p>
         </div>
 
+        <ActiveUsersChart />
 
       </div>
     </DashboardLayout>

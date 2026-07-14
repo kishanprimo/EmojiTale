@@ -1,21 +1,11 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/lib/axiosConfiguration";
+import { createApiThunk } from "@/store/createApiThunk";
 import { NotificationResponse } from "@/types/NotificationTypes/notificationTypes";
 
-export const getNotifications = createAsyncThunk<
+export const getNotifications = createApiThunk<
     NotificationResponse,
-    { page: number; limit: number },
-    { rejectValue: string }
+    { page: number; limit: number }
 >(
     "notifications/getNotifications",
-    async (payload, { rejectWithValue }) => {
-        try {
-            const response = await axios.get("/admin/notifications/broadcast", { params: payload });
-            return response.data;
-        } catch (error: any) {
-            const message = error.response?.data?.message;
-            if (typeof message === "string") return rejectWithValue(message);
-            return rejectWithValue("Something went wrong");
-        }
-    }
+    (payload) => axios.get("/admin/notifications/broadcast", { params: payload }),
 );

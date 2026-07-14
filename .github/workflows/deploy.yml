@@ -33,7 +33,7 @@ jobs:
         with:
           switches: -avzr --delete
           path: ./.next/standalone/
-          remote_path: /var/www/admin.chatlivo.com
+          remote_path: /var/www/admin.emotales.com
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SERVER_USER }}
           remote_key: ${{ secrets.SERVER_SSH_KEY }}
@@ -45,7 +45,7 @@ jobs:
         with:
           switches: -avzr --delete
           path: ./.next/static/
-          remote_path: /var/www/admin.chatlivo.com/.next/static/
+          remote_path: /var/www/admin.emotales.com/.next/static/
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SERVER_USER }}
           remote_key: ${{ secrets.SERVER_SSH_KEY }}
@@ -57,7 +57,7 @@ jobs:
         with:
           switches: -avzr --delete
           path: ./public/
-          remote_path: /var/www/admin.chatlivo.com/public/
+          remote_path: /var/www/admin.emotales.com/public/
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SERVER_USER }}
           remote_key: ${{ secrets.SERVER_SSH_KEY }}
@@ -72,11 +72,11 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-              cd /var/www/admin.chatlivo.com
-              if pm2 describe admin-chatlivo > /dev/null; then
-                pm2 restart admin-chatlivo --update-env
+              cd /var/www/admin.emotales.com
+              if pm2 describe admin-emotales > /dev/null; then
+                pm2 restart admin-emotales --update-env
               else
-                PORT=3003 NODE_ENV=production pm2 start server.js --name admin-chatlivo
+                PORT=3003 NODE_ENV=production pm2 start server.js --name admin-emotales
               fi
               pm2 save
               echo "Deployment complete!"

@@ -13,6 +13,7 @@ import { Download, ChevronDown, SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getEmojiCategories } from "@/store/slices/EmojiCategorySlices/emojiCategoryThunk";
 import { setSelectedEmojiCategory } from "@/store/slices/EmojiCategorySlices/selectedEmojiCategorySlice";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllEmojiCategories() {
     const dispatch = useAppDispatch();
@@ -20,15 +21,10 @@ export default function AllEmojiCategories() {
     const { categories, pagination, loading } = useAppSelector((state) => state.emojiCategories);
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [exportOpen, setExportOpen] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setDebouncedSearch(searchTerm), 1000);
-        return () => clearTimeout(timer);
-    }, [searchTerm]);
 
     useEffect(() => {
         setPage(1);
