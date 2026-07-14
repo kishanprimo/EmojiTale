@@ -1,6 +1,5 @@
 "use client";
 import DashboardLayout from "@/layouts/DashboardLayout";
-//import DashboardUsers from "@/components/dashboard/DashboardUsers";
 import ActiveUsersChart from "@/components/dashboard/LiveUsersChart";
 import { useEffect } from "react";
 
@@ -28,7 +27,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <ActiveUsersChart />
+        {/* <ActiveUsersChart /> */}
 
       </div>
     </DashboardLayout>
