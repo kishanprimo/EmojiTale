@@ -25,6 +25,15 @@ const Dashboard = () => {
     (state) => state.dashboard
   );
   useEffect(() => {
+    console.log("========== DASHBOARD STATE ==========");
+    console.log("Loading:", loading);
+    console.log("Stats:", stats);
+  }, [loading, stats]);
+  useEffect(() => {
+    console.log("========== DASHBOARD ==========");
+    console.log("Dashboard Mounted");
+    console.log("Dispatching getDashboardStats()");
+
     dispatch(getDashboardStats());
   }, [dispatch]);
   const dashboardStats = [
