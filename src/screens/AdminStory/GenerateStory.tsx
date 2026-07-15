@@ -1,27 +1,50 @@
 "use client";
 
-import React, { useEffect, useState, type ChangeEvent } from "react";
+import React, { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { proxiedImage } from "@/lib/imageProxy";
 import { toast } from "react-hot-toast";
-import { Loader2, ChevronDown, Sparkles, ImageIcon } from "lucide-react";
+import { Loader2, ChevronDown, ChevronLeft, ChevronRight, Sparkles, ImageIcon, Plus, Trash2 } from "lucide-react";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { generateAdminStory } from "@/store/slices/AdminStorySlices/generateStoryThunk";
 import { resetGenerateStory } from "@/store/slices/AdminStorySlices/generateStorySlice";
+import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCategoryThunk";
+
+interface StoryPage {
+    id: string;
+    content: string;
+    image: File | null;
+    preview: string;
+    fileName: string;
+}
+
+const makePage = (): StoryPage => ({
+    id: Math.random().toString(36).slice(2),
+    content: "",
+    image: null,
+    preview: "",
+    fileName: "No file chosen",
+});
 
 export default function GenerateStory() {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
     const { loading, success } = useAppSelector((state) => state.generateStory);
+    const { categories } = useAppSelector((state) => state.storyCategory);
 
     const [categoryId, setCategoryId] = useState<number | "">("");
     const [isActive, setIsActive] = useState(true);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [preview, setPreview] = useState("");
-    const [fileName, setFileName] = useState("No file chosen");
+    const [pages, setPages] = useState<StoryPage[]>([makePage()]);
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const createdUrlsRef = useRef<Set<string>>(new Set());
+
+    useEffect(() => {
+        dispatch(getStoryCategories({ page: 1, limit: 100 }));
+    }, [dispatch]);
 
     useEffect(() => {
         if (!success) return;
@@ -30,12 +53,37 @@ export default function GenerateStory() {
         router.push("/admin-story/all");
     }, [success, dispatch, router]);
 
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        return () => {
+            createdUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+        };
+    }, []);
+
+    const addPage = () => {
+        setPages((prev) => [...prev, makePage()]);
+        setActiveIndex(pages.length);
+    };
+
+    const removePage = (id: string) => {
+        setPages((prev) => {
+            if (prev.length <= 1) return prev;
+            const index = prev.findIndex((p) => p.id === id);
+            const next = prev.filter((p) => p.id !== id);
+            setActiveIndex((current) => Math.min(current >= index ? Math.max(0, current - 1) : current, next.length - 1));
+            return next;
+        });
+    };
+
+    const updateContent = (id: string, content: string) => {
+        setPages((prev) => prev.map((p) => (p.id === id ? { ...p, content } : p)));
+    };
+
+    const handleImageChange = (id: string, e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        setSelectedImage(file);
-        setFileName(file.name);
-        setPreview(URL.createObjectURL(file));
+        const url = URL.createObjectURL(file);
+        createdUrlsRef.current.add(url);
+        setPages((prev) => prev.map((p) => (p.id === id ? { ...p, image: file, preview: url, fileName: file.name } : p)));
     };
 
     const handleSubmit = async () => {
@@ -43,14 +91,25 @@ export default function GenerateStory() {
             toast.error("Please enter a story category ID");
             return;
         }
-        if (!selectedImage) {
-            toast.error("Please choose an image");
-            return;
+        for (let i = 0; i < pages.length; i++) {
+            if (!pages[i].content.trim()) {
+                toast.error(`Please enter text content for page ${i + 1}`);
+                return;
+            }
+            if (!pages[i].image) {
+                toast.error(`Please choose an image for page ${i + 1}`);
+                return;
+            }
         }
+
         const formData = new FormData();
         formData.append("storycategory_id", String(categoryId));
         formData.append("is_active", String(isActive));
-        formData.append("image", selectedImage);
+        pages.forEach((page) => {
+            formData.append("content", page.content.trim());
+            formData.append("images", page.image as File);
+        });
+
         try {
             await dispatch(generateAdminStory(formData)).unwrap();
         } catch (error: any) {
@@ -58,9 +117,7 @@ export default function GenerateStory() {
         }
     };
 
-    useEffect(() => {
-        return () => { if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview); };
-    }, [preview]);
+    const activePage = pages[activeIndex];
 
     return (
         <DashboardLayout>
@@ -73,7 +130,7 @@ export default function GenerateStory() {
                     </div>
                     <div>
                         <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Generate Story</h1>
-                        <p className="text-sm text-[#667085]">Upload an image and select a category to auto-generate a story.</p>
+                        <p className="text-sm text-[#667085]">Add pages with an image and text each to auto-generate a story.</p>
                     </div>
                 </div>
 
@@ -90,16 +147,23 @@ export default function GenerateStory() {
                             {/* Category ID */}
                             <div>
                                 <label className="block mb-2 text-[14px] font-semibold text-gray-700">
-                                    Story Category ID <span className="text-red-500">*</span>
+                                    Story Category <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    value={categoryId}
-                                    onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : "")}
-                                    placeholder="Enter category ID (e.g. 1)"
-                                    className="w-full h-12 rounded-[10px] border border-gray-300 px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500 transition-colors"
-                                />
+                                <div className="relative">
+                                    <select
+                                        value={categoryId}
+                                        onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : "")}
+                                        className="w-full h-12 rounded-[10px] border border-gray-300 bg-white px-4 pr-12 text-[#101828] outline-none appearance-none focus:border-blue-500 transition-colors"
+                                    >
+                                        <option value="">Select a category</option>
+                                        {categories.map((cat) => (
+                                            <option key={cat.storycategory_id} value={cat.storycategory_id}>
+                                                {cat.storycategory_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown size={18} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                                </div>
                             </div>
 
                             {/* Status */}
@@ -118,17 +182,62 @@ export default function GenerateStory() {
                                 </div>
                             </div>
 
-                            {/* Image Upload */}
+                            {/* Pages */}
                             <div>
                                 <label className="block mb-2 text-[14px] font-semibold text-gray-700">
-                                    Story Image <span className="text-red-500">*</span>
+                                    Story Pages <span className="text-red-500">*</span>
                                 </label>
-                                <div className="flex overflow-hidden rounded-[10px] border border-gray-300">
-                                    <label className="cursor-pointer border-r border-gray-300 bg-gray-100 px-5 py-3 text-sm font-medium text-[#101828] transition-colors hover:bg-gray-200">
-                                        Choose Image
-                                        <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                                    </label>
-                                    <span className="flex items-center px-4 text-sm text-gray-500 truncate">{fileName}</span>
+                                <div className="space-y-4">
+                                    {pages.map((page, index) => (
+                                        <div
+                                            key={page.id}
+                                            onClick={() => setActiveIndex(index)}
+                                            className={`rounded-xl border p-4 space-y-3 cursor-pointer transition-colors ${activeIndex === index ? "border-blue-400 bg-[#F8FAFF]" : "border-gray-200"}`}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-sm font-semibold text-gray-700">Page {index + 1}</h4>
+                                                {pages.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => { e.stopPropagation(); removePage(page.id); }}
+                                                        className="text-gray-400 hover:text-red-500 transition-colors"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            <div className="flex overflow-hidden rounded-[10px] border border-gray-300">
+                                                <label className="cursor-pointer border-r border-gray-300 bg-gray-100 px-4 py-2 text-xs font-medium text-[#101828] transition-colors hover:bg-gray-200">
+                                                    Choose Image
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={(e) => handleImageChange(page.id, e)}
+                                                    />
+                                                </label>
+                                                <span className="flex items-center px-3 text-xs text-gray-500 truncate">{page.fileName}</span>
+                                            </div>
+
+                                            <textarea
+                                                value={page.content}
+                                                onChange={(e) => updateContent(page.id, e.target.value)}
+                                                onClick={(e) => e.stopPropagation()}
+                                                placeholder="Enter text content for this page..."
+                                                rows={3}
+                                                className="w-full resize-none rounded-[10px] border border-gray-300 px-3 py-2 text-sm text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500 transition-colors"
+                                            />
+                                        </div>
+                                    ))}
+
+                                    <button
+                                        type="button"
+                                        onClick={addPage}
+                                        className="flex w-full items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 py-3 text-sm font-medium text-gray-500 transition-colors hover:border-blue-400 hover:text-blue-600"
+                                    >
+                                        <Plus size={16} /> Add Page
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -159,16 +268,38 @@ export default function GenerateStory() {
 
                     {/* Right — Preview */}
                     <div className="bg-white border border-gray-200 rounded-2xl flex flex-col">
-                        <div className="border-b border-gray-100 px-6 py-5">
-                            <h2 className="text-[17px] font-semibold text-[#101828]">Image Preview</h2>
-                            <p className="text-sm text-[#667085] mt-0.5">Selected image will appear here</p>
+                        <div className="border-b border-gray-100 px-6 py-5 flex items-center justify-between">
+                            <div>
+                                <h2 className="text-[17px] font-semibold text-[#101828]">Page Preview</h2>
+                                <p className="text-sm text-[#667085] mt-0.5">Page {activeIndex + 1} of {pages.length}</p>
+                            </div>
+                            {pages.length > 1 && (
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveIndex((i) => Math.max(0, i - 1))}
+                                        disabled={activeIndex === 0}
+                                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                                    >
+                                        <ChevronLeft size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveIndex((i) => Math.min(pages.length - 1, i + 1))}
+                                        disabled={activeIndex === pages.length - 1}
+                                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                                    >
+                                        <ChevronRight size={16} />
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                        <div className="flex-1 flex items-center justify-center p-6">
-                            {preview ? (
-                                <div className="relative w-full h-[300px]">
+                        <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
+                            {activePage?.preview ? (
+                                <div className="relative w-full h-[260px]">
                                     <Image
-                                        src={proxiedImage(preview)!}
-                                        alt="Preview"
+                                        src={proxiedImage(activePage.preview)!}
+                                        alt={`Page ${activeIndex + 1}`}
                                         fill
                                         unoptimized
                                         className="rounded-xl object-cover border border-gray-200 shadow-sm"
@@ -182,11 +313,16 @@ export default function GenerateStory() {
                                     <p className="text-sm text-gray-400">No image selected</p>
                                 </div>
                             )}
+                            {activePage?.content && (
+                                <p className="text-sm text-gray-600 text-center leading-relaxed line-clamp-5 px-2">
+                                    {activePage.content}
+                                </p>
+                            )}
                         </div>
                         <div className="mx-6 mb-6 rounded-xl bg-[#EEF4FF] border border-blue-100 p-4">
                             <p className="text-xs font-semibold text-[#2563EB] mb-1">How it works</p>
                             <p className="text-xs text-[#3B82F6] leading-relaxed">
-                                Upload an image and provide a category ID. The system will automatically generate a story title and content based on the image.
+                                Add one or more pages, each with its own image and text. All pages are submitted together to generate a multi-page story.
                             </p>
                         </div>
                     </div>

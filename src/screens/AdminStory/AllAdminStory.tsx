@@ -10,11 +10,14 @@ import TableSkeleton from "@/components/common/TableSkeleton";
 import DateTime from "@/components/common/DateTime";
 import Action from "@/components/common/Action";
 import Tags from "@/components/common/Tag";
-import { SearchX, X } from "lucide-react";
+import { SearchX, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminStories } from "@/store/slices/AdminStorySlices/adminStoryThunk";
 
 import { AdminStoryItem } from "@/types/AdminStoryTypes/adminStoryTypes";
+
+const sortedMedia = (story: AdminStoryItem) =>
+    [...story.media].sort((a, b) => a.sort_order - b.sort_order);
 
 export default function AllAdminStory() {
     const dispatch = useAppDispatch();
@@ -25,10 +28,16 @@ export default function AllAdminStory() {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [viewStory, setViewStory] = useState<AdminStoryItem | null>(null);
+    const [modalPageIndex, setModalPageIndex] = useState(0);
 
     useEffect(() => {
         dispatch(getAdminStories({ page, limit }));
     }, [dispatch, page, limit]);
+
+    const openStory = (story: AdminStoryItem) => {
+        setViewStory(story);
+        setModalPageIndex(0);
+    };
 
     return (
         <DashboardLayout>
@@ -61,17 +70,27 @@ export default function AllAdminStory() {
                                 {loading ? (
                                     <TableSkeleton rows={limit} />
                                 ) : stories.length > 0 ? (
-                                    stories.map((story) => (
+                                    stories.map((story) => {
+                                        const media = sortedMedia(story);
+                                        const firstPage = media[0];
+                                        return (
                                         <tr key={story.adminstory_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                             <td className="px-6 py-4">
-                                                {story.image ? (
-                                                    <Image
-                                                        src={proxiedImage(story.image, cacheBust)!}
-                                                        alt={story.title}
-                                                        width={48}
-                                                        height={48}
-                                                        className="h-12 w-12 rounded-xl object-cover border border-gray-200"
-                                                    />
+                                                {firstPage ? (
+                                                    <div className="relative h-12 w-12 shrink-0">
+                                                        <Image
+                                                            src={proxiedImage(firstPage.image, cacheBust)!}
+                                                            alt={story.title}
+                                                            width={48}
+                                                            height={48}
+                                                            className="h-12 w-12 rounded-xl object-cover border border-gray-200"
+                                                        />
+                                                        {media.length > 1 && (
+                                                            <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#2563EB] px-1 text-[10px] font-semibold text-white ring-2 ring-white">
+                                                                {media.length}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 ) : (
                                                     <div className="h-12 w-12 rounded-xl border border-gray-200 bg-gray-100 flex items-center justify-center text-xs text-gray-500">
                                                         —
@@ -88,7 +107,10 @@ export default function AllAdminStory() {
                                                 {story.category?.storycategory_name ?? "—"}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-[#667085] max-w-[260px]">
-                                                <p className="line-clamp-2 leading-relaxed">{story.content}</p>
+                                                <p className="line-clamp-2 leading-relaxed">{firstPage?.content ?? "—"}</p>
+                                                {media.length > 1 && (
+                                                    <p className="mt-1 text-xs text-[#2563EB]">+{media.length - 1} more page{media.length - 1 > 1 ? "s" : ""}</p>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <Tags
@@ -113,11 +135,12 @@ export default function AllAdminStory() {
                                                     showView
                                                     showEdit={false}
                                                     showDelete={false}
-                                                    onView={() => setViewStory(story)}
+                                                    onView={() => openStory(story)}
                                                 />
                                             </td>
                                         </tr>
-                                    ))
+                                        );
+                                    })
                                 ) : (
                                     <tr>
                                         <td colSpan={9} className="py-20">
@@ -152,7 +175,10 @@ export default function AllAdminStory() {
             </div>
 
             {/* View Modal */}
-            {viewStory && (
+            {viewStory && (() => {
+                const media = sortedMedia(viewStory);
+                const currentPage = media[modalPageIndex];
+                return (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
                     onClick={() => setViewStory(null)}
@@ -165,7 +191,7 @@ export default function AllAdminStory() {
                         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
                             <div className="flex items-center gap-3">
                                 <Image
-                                    src={proxiedImage(viewStory.image, cacheBust) ?? "/globe.svg"}
+                                    src={proxiedImage(currentPage?.image, cacheBust) ?? "/globe.svg"}
                                     alt={viewStory.title}
                                     width={40}
                                     height={40}
@@ -199,14 +225,59 @@ export default function AllAdminStory() {
                                     {new Date(viewStory.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
                                 </span>
                             </div>
-                            <div className="rounded-xl bg-[#F9FAFB] border border-gray-100 p-5">
-                                <p className="text-[13px] font-semibold uppercase tracking-wide text-[#8A8A8A] mb-3">Story Content</p>
-                                <p className="text-sm text-[#344054] leading-7 whitespace-pre-wrap">{viewStory.content}</p>
-                            </div>
+
+                            {media.length > 0 ? (
+                                <div className="rounded-xl border border-gray-100 bg-[#F9FAFB] p-5 space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-[13px] font-semibold uppercase tracking-wide text-[#8A8A8A]">
+                                            Page {modalPageIndex + 1} of {media.length}
+                                        </p>
+                                        {media.length > 1 && (
+                                            <div className="flex items-center gap-1">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setModalPageIndex((i) => Math.max(0, i - 1))}
+                                                    disabled={modalPageIndex === 0}
+                                                    className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                                                >
+                                                    <ChevronLeft size={14} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setModalPageIndex((i) => Math.min(media.length - 1, i + 1))}
+                                                    disabled={modalPageIndex === media.length - 1}
+                                                    className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                                                >
+                                                    <ChevronRight size={14} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {currentPage && (
+                                        <>
+                                            <div className="relative h-56 w-full overflow-hidden rounded-xl border border-gray-200">
+                                                <Image
+                                                    src={proxiedImage(currentPage.image, cacheBust)!}
+                                                    alt={`Page ${modalPageIndex + 1}`}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <p className="text-sm text-[#344054] leading-7 whitespace-pre-wrap">{currentPage.content}</p>
+                                        </>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="rounded-xl bg-[#F9FAFB] border border-gray-100 p-5">
+                                    <p className="text-sm text-[#667085]">No pages found for this story.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
-            )}
+                );
+            })()}
         </DashboardLayout>
     );
 }

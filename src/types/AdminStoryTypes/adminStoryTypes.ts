@@ -15,16 +15,25 @@ export interface AdminStoryCategory {
     updatedAt: string;
 }
 
-export interface AdminStoryItem {
+export interface StoryMediaItem {
+    storymedia_id: number;
     adminstory_id: number;
     image: string;
-    title: string;
     content: string;
+    sort_order: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface AdminStoryItem {
+    adminstory_id: number;
+    title: string;
     storycategory_id: number;
     is_active: boolean;
     createdAt: string;
     updatedAt: string;
     category: AdminStoryCategory;
+    media: StoryMediaItem[];
 }
 
 export interface AdminStoryPagination {
@@ -47,15 +56,6 @@ export interface GenerateStoryResponse {
     success: boolean;
     message: string;
     data: {
-        story: {
-            adminstory_id: number;
-            image: string;
-            title: string;
-            content: string;
-            storycategory_id: number;
-            is_active: boolean;
-            createdAt: string;
-            updatedAt: string;
-        };
+        story: AdminStoryItem;
     };
 }
