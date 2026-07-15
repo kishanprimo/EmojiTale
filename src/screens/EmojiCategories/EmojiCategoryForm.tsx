@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -27,11 +29,20 @@ export default function EmojiCategoryForm({ mode = "add" }: EmojiCategoryFormPro
     const success = mode === "edit" ? updateState.success : addState.success;
 
     const [name, setName] = useState("");
+    const [isPremium, setIsPremium] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [preview, setPreview] = useState("");
+    const [fileName, setFileName] = useState("No file chosen");
 
     // Prefill on edit
     useEffect(() => {
         if (mode !== "edit" || !selectedCategory) return;
         setName(selectedCategory.name);
+        setIsPremium(selectedCategory.is_premium ?? false);
+        if (selectedCategory.emoji_category_image) {
+            setPreview(selectedCategory.emoji_category_image);
+            setFileName("Current Image");
+        }
     }, [mode, selectedCategory]);
 
     // Handle success
@@ -47,19 +58,41 @@ export default function EmojiCategoryForm({ mode = "add" }: EmojiCategoryFormPro
         router.push("/emoji-categories");
     }, [success, dispatch, router, mode]);
 
+    useEffect(() => {
+        return () => { if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview); };
+    }, [preview]);
+
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setSelectedImage(file);
+        setFileName(file.name);
+        setPreview(URL.createObjectURL(file));
+    };
+
     const handleSubmit = async () => {
         if (!name.trim()) {
             toast.error("Please enter a category name");
             return;
         }
+        if (mode === "add" && !selectedImage) {
+            toast.error("Please choose a category image");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", name.trim());
+        formData.append("is_premium", String(isPremium));
+        if (selectedImage) formData.append("emoji_category_image", selectedImage);
+
         try {
             if (mode === "edit") {
                 await dispatch(updateEmojiCategory({
                     categoryId: selectedCategory!.emoji_category_id,
-                    name,
+                    formData,
                 })).unwrap();
             } else {
-                await dispatch(addEmojiCategory({ name })).unwrap();
+                await dispatch(addEmojiCategory(formData)).unwrap();
             }
         } catch (error: any) {
             toast.error(error || "Something went wrong");
@@ -91,6 +124,44 @@ export default function EmojiCategoryForm({ mode = "add" }: EmojiCategoryFormPro
                             placeholder="Enter category name"
                             className="w-full h-12 rounded-[10px] border border-gray-300 px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500"
                         />
+                    </div>
+
+                    <div>
+                        <label className="block mb-2 text-[15px] font-semibold text-gray-700">
+                            Category Image
+                            {mode === "add" && <span className="text-red-500"> *</span>}
+                        </label>
+                        <div className="flex overflow-hidden rounded-[10px] border border-gray-300">
+                            <label className="cursor-pointer border-r border-gray-300 bg-gray-100 px-5 py-3 font-medium text-[#101828] transition-colors hover:bg-gray-200">
+                                Choose Image
+                                <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                            </label>
+                            <span className="flex items-center px-4 text-sm text-gray-500">{fileName}</span>
+                        </div>
+                        {preview && (
+                            <div className="mt-4">
+                                <Image
+                                    src={proxiedImage(preview)!}
+                                    alt="Category preview"
+                                    width={112}
+                                    height={112}
+                                    unoptimized
+                                    className="h-28 w-28 rounded-xl border object-cover"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-wrap gap-8">
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={isPremium}
+                                onChange={(e) => setIsPremium(e.target.checked)}
+                                className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                            <span className="text-[15px] font-semibold text-gray-700">Premium</span>
+                        </label>
                     </div>
                 </div>
             </div>

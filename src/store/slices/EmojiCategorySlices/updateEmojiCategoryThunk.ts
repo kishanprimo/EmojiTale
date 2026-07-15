@@ -4,5 +4,8 @@ import { UpdateEmojiCategoryPayload, UpdateEmojiCategoryResponse } from "@/types
 
 export const updateEmojiCategory = createApiThunk<UpdateEmojiCategoryResponse, UpdateEmojiCategoryPayload>(
     "emojiCategory/updateEmojiCategory",
-    ({ categoryId, ...body }) => axios.put(`/admin/emoji-category/${categoryId}`, body),
+    ({ categoryId, formData }) =>
+        axios.put(`/admin/emoji-category/${categoryId}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        }),
 );

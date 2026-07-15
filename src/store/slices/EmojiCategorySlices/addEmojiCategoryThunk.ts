@@ -1,8 +1,11 @@
 import axios from "@/lib/axiosConfiguration";
 import { createApiThunk } from "@/store/createApiThunk";
-import { AddEmojiCategoryPayload, AddEmojiCategoryResponse } from "@/types/EmojiCategoryTypes/emojiCategoryFormTypes";
+import { AddEmojiCategoryResponse } from "@/types/EmojiCategoryTypes/emojiCategoryFormTypes";
 
-export const addEmojiCategory = createApiThunk<AddEmojiCategoryResponse, AddEmojiCategoryPayload>(
+export const addEmojiCategory = createApiThunk<AddEmojiCategoryResponse, FormData>(
     "emojiCategory/addEmojiCategory",
-    (payload) => axios.post("/admin/emoji-category", payload),
+    (formData) =>
+        axios.post("/admin/emoji-category", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        }),
 );

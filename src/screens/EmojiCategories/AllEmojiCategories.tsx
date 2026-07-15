@@ -7,8 +7,9 @@ import Search from "@/components/common/Search";
 import TableHeader from "@/components/common/TableHeader";
 import Pagination from "@/components/common/Pagination";
 import TableSkeleton from "@/components/common/TableSkeleton";
-import DateTime from "@/components/common/DateTime";
 import Action from "@/components/common/Action";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { Download, ChevronDown, SearchX } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getEmojiCategories } from "@/store/slices/EmojiCategorySlices/emojiCategoryThunk";
@@ -35,12 +36,12 @@ export default function AllEmojiCategories() {
     }, [dispatch, page, limit, debouncedSearch]);
 
     const handleExportCSV = () => {
-        const headers = ["Category ID", "Name", "Created At", "Updated At"];
+        const headers = ["Category ID", "Name", "Premium", "Story Count"];
         const rows = categories.map((c) => [
             c.emoji_category_id,
             c.name,
-            new Date(c.createdAt).toLocaleString(),
-            new Date(c.updatedAt).toLocaleString(),
+            c.is_premium ? "Yes" : "No",
+            c.story_count,
         ]);
         const csv = [headers, ...rows]
             .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
@@ -97,14 +98,15 @@ export default function AllEmojiCategories() {
                 {/* Table */}
                 <div className="mt-7 overflow-hidden rounded-[10px] border border-gray-200 bg-white">
                     <div className="w-full overflow-x-auto">
-                    <table className="min-w-[700px] w-full border-collapse text-left">
+                    <table className="min-w-[900px] w-full border-collapse text-left">
                         <TableHeader
                             showCheckbox={false}
                             columns={[
                                 { label: "Cat ID" },
+                                { label: "Image" },
                                 { label: "Name" },
-                                { label: "Created At" },
-                                { label: "Updated At" },
+                                { label: "Premium" },
+                                { label: "Story Count" },
                                 { label: "Action", className: "text-center" },
                             ]}
                         />
@@ -117,20 +119,28 @@ export default function AllEmojiCategories() {
                                         <td className="px-6 py-5 text-sm font-semibold text-[#101828]">
                                             #{cat.emoji_category_id}
                                         </td>
+                                        <td className="px-6 py-5">
+                                            {cat.emoji_category_image ? (
+                                                <Image
+                                                    src={proxiedImage(cat.emoji_category_image)!}
+                                                    alt={cat.name}
+                                                    width={40}
+                                                    height={40}
+                                                    unoptimized
+                                                    className="h-10 w-10 rounded-lg border object-cover"
+                                                />
+                                            ) : (
+                                                <span className="text-sm text-gray-400">—</span>
+                                            )}
+                                        </td>
                                         <td className="px-6 py-5 text-sm font-medium text-[#101828]">
                                             {cat.name}
                                         </td>
-                                        <td className="px-6 py-5">
-                                            <DateTime
-                                                date={new Date(cat.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                time={new Date(cat.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
-                                            />
+                                        <td className="px-6 py-5 text-sm text-[#101828]">
+                                            {cat.is_premium ? "Yes" : "No"}
                                         </td>
-                                        <td className="px-6 py-5">
-                                            <DateTime
-                                                date={new Date(cat.updatedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                time={new Date(cat.updatedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
-                                            />
+                                        <td className="px-6 py-5 text-sm text-[#101828]">
+                                            {cat.story_count}
                                         </td>
                                         <td className="px-6 py-5 text-center">
                                             <Action
@@ -141,6 +151,8 @@ export default function AllEmojiCategories() {
                                             dispatch(setSelectedEmojiCategory({
                                                 emoji_category_id: cat.emoji_category_id,
                                                 name: cat.name,
+                                                is_premium: cat.is_premium,
+                                                emoji_category_image: cat.emoji_category_image,
                                             }));
                                             router.push(`/emoji-categories/edit/${cat.emoji_category_id}`);
                                         }}
@@ -151,7 +163,7 @@ export default function AllEmojiCategories() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="py-20">
+                                    <td colSpan={6} className="py-20">
                                         <div className="flex flex-col items-center justify-center">
                                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                 <SearchX size={30} className="text-[#2563EB]" />
