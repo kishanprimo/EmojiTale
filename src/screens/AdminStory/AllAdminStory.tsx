@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import TableHeader from "@/components/common/TableHeader";
 import Pagination from "@/components/common/Pagination";
@@ -17,6 +19,8 @@ import { AdminStoryItem } from "@/types/AdminStoryTypes/adminStoryTypes";
 export default function AllAdminStory() {
     const dispatch = useAppDispatch();
     const { stories, pagination, loading } = useAppSelector((state) => state.adminStory);
+
+    const [cacheBust] = useState(() => Date.now());
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -61,9 +65,11 @@ export default function AllAdminStory() {
                                         <tr key={story.adminstory_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                             <td className="px-6 py-4">
                                                 {story.image ? (
-                                                    <img
-                                                        src={story.image}
+                                                    <Image
+                                                        src={proxiedImage(story.image, cacheBust)!}
                                                         alt={story.title}
+                                                        width={48}
+                                                        height={48}
                                                         className="h-12 w-12 rounded-xl object-cover border border-gray-200"
                                                     />
                                                 ) : (
@@ -158,9 +164,11 @@ export default function AllAdminStory() {
                         {/* Modal Header */}
                         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
                             <div className="flex items-center gap-3">
-                                <img
-                                    src={(viewStory.image) ?? undefined}
+                                <Image
+                                    src={proxiedImage(viewStory.image, cacheBust) ?? "/globe.svg"}
                                     alt={viewStory.title}
+                                    width={40}
+                                    height={40}
                                     className="h-10 w-10 rounded-xl object-cover border border-gray-200"
                                 />
                                 <div>

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { toast } from "react-hot-toast";
 import { Loader2, Upload } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -64,10 +66,10 @@ export default function StoryCategoryForm() {
                     </label>
                     <div
                         onClick={() => fileRef.current?.click()}
-                        className="flex flex-col items-center justify-center w-full h-40 rounded-[10px] border-2 border-dashed border-gray-300 cursor-pointer hover:border-blue-400 transition-colors bg-gray-50"
+                        className="relative flex flex-col items-center justify-center w-full h-40 rounded-[10px] border-2 border-dashed border-gray-300 cursor-pointer hover:border-blue-400 transition-colors bg-gray-50"
                     >
                         {preview ? (
-                            <img src={preview} alt="preview" className="h-full w-full object-contain rounded-[10px]" />
+                            <Image src={proxiedImage(preview)!} alt="preview" fill unoptimized className="object-contain rounded-[10px]" />
                         ) : (
                             <>
                                 <Upload size={28} className="text-gray-400 mb-2" />

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getThemes } from "@/store/slices/ThemeSlices/themeThunk";
 
@@ -31,9 +33,11 @@ export default function ThemeLeft() {
                                     : "hover:bg-gray-50 text-gray-700"
                                 }`}
                         >
-                            <img
-                                src={(theme.theme_image) ?? undefined}
+                            <Image
+                                src={proxiedImage(theme.theme_image, theme.updatedAt) ?? "/globe.svg"}
                                 alt={theme.theme_name}
+                                width={40}
+                                height={40}
                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200 shrink-0"
                             />
                             <div>

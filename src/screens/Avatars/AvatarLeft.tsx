@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import Image from "next/image";
+
+import { proxiedImage } from "@/lib/imageProxy";
+
 import Search from "@/components/common/Search";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -113,9 +117,11 @@ export default function AvatarLeft() {
                         >
 
                             {avatar.avatar_media ? (
-                                <img
-                                    src={(avatar.avatar_media) ?? undefined}
+                                <Image
+                                    src={proxiedImage(avatar.avatar_media, avatar.updatedAt) ?? "/globe.svg"}
                                     alt={avatar.name}
+                                    width={40}
+                                    height={40}
                                     className="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0"
                                 />
                             ) : (

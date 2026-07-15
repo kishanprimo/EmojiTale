@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import axios from "@/lib/axiosConfiguration";
 import DateTime from "@/components/common/DateTime";
 import { useState, useEffect } from "react";
@@ -487,8 +489,10 @@ export default function AllUsers() {
                                                 {/* Avatar */}
                                                 <td className="px-4 py-5">
                                                     {user.avatar ? (
-                                                        <img
-                                                            src={user.avatar}
+                                                        <Image
+                                                            src={proxiedImage(user.avatar)!}
+                                                            width={40}
+                                                            height={40}
                                                             className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
                                                             alt="avatar"
                                                         />

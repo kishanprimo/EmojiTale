@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getEmojis } from "@/store/slices/EmojiSlices/emojiThunk";
 
@@ -32,9 +34,11 @@ export default function EmojiLeft() {
                                     : "hover:bg-gray-50 text-gray-700"
                                 }`}
                         >
-                            <img
-                                src={(emoji.emoji_url) ?? undefined}
+                            <Image
+                                src={proxiedImage(emoji.emoji_url, emoji.updatedAt) ?? "/globe.svg"}
                                 alt={`emoji-${emoji.emoji_id}`}
+                                width={40}
+                                height={40}
                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200 shrink-0"
                             />
                             <p className="text-[15px] font-medium">#{emoji.emoji_id}</p>

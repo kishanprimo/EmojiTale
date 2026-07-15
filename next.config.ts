@@ -19,6 +19,17 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/**",
       },
     ],
+
+    // ✅ Allow our own image-proxy route (used to bypass upstream CORP block)
+    // plus all other local static assets (logos, icons, etc.)
+    localPatterns: [
+      {
+        pathname: "/api/image-proxy",
+      },
+      {
+        pathname: "/**",
+      },
+    ],
   },
 
   // ✅ Add headers to avoid cross-origin block

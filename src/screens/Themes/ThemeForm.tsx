@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -145,9 +147,12 @@ export default function ThemeForm({ mode = "add" }: ThemeFormProps) {
                         </div>
                         {preview && (
                             <div className="mt-4">
-                                <img
-                                    src={preview}
+                                <Image
+                                    src={proxiedImage(preview)!}
                                     alt="Theme preview"
+                                    width={112}
+                                    height={112}
+                                    unoptimized
                                     className="h-28 w-28 rounded-xl border object-cover"
                                 />
                             </div>

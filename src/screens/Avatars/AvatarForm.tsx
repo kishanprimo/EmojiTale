@@ -1,5 +1,7 @@
 "use client";
 import { toast } from "react-hot-toast";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import TogglableSwitch from "@/components/common/TogglableSwitch";
@@ -363,9 +365,12 @@ export default function AvatarForm({
 
                         {preview && (
                             <div className="mt-4">
-                                <img
-                                    src={preview}
+                                <Image
+                                    src={proxiedImage(preview)!}
                                     alt="Avatar"
+                                    width={112}
+                                    height={112}
+                                    unoptimized
                                     className="h-28 w-28 rounded-xl border object-cover"
                                 />
                             </div>

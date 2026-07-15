@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { toast } from "react-hot-toast";
 import { Loader2, ChevronDown, Sparkles, ImageIcon } from "lucide-react";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -163,11 +165,15 @@ export default function GenerateStory() {
                         </div>
                         <div className="flex-1 flex items-center justify-center p-6">
                             {preview ? (
-                                <img
-                                    src={preview}
-                                    alt="Preview"
-                                    className="w-full max-h-[300px] rounded-xl object-cover border border-gray-200 shadow-sm"
-                                />
+                                <div className="relative w-full h-[300px]">
+                                    <Image
+                                        src={proxiedImage(preview)!}
+                                        alt="Preview"
+                                        fill
+                                        unoptimized
+                                        className="rounded-xl object-cover border border-gray-200 shadow-sm"
+                                    />
+                                </div>
                             ) : (
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200">

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { proxiedImage } from "@/lib/imageProxy";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Search from "@/components/common/Search";
 import TableHeader from "@/components/common/TableHeader";
@@ -21,6 +22,8 @@ export default function AllEmojis() {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { emojis, pagination, loading } = useAppSelector((state) => state.emojis);
+
+    const [cacheBust] = useState(() => Date.now());
 
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 1000);
@@ -115,7 +118,7 @@ export default function AllEmojis() {
                                     <tr key={emoji.emoji_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
                                             <Image
-                                                src={emoji.emoji_url || "/globe.svg"}
+                                                src={proxiedImage(emoji.emoji_url, cacheBust) ?? "/globe.svg"}
                                                 alt={`emoji-${emoji.emoji_id}`}
                                                 width={40}
                                                 height={40}

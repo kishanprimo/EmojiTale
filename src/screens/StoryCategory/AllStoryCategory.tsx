@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import TableHeader from "@/components/common/TableHeader";
 import Pagination from "@/components/common/Pagination";
@@ -14,6 +16,8 @@ import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCate
 export default function AllStoryCategory() {
     const dispatch = useAppDispatch();
     const { categories, pagination, loading } = useAppSelector((state) => state.storyCategory);
+
+    const [cacheBust] = useState(() => Date.now());
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -51,9 +55,11 @@ export default function AllStoryCategory() {
                                 categories.map((cat) => (
                                     <tr key={cat.storycategory_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
-                                            <img
-                                                src={(cat.storycategory_image) ?? undefined}
+                                            <Image
+                                                src={proxiedImage(cat.storycategory_image, cacheBust) ?? "/globe.svg"}
                                                 alt={cat.storycategory_name}
+                                                width={48}
+                                                height={48}
                                                 className="h-12 w-12 rounded-xl object-cover border border-gray-200"
                                             />
                                         </td>

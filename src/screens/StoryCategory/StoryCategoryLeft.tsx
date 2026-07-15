@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import Search from "@/components/common/Search";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCategoryThunk";
@@ -49,9 +51,11 @@ export default function StoryCategoryLeft() {
                                 }`}
                         >
                             {cat.storycategory_image ? (
-                                <img
-                                    src={(cat.storycategory_image) ?? undefined}
+                                <Image
+                                    src={proxiedImage(cat.storycategory_image, cat.updatedAt) ?? "/globe.svg"}
                                     alt={cat.storycategory_name}
+                                    width={40}
+                                    height={40}
                                     className="h-10 w-10 rounded-full object-cover shrink-0 border border-gray-200"
                                 />
                             ) : (

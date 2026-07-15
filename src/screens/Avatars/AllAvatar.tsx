@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Search from "@/components/common/Search";
 import TableHeader from "@/components/common/TableHeader";
@@ -40,6 +42,8 @@ export default function AllAvatar() {
         pagination,
         loading,
     } = useAppSelector((state) => state.avatars);
+
+    const [cacheBust] = useState(() => Date.now());
 
     const [searchTerm, setSearchTerm] =
         useState("");
@@ -99,6 +103,9 @@ export default function AllAvatar() {
                     },
                 }
             );
+
+
+        console.log("All Avatars Response:", response.data.data.records);
 
         return response.data.data.records;
 
@@ -458,9 +465,11 @@ export default function AllAvatar() {
 
                                             <td className="px-4 py-5">
                                                 {avatar.avatar_media ? (
-                                                    <img
-                                                        src={(avatar.avatar_media) ?? undefined}
+                                                    <Image
+                                                        src={proxiedImage(avatar.avatar_media, cacheBust) ?? "/globe.svg"}
                                                         alt={avatar.name}
+                                                        width={40}
+                                                        height={40}
                                                         className="h-10 w-10 rounded-full object-cover border border-gray-200"
                                                     />
                                                 ) : (

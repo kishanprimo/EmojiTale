@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import { toast } from "react-hot-toast";
 import { Loader2, ChevronDown } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -21,6 +23,11 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
     const router = useRouter();
 
     const selectedEmoji = useAppSelector((state) => state.selectedEmoji.emoji);
+
+
+     console.log("Selected Emoji:", selectedEmoji); // Debugging line to check the selected emoji
+
+
     const { categories } = useAppSelector((state) => state.emojiCategories);
     const addState = useAppSelector((state) => state.addEmoji);
     const updateState = useAppSelector((state) => state.updateEmoji);
@@ -87,6 +94,9 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
         return () => { if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview); };
     }, [preview]);
 
+    console.log("preview", preview)
+
+
     return (
         <div className="bg-white border border-gray-200 rounded-[12px] flex flex-col">
 
@@ -151,9 +161,12 @@ export default function EmojiForm({ mode = "add" }: EmojiFormProps) {
                         </div>
                         {preview && (
                             <div className="mt-4">
-                                <img
-                                    src={preview}
+                                <Image
+                                    src={proxiedImage(preview)!}
                                     alt="Emoji preview"
+                                    width={112}
+                                    height={112}
+                                    unoptimized
                                     className="h-28 w-28 rounded-xl border object-cover"
                                 />
                             </div>

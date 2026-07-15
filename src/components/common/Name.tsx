@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import { proxiedImage } from '@/lib/imageProxy';
 
 interface NameProps {
   profilePic?: string | null;
@@ -24,8 +26,10 @@ export default function Name({ profilePic, firstName, lastName, email, descripti
   return (
     <div className="flex items-start gap-3">
       {showAvatar ? (
-        <img
-          src={profilePic}
+        <Image
+          src={proxiedImage(profilePic)!}
+          width={48}
+          height={48}
           className="w-12 h-12 rounded-full object-cover border border-gray-200 shadow-sm shrink-0"
           alt="avatar"
         />

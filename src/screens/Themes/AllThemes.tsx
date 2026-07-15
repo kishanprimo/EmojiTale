@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { proxiedImage } from "@/lib/imageProxy";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import TableHeader from "@/components/common/TableHeader";
 import Pagination from "@/components/common/Pagination";
@@ -18,6 +20,8 @@ export default function AllThemes() {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { themes, pagination, loading } = useAppSelector((state) => state.themes);
+
+    const [cacheBust] = useState(() => Date.now());
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -101,9 +105,11 @@ export default function AllThemes() {
                                 themes.map((theme) => (
                                     <tr key={theme.theme_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
-                                            <img
-                                                src={(theme.theme_image) ?? undefined}
+                                            <Image
+                                                src={proxiedImage(theme.theme_image, cacheBust) ?? "/globe.svg"}
                                                 alt={theme.theme_name}
+                                                width={40}
+                                                height={40}
                                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200"
                                             />
                                         </td>
