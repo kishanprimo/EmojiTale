@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import Search from "@/components/common/Search";
@@ -113,9 +114,11 @@ export default function AllEmojis() {
                                 emojis.map((emoji) => (
                                     <tr key={emoji.emoji_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                         <td className="px-6 py-4">
-                                            <img
-                                                src={(emoji.emoji_url) ?? undefined}
+                                            <Image
+                                                src={emoji.emoji_url || "/globe.svg"}
                                                 alt={`emoji-${emoji.emoji_id}`}
+                                                width={40}
+                                                height={40}
                                                 className="h-10 w-10 rounded-lg object-cover border border-gray-200"
                                             />
                                         </td>
