@@ -132,8 +132,13 @@ export default function GenerateStory({ editItem }: Props) {
 
         if (isEdit) {
             formData.append("adminstory_id", String(editItem!.adminstory_id));
-            pages.forEach((page) => formData.append("content", page.content.trim()));
-            pages.forEach((page) => { if (page.image) formData.append("images", page.image); });
+            // Only send content+images for NEW pages (no storymedia_id)
+            const newPages = pages.filter((p) => !p.storymedia_id);
+            for (const page of newPages) {
+                if (!page.image) { toast.error("Please choose an image for new pages"); return; }
+                formData.append("content", page.content.trim());
+                formData.append("images", page.image);
+            }
             if (removedMediaIds.length) formData.append("remove_media_ids", removedMediaIds.join(","));
         } else {
             pages.forEach((page) => {
@@ -250,7 +255,7 @@ export default function GenerateStory({ editItem }: Props) {
                                             </div>
 
                                             <div className="flex overflow-hidden rounded-[10px] border border-gray-300">
-                                                <label className="cursor-pointer border-r border-gray-300 bg-gray-100 px-4 py-2 text-xs font-medium text-[#101828] transition-colors hover:bg-gray-200">
+                                                <label className="cursor-pointer border-r border-gray-300 bg-gray-100 px-4 py-2 text-xs font-medium text-[#101828] transition-colors hover:bg-gray-200 whitespace-nowrap">
                                                     Choose Image
                                                     <input
                                                         type="file"
@@ -261,6 +266,18 @@ export default function GenerateStory({ editItem }: Props) {
                                                 </label>
                                                 <span className="flex items-center px-3 text-xs text-gray-500 truncate">{page.fileName}</span>
                                             </div>
+                                            {page.preview && (
+                                                <div className="mt-3">
+                                                    <Image
+                                                        src={proxiedImage(page.preview)!}
+                                                        alt={`Page ${index + 1} preview`}
+                                                        width={112}
+                                                        height={112}
+                                                        unoptimized
+                                                        className="h-28 w-28 rounded-xl object-cover border border-gray-200"
+                                                    />
+                                                </div>
+                                            )}
 
                                             <textarea
                                                 value={page.content}
