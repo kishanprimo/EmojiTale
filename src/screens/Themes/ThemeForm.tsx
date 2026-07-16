@@ -30,7 +30,6 @@ export default function ThemeForm({ mode = "add" }: ThemeFormProps) {
     const success = mode === "edit" ? updateState.success : addState.success;
 
     const [name, setName] = useState("");
-    const [subtitle, setSubtitle] = useState("");
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState("");
     const [fileName, setFileName] = useState("No file chosen");
@@ -39,7 +38,6 @@ export default function ThemeForm({ mode = "add" }: ThemeFormProps) {
     useEffect(() => {
         if (mode !== "edit" || !selectedTheme) return;
         setName(selectedTheme.theme_name);
-        setSubtitle(selectedTheme.theme_name_subtitle);
         setPreview((selectedTheme.theme_image) ?? "");
         setFileName("Current Image");
     }, [mode, selectedTheme]);
@@ -73,7 +71,6 @@ export default function ThemeForm({ mode = "add" }: ThemeFormProps) {
 
         const formData = new FormData();
         formData.append("theme_name", name);
-        if (subtitle.trim()) formData.append("theme_name_subtitle", subtitle);
         if (selectedImage) formData.append("theme_image", selectedImage);
 
         try {
@@ -115,20 +112,6 @@ export default function ThemeForm({ mode = "add" }: ThemeFormProps) {
                             value={name}
                             onChange={(e) => setName(e.target.value.trimStart())}
                             placeholder="Enter theme name"
-                            className="w-full h-12 rounded-[10px] border border-gray-300 px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500"
-                        />
-                    </div>
-
-                    {/* Subtitle */}
-                    <div>
-                        <label className="block mb-2 text-[15px] font-semibold text-gray-700">
-                            Subtitle
-                        </label>
-                        <input
-                            type="text"
-                            value={subtitle}
-                            onChange={(e) => setSubtitle(e.target.value.trimStart())}
-                            placeholder="Enter subtitle (optional)"
                             className="w-full h-12 rounded-[10px] border border-gray-300 px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500"
                         />
                     </div>

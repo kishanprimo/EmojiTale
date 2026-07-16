@@ -32,11 +32,10 @@ export default function AllThemes() {
     }, [dispatch, page, limit]);
 
     const handleExportCSV = () => {
-        const headers = ["Theme ID", "Name", "Subtitle", "Created At", "Updated At"];
+        const headers = ["Theme ID", "Name", "Created At", "Updated At"];
         const rows = themes.map((t) => [
             t.theme_id,
             t.theme_name,
-            t.theme_name_subtitle,
             new Date(t.createdAt).toLocaleString(),
             new Date(t.updatedAt).toLocaleString(),
         ]);
@@ -92,7 +91,6 @@ export default function AllThemes() {
                             columns={[
                                 { label: "Image" },
                                 { label: "Name" },
-                                { label: "Subtitle" },
                                 { label: "Created At" },
                                 { label: "Updated At" },
                                 { label: "Action", className: "text-center" },
@@ -115,9 +113,6 @@ export default function AllThemes() {
                                         </td>
                                         <td className="px-6 py-4 text-sm font-medium text-[#101828]">
                                             {theme.theme_name}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-[#667085]">
-                                            {theme.theme_name_subtitle}
                                         </td>
                                         <td className="px-6 py-4">
                                             <DateTime
@@ -151,7 +146,7 @@ export default function AllThemes() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} className="py-20">
+                                    <td colSpan={5} className="py-20">
                                         <div className="flex flex-col items-center justify-center">
                                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                 <SearchX size={30} className="text-[#2563EB]" />
