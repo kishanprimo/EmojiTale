@@ -10,7 +10,10 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { generateAdminStory } from "@/store/slices/AdminStorySlices/generateStoryThunk";
 import { resetGenerateStory } from "@/store/slices/AdminStorySlices/generateStorySlice";
+import { updateAdminStory } from "@/store/slices/AdminStorySlices/updateAdminStoryThunk";
+import { resetUpdateAdminStory } from "@/store/slices/AdminStorySlices/updateAdminStorySlice";
 import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCategoryThunk";
+import { AdminStoryItem } from "@/types/AdminStoryTypes/adminStoryTypes";
 
 interface StoryPage {
     id: string;
@@ -18,6 +21,11 @@ interface StoryPage {
     image: File | null;
     preview: string;
     fileName: string;
+    storymedia_id?: number; // existing media id for edit
+}
+
+interface Props {
+    editItem?: AdminStoryItem;
 }
 
 const makePage = (): StoryPage => ({
@@ -28,17 +36,39 @@ const makePage = (): StoryPage => ({
     fileName: "No file chosen",
 });
 
-export default function GenerateStory() {
+export default function GenerateStory({ editItem }: Props) {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const { loading, success } = useAppSelector((state) => state.generateStory);
+    const isEdit = !!editItem;
+
+    const { loading: generateLoading, success: generateSuccess } = useAppSelector((state) => state.generateStory);
+    const { loading: updateLoading, success: updateSuccess } = useAppSelector((state) => state.updateAdminStory);
+
+    const loading = isEdit ? updateLoading : generateLoading;
+    const success = isEdit ? updateSuccess : generateSuccess;
+
     const { categories } = useAppSelector((state) => state.storyCategory);
 
-    const [categoryId, setCategoryId] = useState<number | "">("");
-    const [isActive, setIsActive] = useState(true);
-    const [pages, setPages] = useState<StoryPage[]>([makePage()]);
+    const [categoryId, setCategoryId] = useState<number | "">(editItem?.storycategory_id ?? "");
+    const [isActive, setIsActive] = useState(editItem?.is_active ?? true);
+    const [pages, setPages] = useState<StoryPage[]>(() => {
+        if (editItem?.media?.length) {
+            return [...editItem.media]
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map((m) => ({
+                    id: String(m.storymedia_id),
+                    content: m.content,
+                    image: null,
+                    preview: m.image,
+                    fileName: "Existing image",
+                    storymedia_id: m.storymedia_id,
+                }));
+        }
+        return [makePage()];
+    });
     const [activeIndex, setActiveIndex] = useState(0);
+    const [removedMediaIds, setRemovedMediaIds] = useState<number[]>([]);
 
     const createdUrlsRef = useRef<Set<string>>(new Set());
 
@@ -48,10 +78,11 @@ export default function GenerateStory() {
 
     useEffect(() => {
         if (!success) return;
-        toast.success("Story generated successfully!");
-        dispatch(resetGenerateStory());
+        toast.success(isEdit ? "Story updated successfully!" : "Story generated successfully!");
+        if (isEdit) dispatch(resetUpdateAdminStory());
+        else dispatch(resetGenerateStory());
         router.push("/admin-story/all");
-    }, [success, dispatch, router]);
+    }, [success, dispatch, router, isEdit]);
 
     useEffect(() => {
         return () => {
@@ -68,6 +99,8 @@ export default function GenerateStory() {
         setPages((prev) => {
             if (prev.length <= 1) return prev;
             const index = prev.findIndex((p) => p.id === id);
+            const page = prev[index];
+            if (page.storymedia_id) setRemovedMediaIds((ids) => [...ids, page.storymedia_id!]);
             const next = prev.filter((p) => p.id !== id);
             setActiveIndex((current) => Math.min(current >= index ? Math.max(0, current - 1) : current, next.length - 1));
             return next;
@@ -87,31 +120,34 @@ export default function GenerateStory() {
     };
 
     const handleSubmit = async () => {
-        if (!categoryId) {
-            toast.error("Please enter a story category ID");
-            return;
-        }
+        if (!categoryId) { toast.error("Please select a story category"); return; }
         for (let i = 0; i < pages.length; i++) {
-            if (!pages[i].content.trim()) {
-                toast.error(`Please enter text content for page ${i + 1}`);
-                return;
-            }
-            if (!pages[i].image) {
-                toast.error(`Please choose an image for page ${i + 1}`);
-                return;
-            }
+            if (!pages[i].content.trim()) { toast.error(`Please enter text content for page ${i + 1}`); return; }
+            if (!isEdit && !pages[i].image) { toast.error(`Please choose an image for page ${i + 1}`); return; }
         }
 
         const formData = new FormData();
         formData.append("storycategory_id", String(categoryId));
         formData.append("is_active", String(isActive));
-        pages.forEach((page) => {
-            formData.append("content", page.content.trim());
-            formData.append("images", page.image as File);
-        });
+
+        if (isEdit) {
+            formData.append("adminstory_id", String(editItem!.adminstory_id));
+            pages.forEach((page) => formData.append("content", page.content.trim()));
+            pages.forEach((page) => { if (page.image) formData.append("images", page.image); });
+            if (removedMediaIds.length) formData.append("remove_media_ids", removedMediaIds.join(","));
+        } else {
+            pages.forEach((page) => {
+                formData.append("content", page.content.trim());
+                formData.append("images", page.image as File);
+            });
+        }
 
         try {
-            await dispatch(generateAdminStory(formData)).unwrap();
+            if (isEdit) {
+                await dispatch(updateAdminStory({ id: editItem!.adminstory_id, formData })).unwrap();
+            } else {
+                await dispatch(generateAdminStory(formData)).unwrap();
+            }
         } catch (error: any) {
             toast.error(error || "Something went wrong");
         }
@@ -129,8 +165,12 @@ export default function GenerateStory() {
                         <Sparkles size={20} className="text-[#2563EB]" />
                     </div>
                     <div>
-                        <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Generate Story</h1>
-                        <p className="text-sm text-[#667085]">Add pages with an image and text each to auto-generate a story.</p>
+                        <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">
+                            {isEdit ? "Edit Story" : "Generate Story"}
+                        </h1>
+                        <p className="text-sm text-[#667085]">
+                            {isEdit ? "Update the story details and pages." : "Add pages with an image and text each to auto-generate a story."}
+                        </p>
                     </div>
                 </div>
 
@@ -140,11 +180,13 @@ export default function GenerateStory() {
                     <div className="bg-white border border-gray-200 rounded-2xl flex flex-col">
                         <div className="border-b border-gray-100 px-6 py-5">
                             <h2 className="text-[17px] font-semibold text-[#101828]">Story Details</h2>
-                            <p className="text-sm text-[#667085] mt-0.5">Fill in the details to generate a new story</p>
+                            <p className="text-sm text-[#667085] mt-0.5">
+                                {isEdit ? "Update the details below" : "Fill in the details to generate a new story"}
+                            </p>
                         </div>
 
                         <div className="flex-1 p-6 space-y-6">
-                            {/* Category ID */}
+                            {/* Category */}
                             <div>
                                 <label className="block mb-2 text-[14px] font-semibold text-gray-700">
                                     Story Category <span className="text-red-500">*</span>
@@ -258,7 +300,9 @@ export default function GenerateStory() {
                                 className={`flex items-center gap-2 rounded-[10px] px-6 py-2 text-sm font-medium text-white transition-all ${loading ? "cursor-not-allowed bg-blue-300" : "bg-[#2563EB] hover:bg-[#1D4ED8]"}`}
                             >
                                 {loading ? (
-                                    <><Loader2 size={16} className="animate-spin" /> Generating...</>
+                                    <><Loader2 size={16} className="animate-spin" /> {isEdit ? "Updating..." : "Generating..."}</>
+                                ) : isEdit ? (
+                                    "Update Story"
                                 ) : (
                                     <><Sparkles size={16} /> Generate Story</>
                                 )}
@@ -267,7 +311,7 @@ export default function GenerateStory() {
                     </div>
 
                     {/* Right — Preview */}
-                    <div className="bg-white border border-gray-200 rounded-2xl flex flex-col">
+                    <div className="bg-white border border-gray-200 rounded-2xl flex flex-col sticky top-6 self-start">
                         <div className="border-b border-gray-100 px-6 py-5 flex items-center justify-between">
                             <div>
                                 <h2 className="text-[17px] font-semibold text-[#101828]">Page Preview</h2>
@@ -294,7 +338,7 @@ export default function GenerateStory() {
                                 </div>
                             )}
                         </div>
-                        <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
+                        <div className="flex flex-col items-center justify-center gap-4 p-6">
                             {activePage?.preview ? (
                                 <div className="relative w-full h-[260px]">
                                     <Image

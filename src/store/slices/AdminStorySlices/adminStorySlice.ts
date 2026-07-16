@@ -19,7 +19,12 @@ const initialState: AdminStoryState = {
 const adminStorySlice = createSlice({
     name: "adminStory",
     initialState,
-    reducers: {},
+    reducers: {
+        toggleStoryStatus(state, action: import("@reduxjs/toolkit").PayloadAction<number>) {
+            const story = state.stories.find((s) => s.adminstory_id === action.payload);
+            if (story) story.is_active = !story.is_active;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getAdminStories.pending, (state) => {
@@ -38,4 +43,5 @@ const adminStorySlice = createSlice({
     },
 });
 
+export const { toggleStoryStatus } = adminStorySlice.actions;
 export default adminStorySlice.reducer;

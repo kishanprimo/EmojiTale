@@ -59,3 +59,19 @@ export interface GenerateStoryResponse {
         story: AdminStoryItem;
     };
 }
+
+export interface UpdateAdminStoryResponse {
+    success: boolean;
+    message: string;
+    data: {
+        story: AdminStoryItem;
+    };
+}
+
+export interface DeleteAdminStoryResponse {
+    success: boolean;
+    message: string;
+    data: {
+        adminstory_id: number;
+    };
+}

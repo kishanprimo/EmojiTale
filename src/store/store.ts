@@ -9,8 +9,12 @@ import updateThemeReducer from "./slices/ThemeSlices/updateThemeSlice";
 import selectedThemeReducer from "./slices/ThemeSlices/selectedThemeSlice";
 import adminStoryReducer from "./slices/AdminStorySlices/adminStorySlice";
 import generateStoryReducer from "./slices/AdminStorySlices/generateStorySlice";
+import updateAdminStoryReducer from "./slices/AdminStorySlices/updateAdminStorySlice";
+import deleteAdminStoryReducer from "./slices/AdminStorySlices/deleteAdminStorySlice";
 import storyCategoryReducer from "./slices/StoryCategorySlices/storyCategorySlice";
 import addStoryCategoryReducer from "./slices/StoryCategorySlices/addStoryCategorySlice";
+import updateStoryCategoryReducer from "./slices/StoryCategorySlices/updateStoryCategorySlice";
+import deleteStoryCategoryReducer from "./slices/StoryCategorySlices/deleteStoryCategorySlice";
 import notificationReducer from "./slices/NotificationSlices/notificationSlice";
 import addNotificationReducer from "./slices/NotificationSlices/addNotificationSlice";
 import adminConfigReducer from "./slices/AdminConfigSlices/adminConfigSlice";
@@ -68,8 +72,12 @@ export const store = configureStore({
 
     adminStory: adminStoryReducer,
     generateStory: generateStoryReducer,
+    updateAdminStory: updateAdminStoryReducer,
+    deleteAdminStory: deleteAdminStoryReducer,
     storyCategory: storyCategoryReducer,
     addStoryCategory: addStoryCategoryReducer,
+    updateStoryCategory: updateStoryCategoryReducer,
+    deleteStoryCategory: deleteStoryCategoryReducer,
     notifications: notificationReducer,
     addNotification: addNotificationReducer,
     adminConfig: adminConfigReducer,

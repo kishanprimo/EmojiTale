@@ -19,7 +19,12 @@ const initialState: StoryCategoryState = {
 const storyCategorySlice = createSlice({
     name: "storyCategory",
     initialState,
-    reducers: {},
+    reducers: {
+        toggleCategoryStatus(state, action: import("@reduxjs/toolkit").PayloadAction<number>) {
+            const cat = state.categories.find((c) => c.storycategory_id === action.payload);
+            if (cat) cat.is_active = !cat.is_active;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getStoryCategories.pending, (state) => {
@@ -38,4 +43,5 @@ const storyCategorySlice = createSlice({
     },
 });
 
+export const { toggleCategoryStatus } = storyCategorySlice.actions;
 export default storyCategorySlice.reducer;
