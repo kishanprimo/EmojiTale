@@ -19,15 +19,7 @@ export default function TogglableSwitch({
     showLabel = true,
 }: TogglableSwitchProps) {
     return (
-        <div className="flex items-center justify-center gap-3">
-            {showLabel && (
-                <span
-                    className={`px-3 py-1 rounded-full text-[13px] font-medium text-center min-w-20 ${isActive ? activeClassName : inactiveClassName
-                        }`}
-                >
-                    {isActive ? activeLabel : inactiveLabel}
-                </span>
-            )}
+        <div className="flex items-center gap-3">
             <button
                 type="button"
                 onClick={onToggle}
@@ -39,6 +31,14 @@ export default function TogglableSwitch({
                         }`}
                 />
             </button>
+            {showLabel && (
+                <span
+                    className={`px-3 py-1 rounded-full text-[13px] font-medium text-center min-w-20 ${isActive ? activeClassName : inactiveClassName
+                        }`}
+                >
+                    {isActive ? activeLabel : inactiveLabel}
+                </span>
+            )}
         </div>
     );
 }

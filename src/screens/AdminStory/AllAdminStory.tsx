@@ -12,7 +12,7 @@ import DateTime from "@/components/common/DateTime";
 import Action from "@/components/common/Action";
 import TogglableSwitch from "@/components/common/TogglableSwitch";
 import CategoriesDeleteModal from "@/components/common/CategoriesDeleteModal";
-import { SearchX, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { SearchX, X, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminStories } from "@/store/slices/AdminStorySlices/adminStoryThunk";
 import { updateAdminStory } from "@/store/slices/AdminStorySlices/updateAdminStoryThunk";
@@ -77,8 +77,14 @@ export default function AllAdminStory() {
         <DashboardLayout>
             <div className="px-4 sm:px-8 pt-4 pb-12 font-inter">
 
-                <div className="mb-8">
+                <div className="mb-8 flex items-center justify-between">
                     <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Admin Stories</h1>
+                    <button
+                        onClick={() => router.push("/admin-story/generate")}
+                        className="flex items-center gap-2 rounded-[10px] bg-[#2563EB] hover:bg-[#1D4ED8] px-4 py-2.5 text-sm font-medium text-white transition-all"
+                    >
+                        <Plus size={16} /> Add Story
+                    </button>
                 </div>
 
                 <div className="overflow-hidden rounded-[10px] border border-gray-200 bg-white">

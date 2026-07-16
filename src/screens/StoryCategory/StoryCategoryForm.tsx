@@ -30,7 +30,6 @@ export default function StoryCategoryForm({ editItem }: Props) {
     const success = isEdit ? updateSuccess : addSuccess;
 
     const [name, setName] = useState(editItem?.storycategory_name ?? "");
-    const [description, setDescription] = useState(editItem?.storycategory_description ?? "");
     const [image, setImage] = useState<File | null>(null);
     const [fileName, setFileName] = useState("No file chosen");
     const [preview, setPreview] = useState<string | null>(
@@ -58,12 +57,10 @@ export default function StoryCategoryForm({ editItem }: Props) {
 
     const handleSubmit = async () => {
         if (!name.trim()) { toast.error("Please enter a category name"); return; }
-        if (!description.trim()) { toast.error("Please enter a description"); return; }
         if (!isEdit && !image) { toast.error("Please select an image"); return; }
 
         const formData = new FormData();
         formData.append("storycategory_name", name);
-        formData.append("storycategory_description", description);
         if (image) formData.append("storycategory_image", image);
         if (isEdit) formData.append("storycategory_id", String(editItem!.storycategory_id));
 
@@ -102,20 +99,6 @@ export default function StoryCategoryForm({ editItem }: Props) {
                         onChange={(e) => setName(e.target.value.trimStart())}
                         placeholder="Enter category name"
                         className="w-full h-12 rounded-[10px] border border-gray-300 px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500"
-                    />
-                </div>
-
-                {/* Description */}
-                <div>
-                    <label className="block mb-2 text-[15px] font-semibold text-gray-700">
-                        Description <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value.trimStart())}
-                        placeholder="Enter category description"
-                        rows={4}
-                        className="w-full rounded-[10px] border border-gray-300 px-4 py-3 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500 resize-none"
                     />
                 </div>
 

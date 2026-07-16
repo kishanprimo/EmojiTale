@@ -10,7 +10,7 @@ import Pagination from "@/components/common/Pagination";
 import TableSkeleton from "@/components/common/TableSkeleton";
 import Action from "@/components/common/Action";
 import TogglableSwitch from "@/components/common/TogglableSwitch";
-import { SearchX } from "lucide-react";
+import { SearchX, Plus } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getStoryCategories } from "@/store/slices/StoryCategorySlices/storyCategoryThunk";
 import { updateStoryCategory } from "@/store/slices/StoryCategorySlices/updateStoryCategoryThunk";
@@ -65,8 +65,14 @@ export default function AllStoryCategory() {
         <DashboardLayout>
             <div className="px-4 sm:px-8 pt-4 pb-12 font-inter">
 
-                <div className="mb-8">
+                <div className="mb-8 flex items-center justify-between">
                     <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Story Categories</h1>
+                    <button
+                        onClick={() => router.push("/story-category/add")}
+                        className="flex items-center gap-2 rounded-[10px] bg-[#2563EB] hover:bg-[#1D4ED8] px-4 py-2.5 text-sm font-medium text-white transition-all"
+                    >
+                        <Plus size={16} /> Add Category
+                    </button>
                 </div>
 
                 <div className="overflow-hidden rounded-[10px] border border-gray-200 bg-white">
@@ -78,7 +84,6 @@ export default function AllStoryCategory() {
                                     { label: "ID" },
                                     { label: "Image" },
                                     { label: "Name" },
-                                    { label: "Description" },
                                     { label: "Status" },
                                     { label: "Action" },
                                 ]}
@@ -104,9 +109,6 @@ export default function AllStoryCategory() {
                                             <td className="px-6 py-4 text-sm font-medium text-[#101828]">
                                                 {cat.storycategory_name}
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-[#667085] max-w-[260px]">
-                                                <p className="line-clamp-2">{cat.storycategory_description}</p>
-                                            </td>
                                             <td className="px-6 py-4">
                                                 <TogglableSwitch
                                                     isActive={cat.is_active}
@@ -126,7 +128,7 @@ export default function AllStoryCategory() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={6} className="py-20">
+                                        <td colSpan={5} className="py-20">
                                             <div className="flex flex-col items-center justify-center">
                                                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                     <SearchX size={30} className="text-[#2563EB]" />
