@@ -16,7 +16,15 @@ export interface UserItem {
     revenuecat_customer_id: string | null;
     login_type: string;
     createdAt: string;
-    avatar: string | null;
+    // Backend response changed from:
+    // avatar: string | null
+    // to:
+    // avatar: { avatar_media, avatar_id, name } | null
+    avatar: {
+        avatar_media: string;
+        avatar_id: number;
+        name: string;
+    } | null;
 }
 
 export interface CardStat {

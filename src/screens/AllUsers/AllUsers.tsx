@@ -485,10 +485,22 @@ export default function AllUsers() {
                                                         />
                                                     </button>
                                                 </td>
-
+                                                {/* // NOTE:
+                                                // Previously `avatar` was expected to be a string URL.
+                                                // The API response has changed to:
+                                                // {
+                                                //   avatar: {
+                                                //     avatar_media: "...",
+                                                //     avatar_id: ...,
+                                                //     name: ...
+                                                //   }
+                                                // }
+                                                // Passing the entire object to `proxiedImage()` caused
+                                                // "url.startsWith is not a function".
+                                                // Therefore we pass `avatar.avatar_media` instead. */}
                                                 {/* Avatar */}
                                                 <td className="px-4 py-5">
-                                                    {user.avatar ? (
+                                                    {/* {user.avatar ? (
                                                         <Image
                                                             src={proxiedImage(user.avatar)!}
                                                             width={40}
@@ -496,11 +508,23 @@ export default function AllUsers() {
                                                             className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
                                                             alt="avatar"
                                                         />
-                                                    ) : (
-                                                        <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-semibold text-sm">
-                                                            {(user.fullname || user.username || "U").charAt(0).toUpperCase()}
-                                                        </div>
-                                                    )}
+                                                    ) : ( */}
+                                                    
+                                                        {
+                                                            user.avatar?.avatar_media ? (
+                                                                <Image
+                                                                    src={proxiedImage(user.avatar.avatar_media)!}
+                                                                    width={40}
+                                                                    height={40}
+                                                                    className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
+                                                                    alt="avatar"
+                                                                />
+                                                            ) : (
+                                                                <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-semibold text-sm">
+                                                                    {(user.fullname || user.username || "U").charAt(0).toUpperCase()}
+                                                                </div>
+                                                            )
+                                                        }
                                                 </td>
 
                                                 {/* Name */}
