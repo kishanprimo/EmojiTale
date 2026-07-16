@@ -31,6 +31,7 @@ const menuGroups = [
       { name: "All Users", href: "/users", icon: Users },
       { name: "Newsletter List", href: "/newsletters", icon: Mail },
       { name: "Subscription Plan", href: "/plans", icon: Gem },
+      { name: "XP Plan", href: "/plans_xp", icon: Gem },
     ],
   },
 ];
