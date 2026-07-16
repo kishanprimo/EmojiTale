@@ -34,7 +34,9 @@ export default function StoryCategoryForm({ editItem }: Props) {
     const [image, setImage] = useState<File | null>(null);
     const [fileName, setFileName] = useState("No file chosen");
     const [preview, setPreview] = useState<string | null>(
-        editItem?.storycategory_image ? proxiedImage(editItem.storycategory_image) : null
+        editItem?.storycategory_image
+            ? proxiedImage(editItem.storycategory_image) ?? null
+            : null
     );
     const fileRef = useRef<HTMLInputElement>(null);
 
