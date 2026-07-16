@@ -13,6 +13,8 @@ import {
   Palette,
   BookOpen,
   FolderOpen,
+  MessageSquare,
+  CreditCard,
   Bell,
   Settings,
   ChevronDown,
@@ -248,6 +250,26 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 { href: "/notifications/all", label: "All Notifications" },
                 { href: "/notifications/add", label: "Add Notification" },
               ]} />
+              <Link
+                href="/feedback"
+                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
+                  pathname === "/feedback" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+                }`}
+              >
+                {pathname === "/feedback" && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
+                <MessageSquare size={20} className={pathname === "/feedback" ? "text-[#2563EB]" : "text-gray-500"} />
+                Feedback
+              </Link>
+              <Link
+                href="/subscriptions"
+                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
+                  pathname === "/subscriptions" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+                }`}
+              >
+                {pathname === "/subscriptions" && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
+                <CreditCard size={20} className={pathname === "/subscriptions" ? "text-[#2563EB]" : "text-gray-500"} />
+                Subscriptions
+              </Link>
               <AdminConfigMenu />
             </div>
           </nav>

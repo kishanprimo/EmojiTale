@@ -19,6 +19,8 @@ import notificationReducer from "./slices/NotificationSlices/notificationSlice";
 import addNotificationReducer from "./slices/NotificationSlices/addNotificationSlice";
 import adminConfigReducer from "./slices/AdminConfigSlices/adminConfigSlice";
 import updateAdminConfigReducer from "./slices/AdminConfigSlices/updateAdminConfigSlice";
+import feedbackReducer from "./slices/FeedbackSlices/feedbackSlice";
+import subscriptionReducer from "./slices/SubscriptionSlices/subscriptionSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/UserSlice/userSlice";
 import userDetailsReducer from "./slices/UserSlice/userDetailsSlice";
@@ -82,6 +84,8 @@ export const store = configureStore({
     addNotification: addNotificationReducer,
     adminConfig: adminConfigReducer,
     updateAdminConfig: updateAdminConfigReducer,
+    feedback: feedbackReducer,
+    subscription: subscriptionReducer,
   },
 });
 
