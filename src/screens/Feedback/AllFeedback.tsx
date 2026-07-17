@@ -82,8 +82,9 @@ export default function AllFeedback() {
                                     { label: "Subject" },
                                     { label: "Message" },
                                     { label: "Rating" },
+                                    { label: "Username" },
+                                    { label: "Email" },
                                     { label: "Created At" },
-                                    { label: "Updated At" },
                                 ]}
                             />
                             <tbody className="divide-y divide-gray-100">
@@ -110,23 +111,23 @@ export default function AllFeedback() {
                                             <td className="px-6 py-4">
                                                 <StarRating rating={fb.overall_rating} />
                                             </td>
+                                            <td className="px-6 py-4 text-sm font-medium text-[#101828]">
+                                                {fb.user?.username ?? "-"}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-[#667085]">
+                                                {fb.user?.email ?? "-"}
+                                            </td>
                                             <td className="px-6 py-4">
                                                 <DateTime
                                                     date={new Date(fb.createdAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
                                                     time={new Date(fb.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
                                                 />
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <DateTime
-                                                    date={new Date(fb.updatedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
-                                                    time={new Date(fb.updatedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
-                                                />
-                                            </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={7} className="py-20">
+                                        <td colSpan={8} className="py-20">
                                             <div className="flex flex-col items-center justify-center">
                                                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                     <SearchX size={30} className="text-[#2563EB]" />

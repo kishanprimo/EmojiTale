@@ -1,3 +1,13 @@
+export interface FeedbackUser {
+    user_id: number;
+    email: string;
+    fullname: string | null;
+    username: string;
+    mobile_number: string | null;
+    country_code: string | null;
+    avatar_id: number | null;
+}
+
 export interface FeedbackItem {
     feedback_id: number;
     user_id: number;
@@ -8,6 +18,7 @@ export interface FeedbackItem {
     is_resolved: boolean;
     createdAt: string;
     updatedAt: string;
+    user: FeedbackUser;
 }
 
 export interface FeedbackPagination {
