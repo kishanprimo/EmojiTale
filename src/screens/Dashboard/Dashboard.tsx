@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import DashboardLayout from "@/layouts/DashboardLayout";
 import StatsCards from "@/components/common/StatsCard";
+import GraphCard from "@/components/Dashboard/GraphCard";
 
 import {
   Users,
@@ -16,26 +17,55 @@ import {
   useAppSelector,
 } from "@/store/hooks";
 
-import { getDashboardStats } from "@/store/slices/DashboardSlice/dashboardThunk";
+import {
+  getDashboardStats,
+  getUserGraph,
+  getMemberGraph,
+} from "@/store/slices/DashboardSlice/dashboardThunk";
+import { GraphPeriod } from "@/types/DashboardTypes/dashboardTypes";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
 
-  const { stats, loading } = useAppSelector(
-    (state) => state.dashboard
-  );
-  useEffect(() => {
-    console.log("========== DASHBOARD STATE ==========");
-    console.log("Loading:", loading);
-    console.log("Stats:", stats);
-  }, [loading, stats]);
-  useEffect(() => {
-    console.log("========== DASHBOARD ==========");
-    console.log("Dashboard Mounted");
-    console.log("Dispatching getDashboardStats()");
+  const {
+    stats,
+    loading,
+    userGraph,
+    userGraphLoading,
+    memberGraph,
+    memberGraphLoading,
+  } = useAppSelector((state) => state.dashboard);
 
+  const [userPeriod, setUserPeriod] = useState<GraphPeriod>("month");
+  const [userRange, setUserRange] = useState({ from: "", to: "" });
+
+  const [memberPeriod, setMemberPeriod] = useState<GraphPeriod>("day");
+  const [memberRange, setMemberRange] = useState({ from: "", to: "" });
+
+  useEffect(() => {
     dispatch(getDashboardStats());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      getUserGraph({
+        period: userPeriod,
+        date_from: userRange.from || undefined,
+        date_to: userRange.to || undefined,
+      })
+    );
+  }, [dispatch, userPeriod, userRange]);
+
+  useEffect(() => {
+    dispatch(
+      getMemberGraph({
+        period: memberPeriod,
+        date_from: memberRange.from || undefined,
+        date_to: memberRange.to || undefined,
+      })
+    );
+  }, [dispatch, memberPeriod, memberRange]);
+
   const dashboardStats = [
     {
       label: "Total Users",
@@ -79,6 +109,32 @@ const Dashboard = () => {
           cols={3}
           loading={loading}
         />
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <GraphCard
+            title="User Growth"
+            subtitle="New users registered over time"
+            data={userGraph}
+            period={userPeriod}
+            onPeriodChange={setUserPeriod}
+            loading={userGraphLoading}
+            color="#2563EB"
+            dateRange={userRange}
+            onDateRangeChange={setUserRange}
+          />
+
+          <GraphCard
+            title="Member Growth"
+            subtitle="New members registered over time"
+            data={memberGraph}
+            period={memberPeriod}
+            onPeriodChange={setMemberPeriod}
+            loading={memberGraphLoading}
+            color="#12B76A"
+            dateRange={memberRange}
+            onDateRangeChange={setMemberRange}
+          />
+        </div>
 
       </div>
     </DashboardLayout>

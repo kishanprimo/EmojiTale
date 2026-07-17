@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getDashboardStats } from "./dashboardThunk";
+import { getDashboardStats, getUserGraph, getMemberGraph } from "./dashboardThunk";
 
-import { DashboardStats } from "@/types/DashboardTypes/dashboardTypes";
+import { DashboardStats, GraphPeriod, GraphPoint } from "@/types/DashboardTypes/dashboardTypes";
 
 interface DashboardState {
     stats: DashboardStats;
@@ -10,6 +10,14 @@ interface DashboardState {
     loading: boolean;
 
     error: string | null;
+
+    userGraph: GraphPoint[];
+    userGraphPeriod: GraphPeriod;
+    userGraphLoading: boolean;
+
+    memberGraph: GraphPoint[];
+    memberGraphPeriod: GraphPeriod;
+    memberGraphLoading: boolean;
 }
 
 const initialState: DashboardState = {
@@ -22,6 +30,14 @@ const initialState: DashboardState = {
     loading: false,
 
     error: null,
+
+    userGraph: [],
+    userGraphPeriod: "month",
+    userGraphLoading: false,
+
+    memberGraph: [],
+    memberGraphPeriod: "day",
+    memberGraphLoading: false,
 };
 
 const dashboardSlice = createSlice({
@@ -50,6 +66,36 @@ const dashboardSlice = createSlice({
                 state.loading = false;
 
                 state.error = action.payload || "Something went wrong";
+            })
+
+            .addCase(getUserGraph.pending, (state) => {
+                state.userGraphLoading = true;
+            })
+
+            .addCase(getUserGraph.fulfilled, (state, action) => {
+                state.userGraphLoading = false;
+
+                state.userGraph = action.payload.data.data;
+                state.userGraphPeriod = action.payload.data.period;
+            })
+
+            .addCase(getUserGraph.rejected, (state) => {
+                state.userGraphLoading = false;
+            })
+
+            .addCase(getMemberGraph.pending, (state) => {
+                state.memberGraphLoading = true;
+            })
+
+            .addCase(getMemberGraph.fulfilled, (state, action) => {
+                state.memberGraphLoading = false;
+
+                state.memberGraph = action.payload.data.data;
+                state.memberGraphPeriod = action.payload.data.period;
+            })
+
+            .addCase(getMemberGraph.rejected, (state) => {
+                state.memberGraphLoading = false;
             });
     },
 });
