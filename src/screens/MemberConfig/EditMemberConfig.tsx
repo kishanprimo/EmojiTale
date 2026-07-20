@@ -9,6 +9,7 @@ import type { RootState, AppDispatch } from "@/store/store";
 import { updateMemberLevelConfig } from "@/store/slices/MemberConfigSlices/update_member_level_config_thunk";
 import { getMemberLevelConfigs } from "@/store/slices/MemberConfigSlices/member_level_config_thunk";
 import { UpdateMemberLevelConfigPayload } from "@/types/MemberConfigTypes/update_member_level_config_types";
+import { proxiedImage } from "@/lib/imageProxy";
 
 interface Props {
     configId: number;
@@ -131,7 +132,7 @@ export default function EditMemberConfig({ configId }: Props) {
                                 <Users size={20} className="text-white" />
                             </div>
                             <div>
-                                <h1 className="text-[24px] font-semibold text-[#101828] font-poppins">Edit Member Config</h1>
+                                <h1 className="text-[24px] font-semibold text-[#101828] font-poppins">Edit Badges</h1>
                                 <p className="text-sm text-[#667085]">Update the member level configuration.</p>
                             </div>
                         </div>
@@ -248,7 +249,7 @@ export default function EditMemberConfig({ configId }: Props) {
                                             {(form.level_image || currentImage) && (
                                                 <div className="border-t border-gray-200 bg-gray-50 p-5">
                                                     <img
-                                                        src={form.level_image ? URL.createObjectURL(form.level_image) : currentImage}
+                                                        src={form.level_image ? URL.createObjectURL(form.level_image) : proxiedImage(currentImage)}
                                                         className="h-28 w-28 rounded-xl border object-cover"
                                                     />
                                                 </div>

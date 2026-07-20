@@ -49,7 +49,7 @@ export default function AllMemberConfig() {
                 {/* Header */}
                 <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">
-                        Member Configurations
+                        Badges List
                     </h1>
                     <div className="flex items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl lg:justify-end">
                         <div className="flex-1 lg:max-w-sm">

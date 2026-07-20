@@ -20,6 +20,7 @@ import {
   Settings,
   ChevronDown,
   ChevronRight,
+  GitMerge,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -248,6 +249,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 { href: "/notifications/all", label: "All Notifications" },
                 { href: "/notifications/add", label: "Add Notification" },
               ]} />
+
+              <AdminConfigMenu />
+ 
+
+            </div>
+
+
+            <div>
+              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">GROWTH</p>
+
               <Link
                 href="/feedback"
                 className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${pathname === "/feedback" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
@@ -266,11 +277,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <CreditCard size={20} className={pathname === "/subscriptions" ? "text-[#2563EB]" : "text-gray-500"} />
                 Subscriptions
               </Link>
-              <AdminConfigMenu />
-              <CollapseMenu label="Member Configuration" icon={Users} prefix="/member-config" links={[
-                { href: "/member-config/all", label: "Member Config List" },
-                { href: "/member-config/add", label: "Add Member Config" },
+    
+              <CollapseMenu label="Badges" icon={Users} prefix="/member-config" links={[
+                { href: "/member-config/all", label: "Badges List" },
+                { href: "/member-config/add", label: "Add Badges" },
               ]} />
+              <Link
+                href="/referrals"
+                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${pathname === "/referrals" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+                  }`}
+              >
+                {pathname === "/referrals" && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
+                <GitMerge size={20} className={pathname === "/referrals" ? "text-[#2563EB]" : "text-gray-500"} />
+                Referrals & Earn
+              </Link>
             </div>
           </nav>
         </div>

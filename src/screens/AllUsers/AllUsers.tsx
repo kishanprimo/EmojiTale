@@ -605,7 +605,7 @@ export default function AllUsers() {
                                                         showView
                                                         showDelete
                                                         showEdit={false}
-                                                        onView={() => { }}
+                                                        onView={() => router.push(`/users/view/${user.user_id}`)}
                                                         onDelete={() => { }}
                                                     />
                                                 </td>

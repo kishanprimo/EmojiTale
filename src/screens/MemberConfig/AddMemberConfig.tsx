@@ -107,7 +107,7 @@ export default function AddMemberConfig() {
                         <Users size={20} className="text-white" />
                     </div>
                     <div>
-                        <h1 className="text-[24px] font-semibold text-[#101828] font-poppins">Add Member Config</h1>
+                        <h1 className="text-[24px] font-semibold text-[#101828] font-poppins">Add Badges</h1>
                         <p className="text-sm text-[#667085]">Create a new member level configuration.</p>
                     </div>
                 </div>

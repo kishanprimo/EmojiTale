@@ -44,17 +44,18 @@ export interface MemberItem {
 }
 
 export interface MemberResponse {
-
     success: boolean;
 
     message: string;
 
     data: {
+        members: MemberItem[];
 
-        count: number;
-
-        rows: MemberItem[];
-
+        pagination: {
+            total: number;
+            page: number;
+            limit: number;
+            totalPages: number;
+        };
     };
-
 }

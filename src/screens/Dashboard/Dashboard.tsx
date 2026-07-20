@@ -110,7 +110,7 @@ const Dashboard = () => {
           loading={loading}
         />
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-1 gap-4">
           <GraphCard
             title="User Growth"
             subtitle="New users registered over time"
@@ -123,7 +123,7 @@ const Dashboard = () => {
             onDateRangeChange={setUserRange}
           />
 
-          <GraphCard
+          {/* <GraphCard
             title="Member Growth"
             subtitle="New members registered over time"
             data={memberGraph}
@@ -133,7 +133,7 @@ const Dashboard = () => {
             color="#12B76A"
             dateRange={memberRange}
             onDateRangeChange={setMemberRange}
-          />
+          /> */}
         </div>
 
       </div>

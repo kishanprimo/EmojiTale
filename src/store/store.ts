@@ -24,7 +24,6 @@ import subscriptionReducer from "./slices/SubscriptionSlices/subscriptionSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/UserSlice/userSlice";
 import userDetailsReducer from "./slices/UserSlice/userDetailsSlice";
-
 import memberReducer from "./slices/UserSlice/memberSlice";
 import newsLetterReducer from "./slices/NewsLetterSlice/newsLetterSlice";
 import emojiCategoryReducer from "./slices/EmojiCategorySlices/emojiCategorySlice";
@@ -38,8 +37,11 @@ import updateAvatarReducer from "@/store/slices/AvatarSlices/updateAvatarSlice";
 import selectedAvatarReducer from "./slices/AvatarSlices/selectedAvatarSlice";
 import dashboardReducer from "./slices/DashboardSlice/dashboardSlice";
 import memberLevelConfigReducer from "./slices/MemberConfigSlices/member_level_config_slice";
+import referralReducer from "./slices/ReferralSlices/referralSlice";
+import userViewReducer from "./slices/UserSlice/userViewSlice";
 import addMemberLevelConfigReducer from "./slices/MemberConfigSlices/add_member_level_config_slice";
 import updateMemberLevelConfigReducer from "./slices/MemberConfigSlices/update_member_level_config_slice";
+import memberStoriesReducer from "./slices/UserSlice/memberStoriesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -93,6 +95,9 @@ export const store = configureStore({
     memberLevelConfig: memberLevelConfigReducer,
     addMemberLevelConfig: addMemberLevelConfigReducer,
     updateMemberLevelConfig: updateMemberLevelConfigReducer,
+    referrals: referralReducer,
+    userView: userViewReducer,
+    memberStories: memberStoriesReducer,
   },
 });
 

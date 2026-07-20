@@ -7,8 +7,14 @@ import {
 } from "@/types/UserTypes/memberTypes";
 
 interface MemberState {
-
     members: Record<number, MemberItem[]>;
+
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    } | null;
 
     loading: boolean;
 
@@ -16,13 +22,13 @@ interface MemberState {
 }
 
 const initialState: MemberState = {
-
     members: {},
+
+    pagination: null,
 
     loading: false,
 
     error: null,
-
 };
 
 const memberSlice = createSlice({
@@ -48,15 +54,13 @@ const memberSlice = createSlice({
             .addCase(getMembers.fulfilled, (state, action) => {
 
                 state.loading = false;
+                const members = action.payload.data.members ?? [];
 
-                const rows = action.payload.data.rows;
-
-                if (rows.length > 0) {
-
-                    state.members[rows[0].user_id] = rows;
-
+                if (members.length > 0) {
+                    state.members[members[0].user_id] = members;
                 }
 
+                state.pagination = action.payload.data.pagination;
             })
 
             .addCase(getMembers.rejected, (state, action) => {
