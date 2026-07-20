@@ -42,6 +42,7 @@ import userViewReducer from "./slices/UserSlice/userViewSlice";
 import addMemberLevelConfigReducer from "./slices/MemberConfigSlices/add_member_level_config_slice";
 import updateMemberLevelConfigReducer from "./slices/MemberConfigSlices/update_member_level_config_slice";
 import memberStoriesReducer from "./slices/UserSlice/memberStoriesSlice";
+import xpHistoryReducer from "./slices/UserSlice/xpHistorySlice";
 
 export const store = configureStore({
   reducer: {
@@ -98,6 +99,7 @@ export const store = configureStore({
     referrals: referralReducer,
     userView: userViewReducer,
     memberStories: memberStoriesReducer,
+    xpHistory: xpHistoryReducer,
   },
 });
 

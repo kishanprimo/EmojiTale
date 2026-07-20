@@ -20,7 +20,8 @@ import TableHeader from "@/components/common/TableHeader";
 import DateTime from "@/components/common/DateTime";
 import { proxiedImage } from "@/lib/imageProxy";
 import { getMemberStories } from "@/store/slices/UserSlice/memberStoriesThunk";
-
+import StatsCards from "@/components/common/StatsCard";
+import TableSkeleton from "@/components/common/TableSkeleton";
 
 interface Props { userId: number; }
 
@@ -117,7 +118,73 @@ export default function UserView({ userId }: Props) {
                 </button>
 
                 {loading && (
-                    <div className="flex items-center justify-center py-20 text-sm text-[#667085]">Loading...</div>
+                    <div className="space-y-6">
+
+                        {/* Profile Skeleton */}
+
+                        <div className="h-[180px] rounded-2xl border border-gray-200 bg-white animate-pulse" />
+
+                        {/* Stats Skeleton */}
+
+                        <StatsCards
+                            loading
+                            cols={3}
+                            stats={[
+                                {
+                                    label: "",
+                                    value: "",
+                                    icon: <Users size={24} />,
+                                    bg: "bg-[#EFF6FF]",
+                                },
+                                {
+                                    label: "",
+                                    value: "",
+                                    icon: <BookOpen size={24} />,
+                                    bg: "bg-[#ECFDF5]",
+                                },
+                                {
+                                    label: "",
+                                    value: "",
+                                    icon: <Zap size={24} />,
+                                    bg: "bg-amber-50",
+                                },
+                            ]}
+                        />
+
+                        {/* Table Skeletons */}
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+                            <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+
+                                <table className="w-full">
+
+                                    <tbody>
+
+                                        <TableSkeleton rows={6} />
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+
+                                <table className="w-full">
+
+                                    <tbody>
+
+                                        <TableSkeleton rows={6} />
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
                 )}
                 {error && (
                     <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
@@ -290,7 +357,10 @@ export default function UserView({ userId }: Props) {
                                                 </div>
                                             )}
 
-                                            <button className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#2563EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#2563EB] transition hover:bg-[#EFF6FF] shadow-sm">
+                                            <button
+                                                onClick={() => router.push(`/users/xp-history/${userId}`)}
+                                                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#2563EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#2563EB] transition hover:bg-[#EFF6FF] shadow-sm"
+                                            >
                                                 <Receipt size={14} />
                                                 View Billing History
                                             </button>
@@ -302,22 +372,31 @@ export default function UserView({ userId }: Props) {
                         </div>
 
                         {/* ── Stats Row ── */}
-                        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                            {[
-                                { icon: <Users size={22} className="text-[#2563EB]" />, bg: "bg-[#EFF6FF]", value: pagination?.total ?? 0, label: "Members Created" },
-                                { icon: <BookOpen size={22} className="text-emerald-600" />, bg: "bg-[#ECFDF5]", value: storyPagination?.total ?? 0, label: "Stories Created" },
-                                { icon: <Zap size={22} className="text-amber-500" />, bg: "bg-amber-50", value: user.xp.toLocaleString(), label: "Total XP" },
+                        {/* ── Stats Row ── */}
 
-                            ].map((stat, i) => (
-                                <div key={i} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                                    <div className={`mb-3 flex h-11 w-11 items-center justify-center rounded-xl ${stat.bg}`}>
-                                        {stat.icon}
-                                    </div>
-                                    <p className="text-2xl font-bold text-[#101828]">{stat.value}</p>
-                                    <p className="mt-0.5 text-sm text-[#667085]">{stat.label}</p>
-                                </div>
-                            ))}
-                        </div>
+                        <StatsCards
+                            cols={3}
+                            stats={[
+                                {
+                                    label: "Members Created",
+                                    value: pagination?.total ?? 0,
+                                    icon: <Users size={24} className="text-[#2563EB]" />,
+                                    bg: "bg-[#EFF6FF]",
+                                },
+                                {
+                                    label: "Stories Created",
+                                    value: storyPagination?.total ?? 0,
+                                    icon: <BookOpen size={24} className="text-emerald-600" />,
+                                    bg: "bg-[#ECFDF5]",
+                                },
+                                {
+                                    label: "Total XP",
+                                    value: user.xp.toLocaleString(),
+                                    icon: <Zap size={24} className="text-amber-500" />,
+                                    bg: "bg-amber-50",
+                                },
+                            ]}
+                        />
                     </>
                 )}
 
@@ -326,12 +405,12 @@ export default function UserView({ userId }: Props) {
 
                     {/* Members Table */}
                     <div className="flex flex-col gap-4">
-                        <div className="overflow-hidden rounded-[10px] border border-gray-200 bg-white">
+                        <div className="flex h-[540px] flex-col overflow-hidden rounded-[10px] border border-gray-200 bg-white">
                             <div className="flex items-center gap-2 border-b border-gray-100 px-6 py-4">
                                 <Users size={17} className="text-[#2563EB]" />
                                 <h2 className="text-sm font-semibold text-[#101828]">Members ({pagination?.total ?? 0})</h2>
                             </div>
-                            <div className="w-full overflow-x-auto">
+                            <div className="flex-1 overflow-auto">
                                 <table className="w-full border-collapse text-left">
                                     <TableHeader
                                         showCheckbox={false}
@@ -347,148 +426,179 @@ export default function UserView({ userId }: Props) {
                                     />
                                     <tbody className="divide-y divide-gray-100">
 
-                                        {pagedMembers.map((member) => (
+                                        {membersLoading ? (
 
-                                            <tr
-                                                key={member.member_id}
-                                                className="transition-all duration-200 hover:bg-[#F9FAFB]"
-                                            >
+                                            <TableSkeleton rows={5} />
 
-                                                {/* IMAGE */}
+                                        ) : pagedMembers.length > 0 ? (
 
-                                                <td className="px-6 py-4">
+                                            pagedMembers.map((member) => (
 
-                                                    {member.avatar?.avatar_media ? (
+                                                <tr
+                                                    key={member.member_id}
+                                                    className="transition-all duration-200 hover:bg-[#F9FAFB]"
+                                                >
 
-                                                        <img
-                                                            src={proxiedImage(member.avatar.avatar_media)}
-                                                            alt={member.fullname}
-                                                            className="h-10 w-10 rounded-full object-cover border border-gray-200"
+                                                    {/* IMAGE */}
+
+                                                    <td className="px-6 py-4">
+
+                                                        {member.avatar?.avatar_media ? (
+
+                                                            <img
+                                                                src={proxiedImage(member.avatar.avatar_media)}
+                                                                alt={member.fullname}
+                                                                className="h-10 w-10 rounded-full object-cover border border-gray-200"
+                                                            />
+
+                                                        ) : (
+
+                                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EFF6FF] text-sm font-semibold text-[#2563EB]">
+                                                                {member.fullname.charAt(0).toUpperCase()}
+                                                            </div>
+
+                                                        )}
+
+                                                    </td>
+
+                                                    {/* NAME */}
+
+                                                    <td className="px-6 py-4">
+
+                                                        <p className="text-sm font-medium text-[#101828]">
+
+                                                            {member.fullname}
+
+                                                        </p>
+
+                                                    </td>
+
+                                                    {/* GENDER */}
+
+                                                    <td className="px-6 py-4">
+
+                                                        <Tags
+                                                            text={
+                                                                member.gender.charAt(0).toUpperCase() +
+                                                                member.gender.slice(1)
+                                                            }
+                                                            variant={
+                                                                member.gender === "male"
+                                                                    ? "blue"
+                                                                    : "purple"
+                                                            }
                                                         />
 
-                                                    ) : (
+                                                    </td>
 
-                                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EFF6FF] text-sm font-semibold text-[#2563EB]">
-                                                            {member.fullname.charAt(0).toUpperCase()}
+                                                    {/* AGE */}
+
+                                                    <td className="px-6 py-4 text-sm text-[#475467]">
+
+                                                        {member.age_group ?? "N/A"} yrs
+
+                                                    </td>
+
+                                                    {/* RELATION */}
+
+                                                    <td className="px-6 py-4 text-sm text-[#475467]">
+
+                                                        {member.relationships?.relationship_type ?? "N/A"}
+
+                                                    </td>
+
+                                                    {/* STREAK */}
+
+                                                    <td className="px-6 py-4">
+
+                                                        <div className="flex items-center gap-1">
+
+                                                            <Flame
+                                                                size={13}
+                                                                className="text-orange-500"
+                                                            />
+
+                                                            <span className="text-sm font-semibold text-orange-600">
+
+                                                                {member.current_streak}
+
+                                                            </span>
+
                                                         </div>
 
-                                                    )}
+                                                    </td>
 
-                                                </td>
+                                                    {/* LAST STORY */}
 
-                                                {/* NAME */}
+                                                    <td className="px-6 py-4">
 
-                                                <td className="px-6 py-4">
+                                                        {member.last_story_at ? (
 
-                                                    <p className="text-sm font-medium text-[#101828]">
+                                                            <DateTime
+                                                                date={new Date(
+                                                                    member.last_story_at
+                                                                ).toLocaleDateString("en-US", {
+                                                                    month: "short",
+                                                                    day: "2-digit",
+                                                                    year: "numeric",
+                                                                })}
+                                                                time={new Date(
+                                                                    member.last_story_at
+                                                                ).toLocaleTimeString("en-US", {
+                                                                    hour: "numeric",
+                                                                    minute: "2-digit",
+                                                                    hour12: true,
+                                                                })}
+                                                            />
 
-                                                        {member.fullname}
+                                                        ) : (
 
-                                                    </p>
+                                                            <span className="text-sm text-[#98A2B3]">
 
-                                                </td>
+                                                                N/A
 
-                                                {/* GENDER */}
+                                                            </span>
 
-                                                <td className="px-6 py-4">
+                                                        )}
 
-                                                    <Tags
-                                                        text={
-                                                            member.gender.charAt(0).toUpperCase() +
-                                                            member.gender.slice(1)
-                                                        }
-                                                        variant={
-                                                            member.gender === "male"
-                                                                ? "blue"
-                                                                : "purple"
-                                                        }
-                                                    />
+                                                    </td>
 
-                                                </td>
+                                                </tr>
 
-                                                {/* AGE */}
+                                            ))
 
-                                                <td className="px-6 py-4 text-sm text-[#475467]">
+                                        ) : (
 
-                                                    {member.age_group ?? "N/A"} yrs
+                                            <tr>
 
-                                                </td>
+                                                <td
+                                                    colSpan={7}
+                                                    className="py-24 text-center text-[#98A2B3]"
+                                                >
 
-                                                {/* RELATION */}
-
-                                                <td className="px-6 py-4 text-sm text-[#475467]">
-
-                                                    {member.relationships?.relationship_type ?? "N/A"}
-
-                                                </td>
-
-                                                {/* STREAK */}
-
-                                                <td className="px-6 py-4">
-
-                                                    <div className="flex items-center gap-1">
-
-                                                        <Flame
-                                                            size={13}
-                                                            className="text-orange-500"
-                                                        />
-
-                                                        <span className="text-sm font-semibold text-orange-600">
-
-                                                            {member.current_streak}
-
-                                                        </span>
-
-                                                    </div>
-
-                                                </td>
-
-                                                {/* LAST STORY */}
-
-                                                <td className="px-6 py-4">
-
-                                                    {member.last_story_at ? (
-
-                                                        <DateTime
-                                                            date={new Date(
-                                                                member.last_story_at
-                                                            ).toLocaleDateString("en-US", {
-                                                                month: "short",
-                                                                day: "2-digit",
-                                                                year: "numeric",
-                                                            })}
-                                                            time={new Date(
-                                                                member.last_story_at
-                                                            ).toLocaleTimeString("en-US", {
-                                                                hour: "numeric",
-                                                                minute: "2-digit",
-                                                                hour12: true,
-                                                            })}
-                                                        />
-
-                                                    ) : (
-
-                                                        <span className="text-sm text-[#98A2B3]">
-
-                                                            N/A
-
-                                                        </span>
-
-                                                    )}
+                                                    No Members Found
 
                                                 </td>
 
                                             </tr>
 
-                                        ))}
+                                        )}
 
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <Pagination
-                            currentPage={pagination?.page ?? 1}
-                            totalPages={pagination?.totalPages ?? 1}
+                            currentPage={
+                                pagination?.total
+                                    ? pagination.page
+                                    : 1
+                            }
+                            totalPages={
+                                pagination?.total
+                                    ? pagination.totalPages
+                                    : 1
+                            }
                             rowsPerPage={membersPerPage}
                             onPageChange={setMemberPage}
                             onRowsPerPageChange={(rows) => { setMembersPerPage(rows); setMemberPage(1); }}
@@ -499,12 +609,12 @@ export default function UserView({ userId }: Props) {
 
                     {/* Stories Table */}
                     <div className="flex flex-col gap-4">
-                        <div className="overflow-hidden rounded-[10px] border border-gray-200 bg-white">
+                        <div className="flex h-[540px] flex-col overflow-hidden rounded-[10px] border border-gray-200 bg-white">
                             <div className="flex items-center gap-2 border-b border-gray-100 px-6 py-4">
                                 <BookOpen size={17} className="text-emerald-600" />
                                 <h2 className="text-sm font-semibold text-[#101828]">Stories ({storyPagination?.total ?? 0})</h2>
                             </div>
-                            <div className="w-full overflow-x-auto">
+                            <div className="flex-1 overflow-auto">
                                 <table className="w-full border-collapse text-left">
                                     <TableHeader
                                         showCheckbox={false}
@@ -522,18 +632,9 @@ export default function UserView({ userId }: Props) {
 
                                         {storiesLoading ? (
 
-                                            <tr>
+                                            <TableSkeleton rows={5} />
 
-                                                <td
-                                                    colSpan={7}
-                                                    className="py-10 text-center text-sm text-[#667085]"
-                                                >
-                                                    Loading...
-                                                </td>
-
-                                            </tr>
-
-                                        ) : (
+                                        ) : pagedStories.length > 0 ? (
 
                                             pagedStories.map((story) => (
 
@@ -650,6 +751,21 @@ export default function UserView({ userId }: Props) {
 
                                             ))
 
+                                        ) : (
+
+                                            <tr>
+
+                                                <td
+                                                    colSpan={7}
+                                                    className="py-24 text-center text-[#98A2B3]"
+                                                >
+
+                                                    No Stories Found
+
+                                                </td>
+
+                                            </tr>
+
                                         )}
 
                                     </tbody>
@@ -657,8 +773,16 @@ export default function UserView({ userId }: Props) {
                             </div>
                         </div>
                         <Pagination
-                            currentPage={storyPagination?.page ?? 1}
-                            totalPages={storyPagination?.totalPages ?? 1}
+                            currentPage={
+                                storyPagination?.total
+                                    ? storyPagination.page
+                                    : 1
+                            }
+                            totalPages={
+                                storyPagination?.total
+                                    ? storyPagination.totalPages
+                                    : 1
+                            }
                             rowsPerPage={storiesPerPage}
                             onPageChange={setStoryPage}
                             onRowsPerPageChange={(rows) => { setStoriesPerPage(rows); setStoryPage(1); }}

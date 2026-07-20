@@ -22,20 +22,21 @@ export default function StatsCards({
     cols,
     loading = false,
 }: StatsCardsProps) {
-    const colClass = cols === 3
-        ? "2xl:grid-cols-3" :
-        cols === 5
-            ? "2xl:grid-cols-5"
-            : cols === 6
-                ? "2xl:grid-cols-6"
-                : "2xl:grid-cols-4";
+    const colClass =
+        cols === 3
+            ? "lg:grid-cols-3"
+            : cols === 5
+                ? "2xl:grid-cols-5"
+                : cols === 6
+                    ? "2xl:grid-cols-6"
+                    : "2xl:grid-cols-4";
 
     return (
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${colClass} gap-4 mb-6`}>
             {stats.map((stat, i) => (
                 <div
                     key={i}
-                    className="bg-white p-4 rounded-[10px] border border-gray-200 flex items-center gap-3 min-w-0"
+                    className="bg-white p-5 rounded-[10px] border border-gray-200 flex items-center gap-4 min-w-0 h-[120px]"
                 >
                     <div
                         className={`w-[58px] h-[58px] shrink-0 rounded-[12px] ${stat.bg} flex items-center justify-center`}
@@ -43,7 +44,7 @@ export default function StatsCards({
                         {stat.icon}
                     </div>
 
-                    <div className="flex flex-col min-w-0">
+                    <div className="flex flex-col justify-center min-w-0">
                         <p className="text-[14px] font-semibold text-[#344054] truncate font-poppins">
                             {stat.label}
                         </p>
