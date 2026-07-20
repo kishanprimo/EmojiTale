@@ -8,6 +8,7 @@ import {
   Users,
   Mail,
   Gem,
+  BadgeCent,
   Image as ImageIcon,
   Smile,
   Palette,
@@ -33,7 +34,7 @@ const menuGroups = [
       { name: "All Users", href: "/users", icon: Users },
       { name: "Newsletter List", href: "/newsletters", icon: Mail },
       { name: "Subscription Plan", href: "/plans", icon: Gem },
-      { name: "XP Plan", href: "/plans_xp", icon: Gem },
+      { name: "XP Plan", href: "/plans_xp", icon: BadgeCent },
     ],
   },
 ];
@@ -69,9 +70,8 @@ function CollapseMenu({
     <div>
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`relative flex w-full items-center justify-between px-6 py-3 text-sm font-medium transition-all ${
-          active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
-        }`}
+        className={`relative flex w-full items-center justify-between px-6 py-3 text-sm font-medium transition-all ${active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+          }`}
       >
         <div className="flex items-center gap-3">
           <Icon size={20} className={active ? "text-[#2563EB]" : "text-gray-500"} />
@@ -85,9 +85,8 @@ function CollapseMenu({
             <Link
               key={link.href}
               href={link.href}
-              className={`block py-2 pl-6 text-sm ${
-                pathname === link.href ? "font-semibold text-[#2563EB]" : "text-[#374151]"
-              }`}
+              className={`block py-2 pl-6 text-sm ${pathname === link.href ? "font-semibold text-[#2563EB]" : "text-[#374151]"
+                }`}
             >
               {link.label}
             </Link>
@@ -104,9 +103,8 @@ function AdminConfigMenu() {
   return (
     <Link
       href="/admin-config/all"
-      className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
-        active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
-      }`}
+      className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+        }`}
     >
       {active && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
       <Settings size={20} className={active ? "text-[#2563EB]" : "text-gray-500"} />
@@ -164,9 +162,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-40 h-screen w-[280px] border-r border-gray-200 bg-white transition-transform duration-300 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 z-40 h-screen w-[280px] border-r border-gray-200 bg-white transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* Logo */}
         <div className="flex h-[70px] items-center border-b border-gray-100 px-6">
@@ -190,9 +187,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         key={item.name}
                         href={item.href}
                         ref={active ? activeRef : undefined}
-                        className={`relative flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
-                          active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
-                        }`}
+                        className={`relative flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${active ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+                          }`}
                       >
                         {active && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
                         <Icon size={20} className={active ? "text-[#2563EB]" : "text-gray-500"} />
@@ -213,27 +209,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </div>
 
             <div>
-              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">EMOJI</p>
-              <CollapseMenu label="Emoji Categories" icon={Smile} prefix="/emoji-categories" links={[
-                { href: "/emoji-categories", label: "All Categories" },
-                { href: "/emoji-categories/add", label: "Add Category" },
-              ]} />
-            </div>
+              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">
+                EMOJI
+              </p>
 
-            <div>
-              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">EMOJI LIST</p>
-              <CollapseMenu label="Emoji" icon={Smile} prefix="/emojis" links={[
-                { href: "/emojis", label: "Emoji List" },
-                { href: "/emojis/add", label: "Add Emoji" },
-              ]} />
-            </div>
+              <CollapseMenu
+                label="Emoji Categories"
+                icon={Smile}
+                prefix="/emoji-categories"
+                links={[
+                  { href: "/emoji-categories", label: "All Categories" },
+                  { href: "/emoji-categories/add", label: "Add Category" },
+                ]}
+              />
 
-            <div>
-              <p className="mb-3 px-6 text-[11px] font-bold uppercase tracking-[0.18em] text-[#8A8A8A]">THEMES</p>
-              <CollapseMenu label="Themes" icon={Palette} prefix="/themes" links={[
-                { href: "/themes", label: "All Themes" },
-                { href: "/themes/add", label: "Add Theme" },
-              ]} />
+              <CollapseMenu
+                label="Emoji"
+                icon={Smile}
+                prefix="/emojis"
+                links={[
+                  { href: "/emojis", label: "Emoji List" },
+                  { href: "/emojis/add", label: "Add Emoji" },
+                ]}
+              />
             </div>
 
             <div>
@@ -252,9 +250,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               ]} />
               <Link
                 href="/feedback"
-                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
-                  pathname === "/feedback" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
-                }`}
+                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${pathname === "/feedback" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+                  }`}
               >
                 {pathname === "/feedback" && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
                 <MessageSquare size={20} className={pathname === "/feedback" ? "text-[#2563EB]" : "text-gray-500"} />
@@ -262,15 +259,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </Link>
               <Link
                 href="/subscriptions"
-                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${
-                  pathname === "/subscriptions" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
-                }`}
+                className={`relative flex w-full items-center gap-3 px-6 py-3 text-sm font-medium transition-all ${pathname === "/subscriptions" ? "bg-[#EEF4FF] text-[#2563EB]" : "text-[#374151] hover:bg-gray-50"
+                  }`}
               >
                 {pathname === "/subscriptions" && <span className="absolute left-0 top-0 h-full w-1 rounded-r-xl bg-[#2563EB]" />}
                 <CreditCard size={20} className={pathname === "/subscriptions" ? "text-[#2563EB]" : "text-gray-500"} />
                 Subscriptions
               </Link>
               <AdminConfigMenu />
+              <CollapseMenu label="Member Configuration" icon={Users} prefix="/member-config" links={[
+                { href: "/member-config/all", label: "Member Config List" },
+                { href: "/member-config/add", label: "Add Member Config" },
+              ]} />
             </div>
           </nav>
         </div>

@@ -75,7 +75,7 @@ export default function AllUsers() {
                 "Created At",
             ]],
             body: allUsers.map((user: {
-                fullname: string | null;
+                name: string | null;
                 username: string | null;
                 email: string;
                 login_type: string;
@@ -84,7 +84,7 @@ export default function AllUsers() {
                 xp: number;
                 createdAt: string | null;
             }) => [
-                    user.fullname || "N/A",
+                    user.name || "N/A",
                     user.username || "—",
                     user.email,
                     user.login_type,
@@ -118,7 +118,7 @@ export default function AllUsers() {
         ];
 
         const rows = allUsers.map((user: {
-            fullname: string | null;
+            name: string | null;
             username: string | null;
             email: string;
             login_type: string;
@@ -127,7 +127,7 @@ export default function AllUsers() {
             xp: number;
             createdAt: string | null;
         }) => [
-                user.fullname || "N/A",
+                user.name || "N/A",
                 user.username || "—",
                 user.email,
                 user.login_type,
@@ -521,7 +521,7 @@ export default function AllUsers() {
                                                                 />
                                                             ) : (
                                                                 <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-semibold text-sm">
-                                                                    {(user.fullname || user.username || "U").charAt(0).toUpperCase()}
+                                                                    {(user.name || user.username || "U").charAt(0).toUpperCase()}
                                                                 </div>
                                                             )
                                                         }
@@ -530,7 +530,7 @@ export default function AllUsers() {
                                                 {/* Name */}
                                                 <td className="px-4 py-5">
                                                     <p className="text-sm font-medium text-[#101828]">
-                                                        {user.fullname || "N/A"}
+                                                        {user.name || "N/A"}
                                                     </p>
                                                     <p className="text-xs text-[#667085] mt-0.5">
                                                         {user.username || "—"}

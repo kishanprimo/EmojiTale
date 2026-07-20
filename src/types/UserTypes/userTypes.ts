@@ -7,7 +7,7 @@ export interface UserPayload {
 export interface UserItem {
     user_id: number;
     email: string;
-    fullname: string | null;
+    name: string | null;
     username: string | null;
     is_premium: boolean;
     xp: number;

@@ -37,6 +37,9 @@ import addAvatarReducer from "./slices/AvatarSlices/addAvatarSlice";
 import updateAvatarReducer from "@/store/slices/AvatarSlices/updateAvatarSlice";
 import selectedAvatarReducer from "./slices/AvatarSlices/selectedAvatarSlice";
 import dashboardReducer from "./slices/DashboardSlice/dashboardSlice";
+import memberLevelConfigReducer from "./slices/MemberConfigSlices/member_level_config_slice";
+import addMemberLevelConfigReducer from "./slices/MemberConfigSlices/add_member_level_config_slice";
+import updateMemberLevelConfigReducer from "./slices/MemberConfigSlices/update_member_level_config_slice";
 
 export const store = configureStore({
   reducer: {
@@ -86,6 +89,10 @@ export const store = configureStore({
     updateAdminConfig: updateAdminConfigReducer,
     feedback: feedbackReducer,
     subscription: subscriptionReducer,
+
+    memberLevelConfig: memberLevelConfigReducer,
+    addMemberLevelConfig: addMemberLevelConfigReducer,
+    updateMemberLevelConfig: updateMemberLevelConfigReducer,
   },
 });
 
