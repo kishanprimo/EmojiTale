@@ -8,9 +8,9 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { useRouter } from "next/navigation";
 import Search from "@/components/common/Search";
-import StatsCard from "@/components/common/StatsCard";
+
 import TableHeader from "@/components/common/TableHeader";
-import Name from "@/components/common/Name";
+
 import Tags from "@/components/common/Tag";
 import Action from "@/components/common/Action";
 import Pagination from "@/components/common/Pagination";
@@ -385,51 +385,8 @@ export default function AllUsers() {
                     </div>
                 </div>
 
-                {/* Stats */}
 
-                {loading ? (
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 animate-pulse">
-
-                        {[...Array(4)].map((_, index) => (
-
-                            <div
-                                key={index}
-                                className="bg-white border border-gray-200 rounded-xl p-6"
-                            >
-                                <div className="flex items-center gap-4">
-
-                                    <div className="h-14 w-14 rounded-xl bg-gray-200" />
-
-                                    <div className="flex-1">
-
-                                        <div className="h-4 w-24 rounded bg-gray-200" />
-
-                                        <div className="mt-3 h-8 w-16 rounded bg-gray-200" />
-
-                                        <div className="mt-3 h-3 w-24 rounded bg-gray-100" />
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        ))}
-
-                    </div>
-
-                ) : (
-
-                    <div className="mb-8">
-                        <StatsCard
-                            stats={stats}
-                            cols={4}
-                        />
-                    </div>
-
-                )}
-
-                <div className="mt-7 bg-white border border-gray-200 rounded-[10px] overflow-hidden">
+                <div className="bg-white border border-gray-200 rounded-[10px] overflow-hidden">
                     <div className="w-full overflow-x-auto">
                         <table className="min-w-[1450px] w-full text-left border-collapse">
 
@@ -509,22 +466,22 @@ export default function AllUsers() {
                                                             alt="avatar"
                                                         />
                                                     ) : ( */}
-                                                    
-                                                        {
-                                                            user.avatar?.avatar_media ? (
-                                                                <Image
-                                                                    src={proxiedImage(user.avatar.avatar_media)!}
-                                                                    width={40}
-                                                                    height={40}
-                                                                    className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
-                                                                    alt="avatar"
-                                                                />
-                                                            ) : (
-                                                                <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-semibold text-sm">
-                                                                    {(user.name || user.username || "U").charAt(0).toUpperCase()}
-                                                                </div>
-                                                            )
-                                                        }
+
+                                                    {
+                                                        user.avatar?.avatar_media ? (
+                                                            <Image
+                                                                src={proxiedImage(user.avatar.avatar_media)!}
+                                                                width={40}
+                                                                height={40}
+                                                                className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
+                                                                alt="avatar"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-semibold text-sm">
+                                                                {(user.name || user.username || "U").charAt(0).toUpperCase()}
+                                                            </div>
+                                                        )
+                                                    }
                                                 </td>
 
                                                 {/* Name */}
@@ -603,10 +560,9 @@ export default function AllUsers() {
                                                 <td className="px-4 py-5 text-center">
                                                     <Action
                                                         showView
-                                                        showDelete
+                                                        showDelete={false}
                                                         showEdit={false}
                                                         onView={() => router.push(`/users/view/${user.user_id}`)}
-                                                        onDelete={() => { }}
                                                     />
                                                 </td>
                                             </tr>
