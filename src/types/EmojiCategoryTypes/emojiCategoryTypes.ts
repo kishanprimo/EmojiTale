@@ -11,6 +11,7 @@ export interface EmojiCategoryItem {
     is_premium: boolean;
     emoji_category_image: string;
     story_count: number;
+    emoji_count: number;
     createdAt: string;
     updatedAt: string;
 }

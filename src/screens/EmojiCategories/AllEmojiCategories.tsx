@@ -36,12 +36,13 @@ export default function AllEmojiCategories() {
     }, [dispatch, page, limit, debouncedSearch]);
 
     const handleExportCSV = () => {
-        const headers = ["Category ID", "Name", "Premium", "Story Count"];
+        const headers = ["Category ID", "Name", "Premium", "Story Count", "Emoji Count"];
         const rows = categories.map((c) => [
             c.emoji_category_id,
             c.name,
             c.is_premium ? "Yes" : "No",
             c.story_count,
+            c.emoji_count,
         ]);
         const csv = [headers, ...rows]
             .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
@@ -107,6 +108,7 @@ export default function AllEmojiCategories() {
                                 { label: "Name" },
                                 { label: "Premium" },
                                 { label: "Story Count" },
+                                { label: "Emoji Count" },
                                 { label: "Action", className: "text-center" },
                             ]}
                         />
@@ -142,6 +144,9 @@ export default function AllEmojiCategories() {
                                         <td className="px-6 py-5 text-sm text-[#101828]">
                                             {cat.story_count}
                                         </td>
+                                        <td className="px-6 py-5 text-sm text-[#101828]">
+                                            {cat.emoji_count}
+                                        </td>
                                         <td className="px-6 py-5 text-center">
                                             <Action
                                                 showEdit
@@ -163,7 +168,7 @@ export default function AllEmojiCategories() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} className="py-20">
+                                    <td colSpan={7} className="py-20">
                                         <div className="flex flex-col items-center justify-center">
                                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                 <SearchX size={30} className="text-[#2563EB]" />
