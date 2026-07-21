@@ -37,7 +37,7 @@ export default function AllNotifications() {
                         <Plus size={16} /> Add Notification
                     </button>
                 </div>
-
+                
                 {/* Table */}
                 <div className="mt-7 bg-white border border-gray-200 rounded-[10px] overflow-hidden">
                     <div className="w-full overflow-x-auto">
