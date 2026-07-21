@@ -32,7 +32,11 @@ export default function AllEmojis() {
     const [exportOpen, setExportOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(getEmojis({ page, limit, search: debouncedSearch }));
+        setPage(1);
+    }, [debouncedSearch]);
+
+    useEffect(() => {
+        dispatch(getEmojis({ page, limit, search: debouncedSearch || undefined }));
     }, [dispatch, page, limit, debouncedSearch]);
 
     const handleExportCSV = () => {

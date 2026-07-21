@@ -11,6 +11,7 @@ export interface UserItem {
     username: string | null;
     is_premium: boolean;
     xp: number;
+    story_count: string | number;
     is_deleted: boolean;
     subscription_expires_at: string | null;
     revenuecat_customer_id: string | null;

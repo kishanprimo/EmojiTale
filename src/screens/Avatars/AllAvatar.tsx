@@ -64,28 +64,18 @@ export default function AllAvatar() {
     // -----------------------------------
 
     useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch]);
 
+    useEffect(() => {
         dispatch(
-
             getAvatars({
-
                 page,
-
                 limit,
-
+                search: debouncedSearch || undefined,
             })
-
         );
-
-    }, [
-
-        dispatch,
-
-        page,
-
-        limit,
-
-    ]);
+    }, [dispatch, page, limit, debouncedSearch]);
 
     // -----------------------------------
     // Fetch All
@@ -296,33 +286,9 @@ export default function AllAvatar() {
     };
 
     // -----------------------------------
-    // Client Search
+    // API handles search
     // -----------------------------------
 
-    const filteredAvatars =
-        avatars.filter((avatar) => {
-
-            if (!debouncedSearch)
-                return true;
-
-            const search =
-                debouncedSearch.toLowerCase();
-
-            return (
-
-                avatar.name
-                    .toLowerCase()
-                    .includes(search)
-
-                ||
-
-                avatar.avatar_gender
-                    .toLowerCase()
-                    .includes(search)
-
-            );
-
-        });
 
     return (
 
@@ -454,9 +420,9 @@ export default function AllAvatar() {
 
                                     <TableSkeleton rows={limit} />
 
-                                ) : filteredAvatars.length > 0 ? (
+                                ) : avatars.length > 0 ? (
 
-                                    filteredAvatars.map((avatar) => (
+                                    avatars.map((avatar) => (
 
                                         <tr
                                             key={avatar.avatar_id}
@@ -639,16 +605,7 @@ export default function AllAvatar() {
                                                 </h3>
 
                                                 <p className="mt-2 max-w-sm text-center text-[15px] text-[#667085]">
-
-                                                    We couldn't find any avatars matching
-
-                                                    <span className="font-bold text-[#101828]">
-
-                                                        {" "}
-                                                        "{debouncedSearch}"
-
-                                                    </span>
-
+                                                    {debouncedSearch ? `No avatars found for "${debouncedSearch}".` : "No avatars found."}
                                                 </p>
 
                                             </div>

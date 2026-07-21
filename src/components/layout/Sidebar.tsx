@@ -21,6 +21,7 @@ import {
   ChevronDown,
   ChevronRight,
   GitMerge,
+  FileText,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -251,7 +252,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               ]} />
 
               <AdminConfigMenu />
- 
+
 
             </div>
 
@@ -277,7 +278,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <CreditCard size={20} className={pathname === "/subscriptions" ? "text-[#2563EB]" : "text-gray-500"} />
                 Subscriptions
               </Link>
-    
+
               <CollapseMenu label="Badges" icon={Users} prefix="/member-config" links={[
                 { href: "/member-config/all", label: "Badges List" },
                 { href: "/member-config/add", label: "Add Badges" },
@@ -291,6 +292,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <GitMerge size={20} className={pathname === "/referrals" ? "text-[#2563EB]" : "text-gray-500"} />
                 Referrals & Earn
               </Link>
+              <CollapseMenu label="Reports" icon={FileText} prefix="/reports" links={[
+                { href: "/reports/all", label: "All Reports" },
+                { href: "/reports/add", label: "Add Report" },
+              ]} />
+
             </div>
           </nav>
         </div>

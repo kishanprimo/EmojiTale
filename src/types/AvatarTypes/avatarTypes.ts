@@ -1,6 +1,7 @@
 export interface AvatarPayload {
     page: number;
     limit: number;
+    search?: string;
     avatar_gender?: string;
     status?: boolean;
 }

@@ -1,60 +1,41 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import Search from "@/components/common/Search";
 import TableHeader from "@/components/common/TableHeader";
 import Pagination from "@/components/common/Pagination";
 import TableSkeleton from "@/components/common/TableSkeleton";
 import DateTime from "@/components/common/DateTime";
 import Tags from "@/components/common/Tag";
-import { SearchX } from "lucide-react";
+import { SearchX, Plus } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getNotifications } from "@/store/slices/NotificationSlices/notificationThunk";
-import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllNotifications() {
     const dispatch = useAppDispatch();
+    const router = useRouter();
     const { notifications, pagination, loading } = useAppSelector((state) => state.notifications);
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-
-    useEffect(() => {
-        setPage(1);
-    }, [debouncedSearch]);
 
     useEffect(() => {
         dispatch(getNotifications({ page, limit }));
     }, [dispatch, page, limit]);
 
-    const filtered = debouncedSearch
-        ? notifications.filter(
-            (n) =>
-                n.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                n.message.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                n.admin.email.toLowerCase().includes(debouncedSearch.toLowerCase())
-        )
-        : notifications;
-
     return (
         <DashboardLayout>
             <div className="px-4 sm:px-8 pt-4 pb-12 font-inter">
 
-                {/* Header */}
-                <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="mb-8 flex items-center justify-between">
                     <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">All Notifications</h1>
-                    <div className="flex items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl lg:justify-end">
-                        <div className="flex-1 lg:max-w-sm">
-                            <Search
-                                searchTerm={searchTerm}
-                                setSearchTerm={setSearchTerm}
-                                placeholder="Search by title or email..."
-                            />
-                        </div>
-                    </div>
+                    <button
+                        onClick={() => router.push("/notifications/add")}
+                        className="flex items-center gap-2 rounded-[10px] bg-[#2563EB] hover:bg-[#1D4ED8] px-4 py-2.5 text-sm font-medium text-white transition-all"
+                    >
+                        <Plus size={16} /> Add Notification
+                    </button>
                 </div>
 
                 {/* Table */}
@@ -76,8 +57,8 @@ export default function AllNotifications() {
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
                                     <TableSkeleton rows={limit} />
-                                ) : filtered.length > 0 ? (
-                                    filtered.map((n) => (
+                                ) : notifications.length > 0 ? (
+                                    notifications.map((n) => (
                                         <tr key={n.broadcast_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                             <td className="px-6 py-4 text-sm font-semibold text-[#101828]">
                                                 #{n.broadcast_id}
@@ -120,9 +101,7 @@ export default function AllNotifications() {
                                                     <SearchX size={30} className="text-[#2563EB]" />
                                                 </div>
                                                 <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Notifications Found</h3>
-                                                <p className="mt-2 text-[15px] text-[#667085]">
-                                                    {debouncedSearch ? `No results for "${debouncedSearch}"` : "No notifications have been sent yet."}
-                                                </p>
+                                                <p className="mt-2 text-[15px] text-[#667085]">No notifications have been sent yet.</p>
                                             </div>
                                         </td>
                                     </tr>

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import Search from "@/components/common/Search";
 import TableHeader from "@/components/common/TableHeader";
 import TableSkeleton from "@/components/common/TableSkeleton";
 import DateTime from "@/components/common/DateTime";
@@ -12,32 +11,19 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminConfigs } from "@/store/slices/AdminConfigSlices/adminConfigThunk";
-import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AllAdminConfig() {
     const dispatch = useAppDispatch();
     const { configs, loading } = useAppSelector((state) => state.adminConfig);
 
     const router = useRouter();
-
-    const [searchTerm, setSearchTerm] = useState("");
-    const debouncedSearch = useDebounce(searchTerm, 1000);
     const [exportOpen, setExportOpen] = useState(false);
 
     useEffect(() => {
         dispatch(getAdminConfigs());
     }, [dispatch]);
 
-    const filtered = debouncedSearch
-        ? configs.filter(
-            (c) =>
-                c.key.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                c.value.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                c.description.toLowerCase().includes(debouncedSearch.toLowerCase())
-        )
-        : configs;
-
-    const handleExportPDF = () => {
+        const handleExportPDF = () => {
         const doc = new jsPDF("landscape");
         doc.setFontSize(18);
         doc.text("Admin Configurations", 14, 18);
@@ -46,7 +32,7 @@ export default function AllAdminConfig() {
         autoTable(doc, {
             startY: 34,
             head: [["ID", "Key", "Value", "Description", "Created At", "Updated At"]],
-            body: filtered.map((c) => [
+            body: configs.map((c) => [
                 c.config_id,
                 c.key,
                 c.value,
@@ -62,7 +48,7 @@ export default function AllAdminConfig() {
 
     const handleExportCSV = () => {
         const headers = ["ID", "Key", "Value", "Description", "Created At", "Updated At"];
-        const rows = filtered.map((c) => [
+        const rows = configs.map((c) => [
             c.config_id,
             c.key,
             c.value,
@@ -87,18 +73,9 @@ export default function AllAdminConfig() {
             <div className="px-4 sm:px-8 pt-4 pb-12 font-inter">
 
                 {/* Header */}
-                <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">
-                        Admin Configurations
-                    </h1>
-                    <div className="flex items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl lg:justify-end">
-                        <div className="flex-1 lg:max-w-sm">
-                            <Search
-                                searchTerm={searchTerm}
-                                setSearchTerm={setSearchTerm}
-                                placeholder="Search configs..."
-                            />
-                        </div>
+                <div className="mb-8 flex items-center justify-between">
+                    <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Admin Configurations</h1>
+                    <div className="flex items-center gap-3">
 
                         {/* Export */}
                         <div className="relative shrink-0">
@@ -148,8 +125,8 @@ export default function AllAdminConfig() {
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
                                     <TableSkeleton rows={5} />
-                                ) : filtered.length > 0 ? (
-                                    filtered.map((config) => (
+                                ) : configs.length > 0 ? (
+                                    configs.map((config) => (
                                         <tr key={config.config_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
                                             <td className="px-6 py-4 text-sm font-semibold text-[#101828]">
                                                 #{config.config_id}
@@ -193,9 +170,7 @@ export default function AllAdminConfig() {
                                                     <SearchX size={30} className="text-[#2563EB]" />
                                                 </div>
                                                 <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Configs Found</h3>
-                                                <p className="mt-2 text-[15px] text-[#667085]">
-                                                    {debouncedSearch ? `No results for "${debouncedSearch}"` : "No configurations available."}
-                                                </p>
+                                                <p className="mt-2 text-[15px] text-[#667085]">No configurations available.</p>
                                             </div>
                                         </td>
                                     </tr>

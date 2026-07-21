@@ -21,6 +21,8 @@ import adminConfigReducer from "./slices/AdminConfigSlices/adminConfigSlice";
 import updateAdminConfigReducer from "./slices/AdminConfigSlices/updateAdminConfigSlice";
 import feedbackReducer from "./slices/FeedbackSlices/feedbackSlice";
 import subscriptionReducer from "./slices/SubscriptionSlices/subscriptionSlice";
+import reportReducer from "./slices/ReportSlices/reportSlice";
+import createReportReducer from "./slices/ReportSlices/createReportSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/UserSlice/userSlice";
 import userDetailsReducer from "./slices/UserSlice/userDetailsSlice";
@@ -36,6 +38,7 @@ import addAvatarReducer from "./slices/AvatarSlices/addAvatarSlice";
 import updateAvatarReducer from "@/store/slices/AvatarSlices/updateAvatarSlice";
 import selectedAvatarReducer from "./slices/AvatarSlices/selectedAvatarSlice";
 import dashboardReducer from "./slices/DashboardSlice/dashboardSlice";
+import popularAuthorReducer from "./slices/PopularAuthorSlices/popularAuthorSlice";
 import memberLevelConfigReducer from "./slices/MemberConfigSlices/member_level_config_slice";
 import referralReducer from "./slices/ReferralSlices/referralSlice";
 import userViewReducer from "./slices/UserSlice/userViewSlice";
@@ -49,6 +52,7 @@ export const store = configureStore({
     auth: authReducer,
 
     dashboard: dashboardReducer,
+    popularAuthors: popularAuthorReducer,
 
     users: userReducer,
     members: memberReducer,
@@ -92,6 +96,8 @@ export const store = configureStore({
     updateAdminConfig: updateAdminConfigReducer,
     feedback: feedbackReducer,
     subscription: subscriptionReducer,
+    reports: reportReducer,
+    createReport: createReportReducer,
 
     memberLevelConfig: memberLevelConfigReducer,
     addMemberLevelConfig: addMemberLevelConfigReducer,
@@ -100,6 +106,8 @@ export const store = configureStore({
     userView: userViewReducer,
     memberStories: memberStoriesReducer,
     xpHistory: xpHistoryReducer,
+
+
   },
 });
 

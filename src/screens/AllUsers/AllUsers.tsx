@@ -398,6 +398,7 @@ export default function AllUsers() {
                                     { label: "Login Type" },
                                     { label: "Plan" },
                                     { label: "Status" },
+                                    { label: "Story Count" },
                                     { label: "XP" },
                                     { label: "Created At" },
                                     { label: "Action", className: "text-center" },
@@ -521,6 +522,11 @@ export default function AllUsers() {
                                                         text={user.is_deleted ? "Inactive" : "Active"}
                                                         variant={user.is_deleted ? "red" : "green"}
                                                     />
+                                                </td>
+
+                                                {/* Story Count */}
+                                                <td className="px-4 py-5 text-sm font-semibold text-[#101828]">
+                                                    {user.story_count ?? 0}
                                                 </td>
 
                                                 {/* XP */}

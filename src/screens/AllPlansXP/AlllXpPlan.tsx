@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import Search from "@/components/common/Search";
 import TableHeader from "@/components/common/TableHeader";
 import Pagination from "@/components/common/Pagination";
 import TableSkeleton from "@/components/common/TableSkeleton";
@@ -22,7 +21,6 @@ import axios from "@/lib/axiosConfiguration";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getPlans } from "@/store/slices/PlanSlices/planThunk";
-import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AlllXpPlan() {
 
@@ -33,10 +31,6 @@ export default function AlllXpPlan() {
         pagination,
         loading,
     } = useAppSelector((state) => state.plans);
-
-    const [searchTerm, setSearchTerm] = useState("");
-
-    const debouncedSearch = useDebounce(searchTerm, 1000);
 
     const [page, setPage] = useState(1);
 
@@ -207,20 +201,7 @@ export default function AlllXpPlan() {
 
     };
 
-    // ----------------------------
-    // Temporary Client Search
-    // (Remove when backend supports search)
-    // ----------------------------
 
-        const filteredPlans = plans.filter((plan) => {
-        if (!debouncedSearch) return true;
-        const search = debouncedSearch.toLowerCase();
-        return (
-            plan.plan_type.toLowerCase().includes(search) ||
-            plan.revenuecat_product_id.toLowerCase().includes(search) ||
-            String(plan.plan_id).includes(search)
-        );
-    });
 
     return (
 
@@ -235,17 +216,7 @@ export default function AlllXpPlan() {
                         Xp Plan
                     </h1>
 
-                    <div className="flex items-center gap-3 w-full lg:w-auto lg:flex-1 lg:max-w-xl lg:justify-end">
-
-                        <div className="flex-1 lg:max-w-sm">
-
-                            <Search
-                                searchTerm={searchTerm}
-                                setSearchTerm={setSearchTerm}
-                                placeholder="Search plans..."
-                            />
-
-                        </div>
+                    <div className="flex items-center gap-3">
 
                         {/* Export */}
 
@@ -334,9 +305,9 @@ export default function AlllXpPlan() {
 
                                     <TableSkeleton rows={limit} />
 
-                                ) : filteredPlans.length > 0 ? (
+                                ) : plans.length > 0 ? (
 
-                                    filteredPlans.map((plan) => (
+                                    plans.map((plan) => (
 
                                         <tr
                                             key={plan.plan_id}
@@ -433,14 +404,7 @@ export default function AlllXpPlan() {
 
                                                 <p className="mt-2 max-w-sm text-center text-[15px] text-[#667085]">
 
-                                                    We couldn't find any plans matching
-
-                                                    <span className="font-bold text-[#101828]">
-
-                                                        {" "}
-                                                        "{debouncedSearch}"
-
-                                                    </span>
+                                                    No XP plans found.
 
                                                 </p>
 

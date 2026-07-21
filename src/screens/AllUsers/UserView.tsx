@@ -614,8 +614,8 @@ export default function UserView({ userId }: Props) {
                                 <BookOpen size={17} className="text-emerald-600" />
                                 <h2 className="text-sm font-semibold text-[#101828]">Stories ({storyPagination?.total ?? 0})</h2>
                             </div>
-                            <div className="flex-1 overflow-auto">
-                                <table className="w-full border-collapse text-left">
+                            <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                                <table className="w-full table-fixed border-collapse text-left">
                                     <TableHeader
                                         showCheckbox={false}
                                         columns={[
@@ -624,8 +624,8 @@ export default function UserView({ userId }: Props) {
                                             { label: "Story Title" },
                                             { label: "Content" },
                                             { label: "Public" },
-                                            { label: "AI Model" },
-                                            { label: "AI Cost" },
+                                            { label: "Created At" },
+
                                         ]}
                                     />
                                     <tbody className="divide-y divide-gray-100">
@@ -685,7 +685,7 @@ export default function UserView({ userId }: Props) {
 
                                                     <td className="px-6 py-4">
 
-                                                        <p className="max-w-[220px] truncate text-sm font-medium text-[#101828]">
+                                                        <p className="truncate text-sm font-medium text-[#101828]">
 
                                                             {story.title}
 
@@ -697,9 +697,9 @@ export default function UserView({ userId }: Props) {
 
                                                     <td className="px-6 py-4">
 
-                                                        <div className="max-w-[250px]">
+                                                        <div className="w-full">
 
-                                                            <p className="line-clamp-1 text-sm text-[#667085]">
+                                                            <p className="truncate text-sm text-[#667085]">
 
                                                                 {story.content}
 
@@ -731,21 +731,17 @@ export default function UserView({ userId }: Props) {
 
                                                     </td>
 
-                                                    {/* AI MODEL */}
-
-                                                    <td className="px-6 py-4 text-sm text-[#475467]">
-
-                                                        {story.ai_model}
-
+                                                    {/* Created At */}
+                                                    <td className="pl-6 px-4 py-5">
+                                                        <span className="text-sm text-[#475467] whitespace-nowrap">
+                                                            {new Date(story.created_at).toLocaleDateString("en-US", {
+                                                                month: "short",
+                                                                day: "2-digit",
+                                                                year: "numeric",
+                                                            })}
+                                                        </span>
                                                     </td>
 
-                                                    {/* AI COST */}
-
-                                                    <td className="px-6 py-4 text-sm font-semibold text-[#2563EB]">
-
-                                                        ${story.ai_cost_usd}
-
-                                                    </td>
 
                                                 </tr>
 
@@ -906,25 +902,7 @@ export default function UserView({ userId }: Props) {
                             </h3>
                             <div className="grid grid-cols-2 gap-5">
 
-                                <InfoCard
-                                    title="AI Provider"
-                                    value={selectedStory.ai_provider}
-                                />
 
-                                <InfoCard
-                                    title="AI Model"
-                                    value={selectedStory.ai_model}
-                                />
-
-                                <InfoCard
-                                    title="Prompt Tokens"
-                                    value={selectedStory.prompt_tokens}
-                                />
-
-                                <InfoCard
-                                    title="Completion Tokens"
-                                    value={selectedStory.completion_tokens}
-                                />
 
                                 <InfoCard
                                     title="AI Cost"
