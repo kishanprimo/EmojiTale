@@ -22,6 +22,13 @@ interface StoryPage {
     preview: string;
     fileName: string;
     storymedia_id?: number; // existing media id for edit
+    originalContent?: string; // content as loaded, to detect edits
+}
+
+async function urlToFile(url: string, fileName: string): Promise<File> {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return new File([blob], fileName, { type: blob.type });
 }
 
 interface Props {
@@ -64,6 +71,7 @@ export default function GenerateStory({ editItem }: Props) {
                     preview: m.image,
                     fileName: "Existing image",
                     storymedia_id: m.storymedia_id,
+                    originalContent: m.content,
                 }));
         }
         return [makePage()];
@@ -141,14 +149,31 @@ export default function GenerateStory({ editItem }: Props) {
 
         if (isEdit) {
             formData.append("adminstory_id", String(editItem!.adminstory_id));
-            // Only send content+images for NEW pages (no storymedia_id)
+
+            // Brand-new pages (no storymedia_id): always send as content+images
             const newPages = pages.filter((p) => !p.storymedia_id);
             for (const page of newPages) {
                 if (!page.image) { toast.error("Please choose an image for new pages"); return; }
                 formData.append("content", page.content.trim());
                 formData.append("images", page.image);
             }
-            if (removedMediaIds.length) formData.append("remove_media_ids", removedMediaIds.join(","));
+
+            // Existing pages the user edited (content changed or image replaced):
+            // backend has no in-place update, so remove the old media and re-add it as a new pair.
+            const editedExistingPages = pages.filter(
+                (p) => p.storymedia_id && (p.image || p.content.trim() !== p.originalContent)
+            );
+            const removeIds = [...removedMediaIds, ...editedExistingPages.map((p) => p.storymedia_id!)];
+
+            for (const page of editedExistingPages) {
+                const file = page.image ?? (await urlToFile(page.preview, `page-${page.storymedia_id}.jpg`));
+                formData.append("content", page.content.trim());
+                formData.append("images", file);
+            }
+
+            for (const id of removeIds) {
+                formData.append("remove_media_ids", String(id));
+            }
         } else {
             pages.forEach((page) => {
                 formData.append("content", page.content.trim());
