@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
             pauseOnHover
             theme="light"
           />
+          <Toaster position="top-right" />
         </ReduxProvider>
       </body>
     </html>

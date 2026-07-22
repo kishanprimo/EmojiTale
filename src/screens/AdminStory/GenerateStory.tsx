@@ -50,6 +50,7 @@ export default function GenerateStory({ editItem }: Props) {
 
     const { categories } = useAppSelector((state) => state.storyCategory);
 
+    const [title, setTitle] = useState(editItem?.title ?? "");
     const [categoryId, setCategoryId] = useState<number | "">(editItem?.storycategory_id ?? "");
     const [isActive, setIsActive] = useState(editItem?.is_active ?? true);
     const [pages, setPages] = useState<StoryPage[]>(() => {
@@ -120,13 +121,21 @@ export default function GenerateStory({ editItem }: Props) {
     };
 
     const handleSubmit = async () => {
-        if (!categoryId) { toast.error("Please select a story category"); return; }
-        for (let i = 0; i < pages.length; i++) {
-            if (!pages[i].content.trim()) { toast.error(`Please enter text content for page ${i + 1}`); return; }
-            if (!isEdit && !pages[i].image) { toast.error(`Please choose an image for page ${i + 1}`); return; }
+        const errors: string[] = [];
+        if (!title.trim()) errors.push("Story title");
+        if (!categoryId) errors.push("Story category");
+        pages.forEach((page, i) => {
+            if (!page.content.trim()) errors.push(`Page ${i + 1} text`);
+            if (!isEdit && !page.image) errors.push(`Page ${i + 1} image`);
+        });
+
+        if (errors.length) {
+            toast.error(`All fields are required: ${errors.join(", ")}`);
+            return;
         }
 
         const formData = new FormData();
+        formData.append("title", title.trim());
         formData.append("storycategory_id", String(categoryId));
         formData.append("is_active", String(isActive));
 
@@ -191,6 +200,20 @@ export default function GenerateStory({ editItem }: Props) {
                         </div>
 
                         <div className="flex-1 p-6 space-y-6">
+                            {/* Title */}
+                            <div>
+                                <label className="block mb-2 text-[14px] font-semibold text-gray-700">
+                                    Story Title <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder="Enter story title..."
+                                    className="w-full h-12 rounded-[10px] border border-gray-300 bg-white px-4 text-[#101828] placeholder:text-gray-400 outline-none focus:border-blue-500 transition-colors"
+                                />
+                            </div>
+
                             {/* Category */}
                             <div>
                                 <label className="block mb-2 text-[14px] font-semibold text-gray-700">
@@ -331,7 +354,7 @@ export default function GenerateStory({ editItem }: Props) {
                     <div className="bg-white border border-gray-200 rounded-2xl flex flex-col sticky top-6 self-start">
                         <div className="border-b border-gray-100 px-6 py-5 flex items-center justify-between">
                             <div>
-                                <h2 className="text-[17px] font-semibold text-[#101828]">Page Preview</h2>
+                                <h2 className="text-[17px] font-semibold text-[#101828]">{title.trim() || "Page Preview"}</h2>
                                 <p className="text-sm text-[#667085] mt-0.5">Page {activeIndex + 1} of {pages.length}</p>
                             </div>
                             {pages.length > 1 && (
