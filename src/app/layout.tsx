@@ -42,6 +42,7 @@ export default function RootLayout({
             closeOnClick
             pauseOnHover
             theme="light"
+            
           />
           <Toaster position="top-right" />
         </ReduxProvider>
