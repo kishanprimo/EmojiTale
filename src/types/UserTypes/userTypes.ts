@@ -16,6 +16,7 @@ export interface UserItem {
     subscription_expires_at: string | null;
     revenuecat_customer_id: string | null;
     login_type: string;
+    platform: string | null;
     createdAt: string;
     // Backend response changed from:
     // avatar: string | null

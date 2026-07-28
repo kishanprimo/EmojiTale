@@ -69,6 +69,7 @@ export default function AllUsers() {
                 "Username",
                 "Email",
                 "Login Type",
+                "Platform",
                 "Plan",
                 "Status",
                 "XP",
@@ -79,6 +80,7 @@ export default function AllUsers() {
                 username: string | null;
                 email: string;
                 login_type: string;
+                platform: string | null;
                 is_premium: boolean;
                 is_deleted: boolean;
                 xp: number;
@@ -88,6 +90,7 @@ export default function AllUsers() {
                     user.username || "—",
                     user.email,
                     user.login_type,
+                    user.platform || "—",
                     user.is_premium ? "Premium" : "Free",
                     user.is_deleted ? "Inactive" : "Active",
                     user.xp,
@@ -111,6 +114,7 @@ export default function AllUsers() {
             "Username",
             "Email",
             "Login Type",
+            "Platform",
             "Plan",
             "Status",
             "XP",
@@ -122,6 +126,7 @@ export default function AllUsers() {
             username: string | null;
             email: string;
             login_type: string;
+            platform: string | null;
             is_premium: boolean;
             is_deleted: boolean;
             xp: number;
@@ -131,6 +136,7 @@ export default function AllUsers() {
                 user.username || "—",
                 user.email,
                 user.login_type,
+                user.platform || "—",
                 user.is_premium ? "Premium" : "Free",
                 user.is_deleted ? "Inactive" : "Active",
                 user.xp,
@@ -396,6 +402,7 @@ export default function AllUsers() {
                                     { label: "Name" },
                                     { label: "Email" },
                                     { label: "Login Type" },
+                                    { label: "Platform" },
                                     { label: "Plan" },
                                     { label: "Status" },
                                     { label: "Story Count" },
@@ -508,6 +515,11 @@ export default function AllUsers() {
                                                     />
                                                 </td>
 
+                                                {/* Platform */}
+                                                <td className="px-4 py-5 text-sm text-[#475467]">
+                                                    {user.platform || "—"}
+                                                </td>
+
                                                 {/* Plan */}
                                                 <td className="px-4 py-5">
                                                     <Tags
@@ -574,7 +586,7 @@ export default function AllUsers() {
                                             </tr>
                                             {expandedRows.includes(user.user_id) && (
                                                 <tr>
-                                                    <td colSpan={14}>
+                                                    <td colSpan={15}>
                                                         <div className="mx-8 mt-6">
                                                             <div className="mx-auto mb-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                                                                 <div className="flex items-center justify-between border-b border-gray-200 bg-[#F8FAFC] px-6 py-4">
@@ -685,7 +697,7 @@ export default function AllUsers() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={12} className="py-20">
+                                        <td colSpan={13} className="py-20">
                                             <div className="flex flex-col items-center justify-center">
                                                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                     <SearchX
