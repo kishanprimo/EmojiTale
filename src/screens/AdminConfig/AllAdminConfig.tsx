@@ -5,10 +5,13 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import TableHeader from "@/components/common/TableHeader";
 import TableSkeleton from "@/components/common/TableSkeleton";
 import DateTime from "@/components/common/DateTime";
-import { Download, ChevronDown, SearchX, Pencil } from "lucide-react";
+import { Download, ChevronDown, SearchX, Pencil, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
+import axios from "@/lib/axiosConfiguration";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminConfigs } from "@/store/slices/AdminConfigSlices/adminConfigThunk";
 
@@ -18,6 +21,21 @@ export default function AllAdminConfig() {
 
     const router = useRouter();
     const [exportOpen, setExportOpen] = useState(false);
+    const [syncing, setSyncing] = useState(false);
+
+    const handleSyncPlan = async () => {
+        setSyncing(true);
+        try {
+            await axios.post("/admin/xp-store/sync-revenuecat");
+            toast.success("Plan synced successfully!");
+            dispatch(getAdminConfigs());
+        } catch (error) {
+            const message = isAxiosError(error) ? error.response?.data?.message : undefined;
+            toast.error(message || "Failed to sync plan");
+        } finally {
+            setSyncing(false);
+        }
+    };
 
     useEffect(() => {
         dispatch(getAdminConfigs());
@@ -73,8 +91,16 @@ export default function AllAdminConfig() {
             <div className="px-4 sm:px-8 pt-4 pb-12 font-inter">
 
                 {/* Header */}
-                <div className="mb-8 flex items-center justify-between">
+                <div className="relative mb-8 flex items-center justify-between">
                     <h1 className="text-[28px] font-semibold text-[#101828] font-poppins">Admin Configurations</h1>
+                    <button
+                        onClick={handleSyncPlan}
+                        disabled={syncing}
+                        className="absolute left-1/2 flex -translate-x-1/2 cursor-pointer items-center gap-2 rounded-[10px] bg-[#7F56D9] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#6941C6] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                        {syncing && <Loader2 size={16} className="animate-spin" />}
+                        {syncing ? "Syncing..." : "Update Plan"}
+                    </button>
                     <div className="flex items-center gap-3">
 
                         {/* Export */}
