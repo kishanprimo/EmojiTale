@@ -22,6 +22,7 @@ import {
   ChevronRight,
   GitMerge,
   FileText,
+  Globe,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -249,6 +250,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <CollapseMenu label="Admin Notification" icon={Bell} prefix="/notifications" links={[
                 { href: "/notifications/all", label: "All Notifications" },
                 { href: "/notifications/add", label: "Add Notification" },
+              ]} />
+              <CollapseMenu label="Language" icon={Globe} prefix="/language" links={[
+                { href: "/language/all", label: "Language List" },
+                { href: "/language/add", label: "Add Language" },
               ]} />
 
               <AdminConfigMenu />

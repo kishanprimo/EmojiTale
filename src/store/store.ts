@@ -46,6 +46,10 @@ import addMemberLevelConfigReducer from "./slices/MemberConfigSlices/add_member_
 import updateMemberLevelConfigReducer from "./slices/MemberConfigSlices/update_member_level_config_slice";
 import memberStoriesReducer from "./slices/UserSlice/memberStoriesSlice";
 import xpHistoryReducer from "./slices/UserSlice/xpHistorySlice";
+import languageReducer from "./slices/LanguageSlices/languageSlice";
+import addLanguageReducer from "./slices/LanguageSlices/addLanguageSlice";
+import updateLanguageReducer from "./slices/LanguageSlices/updateLanguageSlice";
+import deleteLanguageReducer from "./slices/LanguageSlices/deleteLanguageSlice";
 
 export const store = configureStore({
   reducer: {
@@ -107,6 +111,10 @@ export const store = configureStore({
     memberStories: memberStoriesReducer,
     xpHistory: xpHistoryReducer,
 
+    language: languageReducer,
+    addLanguage: addLanguageReducer,
+    updateLanguage: updateLanguageReducer,
+    deleteLanguage: deleteLanguageReducer,
 
   },
 });
