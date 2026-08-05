@@ -14,6 +14,10 @@ export interface EmojiCategoryItem {
     emoji_count: number;
     createdAt: string;
     updatedAt: string;
+    // ✅ ADD THIS
+    translations?: {
+        [key: string]: string;
+    };
 }
 
 export interface EmojiCategoryPagination {

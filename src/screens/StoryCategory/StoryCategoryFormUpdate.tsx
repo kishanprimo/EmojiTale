@@ -48,7 +48,10 @@ export default function StoryCategoryFormUpdate({ editItem }: Props) {
     );
 
     // Original translations coming from backend (baseline, read-only reference)
-    const originalTranslations = editItem?.translations ?? {};
+    const originalTranslations: Record<string, string> =
+    (editItem && "translations" in editItem
+        ? (editItem as any).translations
+        : {}) ?? {};
 
     // Current values shown in inputs (starts as a copy of original)
     const [translations, setTranslations] = useState<Record<string, string>>(

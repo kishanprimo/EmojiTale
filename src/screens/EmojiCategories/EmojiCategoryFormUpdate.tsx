@@ -144,11 +144,11 @@ export default function EmojiCategoryFormUpdate({ mode = "add" }: EmojiCategoryF
         }
     };
 
-    const languageCodes = Object.keys(
-        Object.keys(selectedCategory?.translations ?? {}).length > 0
-            ? selectedCategory!.translations
-            : LANGUAGE_LABELS
-    );
+
+const languageCodes =
+    Object.keys(translations).length > 0
+        ? Object.keys(translations)
+        : Object.keys(LANGUAGE_LABELS);
 
     return (
         <div className="bg-white border border-gray-200 rounded-[12px] flex flex-col h-full">
