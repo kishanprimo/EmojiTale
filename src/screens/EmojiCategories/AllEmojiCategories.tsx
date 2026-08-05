@@ -99,90 +99,93 @@ export default function AllEmojiCategories() {
                 {/* Table */}
                 <div className="mt-7 overflow-hidden rounded-[10px] border border-gray-200 bg-white">
                     <div className="w-full overflow-x-auto">
-                    <table className="min-w-[900px] w-full border-collapse text-left">
-                        <TableHeader
-                            showCheckbox={false}
-                            columns={[
-                                { label: "Cat ID" },
-                                { label: "Image" },
-                                { label: "Name" },
-                                { label: "Premium" },
-                                { label: "Story Count" },
-                                { label: "Emoji Count" },
-                                { label: "Action", className: "text-center" },
-                            ]}
-                        />
-                        <tbody className="divide-y divide-gray-100">
-                            {loading ? (
-                                <TableSkeleton rows={limit} />
-                            ) : categories.length > 0 ? (
-                                categories.map((cat) => (
-                                    <tr key={cat.emoji_category_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
-                                        <td className="px-6 py-5 text-sm font-semibold text-[#101828]">
-                                            #{cat.emoji_category_id}
-                                        </td>
-                                        <td className="px-6 py-5">
-                                            {cat.emoji_category_image ? (
-                                                <Image
-                                                    src={proxiedImage(cat.emoji_category_image)!}
-                                                    alt={cat.name}
-                                                    width={40}
-                                                    height={40}
-                                                    unoptimized
-                                                    className="h-10 w-10 rounded-lg border object-cover"
+                        <table className="min-w-[900px] w-full border-collapse text-left">
+                            <TableHeader
+                                showCheckbox={false}
+                                columns={[
+                                    { label: "Cat ID" },
+                                    { label: "Image" },
+                                    { label: "Name" },
+                                    { label: "Premium" },
+                                    { label: "Story Count" },
+                                    { label: "Emoji Count" },
+                                    { label: "Action", className: "text-center" },
+                                ]}
+                            />
+                            <tbody className="divide-y divide-gray-100">
+                                {loading ? (
+                                    <TableSkeleton rows={limit} />
+                                ) : categories.length > 0 ? (
+                                    categories.map((cat) => (
+                                        <tr key={cat.emoji_category_id} className="transition-all duration-200 hover:bg-[#F9FAFB]">
+                                            <td className="px-6 py-5 text-sm font-semibold text-[#101828]">
+                                                #{cat.emoji_category_id}
+                                            </td>
+                                            <td className="px-6 py-5">
+                                                {cat.emoji_category_image ? (
+                                                    <Image
+                                                        src={proxiedImage(cat.emoji_category_image)!}
+                                                        alt={cat.name}
+                                                        width={40}
+                                                        height={40}
+                                                        unoptimized
+                                                        className="h-10 w-10 rounded-lg border object-cover"
+                                                    />
+                                                ) : (
+                                                    <span className="text-sm text-gray-400">—</span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-5 text-sm font-medium text-[#101828]">
+                                                {cat.name}
+                                            </td>
+                                            <td className="px-6 py-5 text-sm text-[#101828]">
+                                                {cat.is_premium ? "Yes" : "No"}
+                                            </td>
+                                            <td className="px-6 py-5 text-sm text-[#101828]">
+                                                {cat.story_count}
+                                            </td>
+                                            <td className="px-6 py-5 text-sm text-[#101828]">
+                                                {cat.emoji_count}
+                                            </td>
+                                            <td className="px-6 py-5 text-center">
+                                                <Action
+                                                    showEdit
+                                                    showDelete={false}
+                                                    showView={false}
+                                                    onEdit={() => {
+                                                        dispatch(
+                                                            setSelectedEmojiCategory({
+                                                                emoji_category_id: cat.emoji_category_id,
+                                                                name: cat.name,
+                                                                is_premium: cat.is_premium,
+                                                                emoji_category_image: cat.emoji_category_image,
+                                                                translations: cat.translations || {},
+                                                            })
+                                                        );
+                                                        router.push(`/emoji-categories/edit/${cat.emoji_category_id}`);
+                                                    }}
+                                                    onDelete={() => { }}
                                                 />
-                                            ) : (
-                                                <span className="text-sm text-gray-400">—</span>
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-5 text-sm font-medium text-[#101828]">
-                                            {cat.name}
-                                        </td>
-                                        <td className="px-6 py-5 text-sm text-[#101828]">
-                                            {cat.is_premium ? "Yes" : "No"}
-                                        </td>
-                                        <td className="px-6 py-5 text-sm text-[#101828]">
-                                            {cat.story_count}
-                                        </td>
-                                        <td className="px-6 py-5 text-sm text-[#101828]">
-                                            {cat.emoji_count}
-                                        </td>
-                                        <td className="px-6 py-5 text-center">
-                                            <Action
-                                                showEdit
-                                                showDelete={false}
-                                                showView={false}
-                                                onEdit={() => {
-                                            dispatch(setSelectedEmojiCategory({
-                                                emoji_category_id: cat.emoji_category_id,
-                                                name: cat.name,
-                                                is_premium: cat.is_premium,
-                                                emoji_category_image: cat.emoji_category_image,
-                                            }));
-                                            router.push(`/emoji-categories/edit/${cat.emoji_category_id}`);
-                                        }}
-                                                onDelete={() => { }}
-                                            />
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={7} className="py-20">
+                                            <div className="flex flex-col items-center justify-center">
+                                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
+                                                    <SearchX size={30} className="text-[#2563EB]" />
+                                                </div>
+                                                <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Categories Found</h3>
+                                                <p className="mt-2 max-w-sm text-center text-[15px] text-[#667085]">
+                                                    {debouncedSearch ? `No results for "${debouncedSearch}"` : "No emoji categories yet."}
+                                                </p>
+                                            </div>
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={7} className="py-20">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
-                                                <SearchX size={30} className="text-[#2563EB]" />
-                                            </div>
-                                            <h3 className="mt-5 text-xl font-semibold text-[#101828]">No Categories Found</h3>
-                                            <p className="mt-2 max-w-sm text-center text-[15px] text-[#667085]">
-                                                {debouncedSearch ? `No results for "${debouncedSearch}"` : "No emoji categories yet."}
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
