@@ -33,6 +33,8 @@ async function urlToFile(url: string, fileName: string): Promise<File> {
 
 interface Props {
     editItem?: AdminStoryItem;
+        extraSection?: React.ReactNode;
+
 }
 
 const makePage = (): StoryPage => ({
@@ -43,7 +45,7 @@ const makePage = (): StoryPage => ({
     fileName: "No file chosen",
 });
 
-export default function GenerateStory({ editItem }: Props) {
+export default function GenerateStory({ editItem , extraSection }: Props) {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
@@ -436,6 +438,7 @@ export default function GenerateStory({ editItem }: Props) {
                         </div>
                     </div>
                 </div>
+                  {extraSection}
             </div>
         </DashboardLayout>
     );

@@ -24,6 +24,10 @@ const adminStorySlice = createSlice({
             const story = state.stories.find((s) => s.adminstory_id === action.payload);
             if (story) story.is_active = !story.is_active;
         },
+        toggleStoryPremiumStatus(state, action: import("@reduxjs/toolkit").PayloadAction<number>) {
+            const story = state.stories.find((s) => s.adminstory_id === action.payload);
+            if (story) story.is_premium = !story.is_premium;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -43,5 +47,5 @@ const adminStorySlice = createSlice({
     },
 });
 
-export const { toggleStoryStatus } = adminStorySlice.actions;
+export const { toggleStoryStatus, toggleStoryPremiumStatus } = adminStorySlice.actions;
 export default adminStorySlice.reducer;

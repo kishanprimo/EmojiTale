@@ -4,6 +4,8 @@ export interface AdminStoryPayload {
     search?: string;
     storycategory_id?: number;
     is_active?: boolean;
+    language_id?: number;
+
 }
 
 export interface AdminStoryCategory {
@@ -11,6 +13,7 @@ export interface AdminStoryCategory {
     storycategory_name: string;
     storycategory_image: string;
     storycategory_description: string;
+     original_content?: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -21,6 +24,7 @@ export interface StoryMediaItem {
     image: string;
     content: string;
     sort_order: number;
+    original_content?: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -30,8 +34,10 @@ export interface AdminStoryItem {
     title: string;
     storycategory_id: number;
     is_active: boolean;
+    is_premium: boolean;
     createdAt: string;
     updatedAt: string;
+     original_content?: string;
     category: AdminStoryCategory;
     media: StoryMediaItem[];
 }
@@ -47,6 +53,7 @@ export interface AdminStoryResponse {
     success: boolean;
     message: string;
     data: {
+        language_id?: number | null;
         stories: AdminStoryItem[];
         pagination: AdminStoryPagination;
     };

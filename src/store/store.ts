@@ -50,6 +50,7 @@ import languageReducer from "./slices/LanguageSlices/languageSlice";
 import addLanguageReducer from "./slices/LanguageSlices/addLanguageSlice";
 import updateLanguageReducer from "./slices/LanguageSlices/updateLanguageSlice";
 import deleteLanguageReducer from "./slices/LanguageSlices/deleteLanguageSlice";
+import storyTranslationReducer from "./slices/StoryTranslationSlices/storyTranslationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -115,6 +116,9 @@ export const store = configureStore({
     addLanguage: addLanguageReducer,
     updateLanguage: updateLanguageReducer,
     deleteLanguage: deleteLanguageReducer,
+
+    storyTranslation: storyTranslationReducer,
+
 
   },
 });

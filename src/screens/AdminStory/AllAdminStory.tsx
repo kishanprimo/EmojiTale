@@ -12,14 +12,15 @@ import DateTime from "@/components/common/DateTime";
 import Action from "@/components/common/Action";
 import TogglableSwitch from "@/components/common/TogglableSwitch";
 import CategoriesDeleteModal from "@/components/common/CategoriesDeleteModal";
-import { SearchX, X, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { SearchX, X, ChevronLeft, ChevronRight, Plus, ChevronDown, Languages } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminStories } from "@/store/slices/AdminStorySlices/adminStoryThunk";
 import { updateAdminStory } from "@/store/slices/AdminStorySlices/updateAdminStoryThunk";
 import { deleteAdminStory } from "@/store/slices/AdminStorySlices/deleteAdminStoryThunk";
-import { toggleStoryStatus } from "@/store/slices/AdminStorySlices/adminStorySlice";
+import { toggleStoryPremiumStatus, toggleStoryStatus } from "@/store/slices/AdminStorySlices/adminStorySlice";
 import { toast } from "react-hot-toast";
 import { AdminStoryItem } from "@/types/AdminStoryTypes/adminStoryTypes";
+import { getLanguages } from "@/store/slices/LanguageSlices/languageThunk";
 
 const sortedMedia = (story: AdminStoryItem) =>
     [...story.media].sort((a, b) => a.sort_order - b.sort_order);
@@ -28,6 +29,8 @@ export default function AllAdminStory() {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { stories, pagination, loading } = useAppSelector((state) => state.adminStory);
+    const { languages } = useAppSelector((state) => state.language);
+    const [languageId, setLanguageId] = useState<number | "">("");
 
     const [cacheBust] = useState(() => Date.now());
     const [page, setPage] = useState(1);
@@ -37,9 +40,16 @@ export default function AllAdminStory() {
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    useEffect(() => {
-        dispatch(getAdminStories({ page, limit }));
-    }, [dispatch, page, limit]);
+
+ useEffect(() => {
+    dispatch(getAdminStories({ page, limit }));
+}, [dispatch, page, limit]);
+
+useEffect(() => {
+    dispatch(getLanguages({ page: 1, limit: 100 }));
+}, [dispatch]);
+
+    
 
     const openStory = (story: AdminStoryItem) => {
         setViewStory(story);
@@ -58,13 +68,26 @@ export default function AllAdminStory() {
         }
     };
 
+
+    const handleToggleIsPremium = async (id: number, currentActive: boolean) => {
+    dispatch(toggleStoryPremiumStatus(id));
+    const formData = new FormData();
+    formData.append("is_premium", String(!currentActive));
+    try {
+        await dispatch(updateAdminStory({ id, formData })).unwrap();
+    } catch {
+        dispatch(toggleStoryPremiumStatus(id));
+        toast.error("Failed to update status");
+    }
+};
+
     const handleDeleteConfirm = async () => {
         if (!deleteId) return;
         setDeleteLoading(true);
         try {
             await dispatch(deleteAdminStory(deleteId)).unwrap();
             toast.success("Story deleted successfully");
-            dispatch(getAdminStories({ page, limit }));
+            dispatch(getAdminStories({ page, limit, language_id: languageId || undefined }));
         } catch {
             toast.error("Failed to delete story");
         } finally {
@@ -86,6 +109,33 @@ export default function AllAdminStory() {
                         <Plus size={16} /> Add Story
                     </button>
                 </div>
+                  <div className="mb-4 flex flex-wrap  hidden items-center gap-3">
+                    <div className="relative">
+                        <Languages size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <select
+                            value={languageId}
+                            onChange={(e) => { setLanguageId(e.target.value ? Number(e.target.value) : ""); setPage(1); }}
+                            className="h-10 min-w-[220px] appearance-none rounded-[10px] border border-gray-300 bg-white pl-9 pr-10 text-sm text-[#101828] outline-none transition-colors focus:border-blue-500"
+                        >
+                            <option value="">Default language</option>
+                            {languages.map((lang) => (
+                                <option key={lang.language_id} value={lang.language_id}>
+                                    {lang.flag ? `${lang.flag} ` : ""}{lang.name} ({lang.code.toUpperCase()})
+                                </option>
+                            ))}
+                        </select>
+                        <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                    </div>
+                    {languageId !== "" && (
+                        <button
+                            type="button"
+                            onClick={() => { setLanguageId(""); setPage(1); }}
+                            className="text-sm font-medium text-[#2563EB] hover:underline"
+                        >
+                            Reset
+                        </button>
+                    )}
+                </div>
 
                 <div className="overflow-hidden rounded-[10px] border border-gray-200 bg-white">
                     <div className="w-full overflow-x-auto">
@@ -99,6 +149,7 @@ export default function AllAdminStory() {
                                     { label: "Category" },
                                     { label: "Content" },
                                     { label: "Status" },
+                                     { label: "is_premium" },
                                     { label: "Created At" },
                                     { label: "Action", className: "text-center" },
                                 ]}
@@ -153,6 +204,13 @@ export default function AllAdminStory() {
                                                     <TogglableSwitch
                                                         isActive={story.is_active}
                                                         onToggle={() => handleToggle(story.adminstory_id, story.is_active)}
+                                                    />
+                                                </td>
+
+                                                 <td className="px-6 py-4">
+                                                    <TogglableSwitch
+                                                        isActive={story.is_premium}
+                                                        onToggle={() => handleToggleIsPremium(story.adminstory_id, story.is_premium)}
                                                     />
                                                 </td>
                                                 <td className="px-6 py-4">

@@ -5,6 +5,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import GenerateStory from "./GenerateStory";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getAdminStories } from "@/store/slices/AdminStorySlices/adminStoryThunk";
+import StoryTranslations from "./StoryTranslations";
 
 interface Props {
     id: number;
@@ -32,5 +33,6 @@ export default function EditAdminStory({ id }: Props) {
         );
     }
 
-    return <GenerateStory editItem={editItem} />;
+        return <GenerateStory editItem={editItem} extraSection={<StoryTranslations storyId={id} />} />;
+
 }

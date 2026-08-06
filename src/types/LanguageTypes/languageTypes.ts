@@ -50,3 +50,10 @@ export interface DeleteLanguageResponse {
     message: string;
     data: null;
 }
+
+
+export interface RetranslateLanguageResponse {
+    success: boolean;
+    message: string;
+    data: null;
+}
