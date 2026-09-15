@@ -12,7 +12,7 @@ import {
     ArrowLeft, Mail, User, Globe, Calendar,
     Flame, BookOpen, Users, Zap, Crown, Receipt,
     Star, Hash, Smartphone, CreditCard, CheckCircle2,
-    XCircle, ShieldCheck, Sparkles,
+    XCircle, ShieldCheck, Sparkles, MapPin,
 } from "lucide-react";
 import Tags from "@/components/common/Tag";
 import Pagination from "@/components/common/Pagination";
@@ -269,6 +269,19 @@ export default function UserView({ userId }: Props) {
                                                     </span>
                                                 )}
                                             </div>
+
+                                            {/* Meta row 2b — location */}
+                                            {(user.city || user.region || user.country) && (
+                                                <div className="mt-1.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-[#667085]">
+                                                    <span className="flex items-center gap-1.5">
+                                                        <MapPin size={13} className="text-[#9CA3AF]" />
+                                                        {[user.city, user.region, user.country].filter(Boolean).join(", ")}
+                                                        {user.postal_code && (
+                                                            <span className="text-[#98A2B3]">· {user.postal_code}</span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            )}
 
                                             {/* Meta row 3 — referral + device */}
                                             <div className="mt-1.5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-[#667085]">

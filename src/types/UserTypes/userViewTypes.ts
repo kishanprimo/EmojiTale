@@ -46,6 +46,11 @@ export interface UserViewData {
     device_token: string | null;
     referral_code: string | null;
     referred_by: number | null;
+    last_login_ip: string | null;
+    country: string | null;
+    region: string | null;
+    city: string | null;
+    postal_code: string | null;
     createdAt: string;
     updatedAt: string;
     avatar: UserViewAvatar | null;
