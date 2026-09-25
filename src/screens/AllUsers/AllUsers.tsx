@@ -394,7 +394,7 @@ export default function AllUsers() {
 
                 <div className="bg-white border border-gray-200 rounded-[10px] overflow-hidden">
                     <div className="w-full overflow-x-auto">
-                        <table className="min-w-[1450px] w-full text-left border-collapse">
+                        <table className="min-w-[1650px] w-full text-left border-collapse">
 
                             <TableHeader
                                 columns={[
@@ -403,6 +403,7 @@ export default function AllUsers() {
                                     { label: "Email" },
                                     { label: "Login Type" },
                                     { label: "Platform" },
+                                    { label: "Address" },
                                     { label: "Plan" },
                                     { label: "Status" },
                                     { label: "Story Count" },
@@ -518,6 +519,14 @@ export default function AllUsers() {
                                                 {/* Platform */}
                                                 <td className="px-4 py-5 text-sm text-[#475467]">
                                                     {user.platform || "—"}
+                                                </td>
+
+                                                {/* Address */}
+                                                <td className="px-4 py-5 text-sm text-[#475467]">
+                                                    {[user.city, user.region, user.country].filter(Boolean).join(", ") || "—"}
+                                                    {user.postal_code && (
+                                                        <span className="block text-xs text-[#98A2B3]">{user.postal_code}</span>
+                                                    )}
                                                 </td>
 
                                                 {/* Plan */}

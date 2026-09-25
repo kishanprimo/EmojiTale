@@ -17,6 +17,10 @@ export interface UserItem {
     revenuecat_customer_id: string | null;
     login_type: string;
     platform: string | null;
+    country?: string | null;
+    region?: string | null;
+    city?: string | null;
+    postal_code?: string | null;
     createdAt: string;
     // Backend response changed from:
     // avatar: string | null
