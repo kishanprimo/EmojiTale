@@ -334,7 +334,7 @@ export default function UserView({ userId }: Props) {
                                             {/* Plan name + price */}
                                             <div className="mb-3">
                                                 <p className="text-xl font-bold text-[#101828]">
-                                                    {user.current_plan.tier_label} Plan
+                                                    {plan?.revenuecat_product_id || `${user.current_plan.tier_label} Plan`}
                                                 </p>
                                                 {plan && (
                                                     <p className="mt-0.5 text-sm text-[#667085]">
