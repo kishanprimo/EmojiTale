@@ -64,8 +64,8 @@ export default function AllNotifications() {
                                                 #{n.broadcast_id}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <p className="text-sm font-medium text-[#101828]">{n.admin.full_name}</p>
-                                                <p className="text-xs text-[#667085]">{n.admin.email}</p>
+                                                <p className="text-sm font-medium text-[#101828]">{n.admin?.full_name ?? "N/A"}</p>
+                                                <p className="text-xs text-[#667085]">{n.admin?.email ?? "—"}</p>
                                             </td>
                                             <td className="px-6 py-4 text-sm font-medium text-[#101828] max-w-[180px]">
                                                 <p className="line-clamp-2">{n.title}</p>

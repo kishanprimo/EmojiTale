@@ -72,7 +72,9 @@ export default function AllUsers() {
                 "Platform",
                 "Plan",
                 "Status",
+                "Timezone",
                 "XP",
+                "Last Active",
                 "Created At",
             ]],
             body: allUsers.map((user: {
@@ -84,6 +86,8 @@ export default function AllUsers() {
                 is_premium: boolean;
                 is_deleted: boolean;
                 xp: number;
+                timezone?: string | null;
+                last_active_at?: string | null;
                 createdAt: string | null;
             }) => [
                     user.name || "N/A",
@@ -93,7 +97,14 @@ export default function AllUsers() {
                     user.platform || "—",
                     user.is_premium ? "Premium" : "Free",
                     user.is_deleted ? "Inactive" : "Active",
+                    user.timezone || "—",
                     user.xp,
+                    user.last_active_at
+                        ? new Date(user.last_active_at).toLocaleString("en-US", {
+                            day: "2-digit", month: "short", year: "numeric",
+                            hour: "numeric", minute: "2-digit", hour12: true,
+                        })
+                        : "-",
                     user.createdAt
                         ? new Date(user.createdAt).toLocaleString("en-US", {
                             day: "2-digit", month: "short", year: "numeric",
@@ -117,7 +128,9 @@ export default function AllUsers() {
             "Platform",
             "Plan",
             "Status",
+            "Timezone",
             "XP",
+            "Last Active",
             "Created At",
         ];
 
@@ -130,6 +143,8 @@ export default function AllUsers() {
             is_premium: boolean;
             is_deleted: boolean;
             xp: number;
+            timezone?: string | null;
+            last_active_at?: string | null;
             createdAt: string | null;
         }) => [
                 user.name || "N/A",
@@ -139,7 +154,9 @@ export default function AllUsers() {
                 user.platform || "—",
                 user.is_premium ? "Premium" : "Free",
                 user.is_deleted ? "Inactive" : "Active",
+                user.timezone || "—",
                 user.xp,
+                user.last_active_at ? new Date(user.last_active_at).toLocaleString() : "-",
                 user.createdAt ? new Date(user.createdAt).toLocaleString() : "-",
             ]);
 
@@ -394,7 +411,7 @@ export default function AllUsers() {
 
                 <div className="bg-white border border-gray-200 rounded-[10px] overflow-hidden">
                     <div className="w-full overflow-x-auto">
-                        <table className="min-w-[1650px] w-full text-left border-collapse">
+                        <table className="min-w-[1900px] w-full text-left border-collapse">
 
                             <TableHeader
                                 columns={[
@@ -404,10 +421,12 @@ export default function AllUsers() {
                                     { label: "Login Type" },
                                     { label: "Platform" },
                                     { label: "Address" },
+                                    { label: "Timezone" },
                                     { label: "Plan" },
                                     { label: "Status" },
                                     { label: "Story Count" },
                                     { label: "XP" },
+                                    { label: "Last Active" },
                                     { label: "Created At" },
                                     { label: "Action", className: "text-center" },
                                 ]}
@@ -529,6 +548,11 @@ export default function AllUsers() {
                                                     )}
                                                 </td>
 
+                                                {/* Timezone */}
+                                                <td className="px-4 py-5 text-sm text-[#475467]">
+                                                    {user.timezone || "—"}
+                                                </td>
+
                                                 {/* Plan */}
                                                 <td className="px-4 py-5">
                                                     <Tags
@@ -553,6 +577,34 @@ export default function AllUsers() {
                                                 {/* XP */}
                                                 <td className="px-4 py-5 text-sm font-semibold text-[#101828]">
                                                     {user.xp}
+                                                </td>
+
+                                                {/* Last Active */}
+                                                <td className="px-4 py-5">
+                                                    {user.last_active_at ? (
+                                                        <DateTime
+                                                            date={new Date(user.last_active_at).toLocaleDateString(
+                                                                "en-US",
+                                                                {
+                                                                    month: "short",
+                                                                    day: "2-digit",
+                                                                    year: "numeric",
+                                                                }
+                                                            )}
+                                                            time={new Date(user.last_active_at).toLocaleTimeString(
+                                                                "en-US",
+                                                                {
+                                                                    hour: "numeric",
+                                                                    minute: "2-digit",
+                                                                    hour12: true,
+                                                                }
+                                                            )}
+                                                        />
+                                                    ) : (
+                                                        <span className="text-[#98A2B3]">
+                                                            N/A
+                                                        </span>
+                                                    )}
                                                 </td>
 
                                                 {/* Created At */}
@@ -595,7 +647,7 @@ export default function AllUsers() {
                                             </tr>
                                             {expandedRows.includes(user.user_id) && (
                                                 <tr>
-                                                    <td colSpan={15}>
+                                                    <td colSpan={17}>
                                                         <div className="mx-8 mt-6">
                                                             <div className="mx-auto mb-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                                                                 <div className="flex items-center justify-between border-b border-gray-200 bg-[#F8FAFC] px-6 py-4">
@@ -706,7 +758,7 @@ export default function AllUsers() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={13} className="py-20">
+                                        <td colSpan={15} className="py-20">
                                             <div className="flex flex-col items-center justify-center">
                                                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
                                                     <SearchX

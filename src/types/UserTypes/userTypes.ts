@@ -21,6 +21,8 @@ export interface UserItem {
     region?: string | null;
     city?: string | null;
     postal_code?: string | null;
+    timezone?: string | null;
+    last_active_at?: string | null;
     createdAt: string;
     // Backend response changed from:
     // avatar: string | null

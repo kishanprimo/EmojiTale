@@ -13,7 +13,7 @@ export interface NotificationItem {
     extraData: any;
     createdAt: string;
     updatedAt: string;
-    admin: NotificationAdmin;
+    admin: NotificationAdmin | null;
 }
 
 export interface NotificationPagination {
