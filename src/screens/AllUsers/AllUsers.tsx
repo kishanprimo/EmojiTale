@@ -394,8 +394,8 @@ export default function AllUsers() {
                                 columns={[
                                     { label: "Avatar" },
                                     { label: "Name" },
-                                    { label: "Email" },
                                     { label: "Platform" },
+                                    { label: "Address" },
                                     { label: "Plan" },
                                     { label: "Status" },
                                     { label: "Story Count" },
@@ -491,19 +491,22 @@ export default function AllUsers() {
                                                         {user.name || "N/A"}
                                                     </p>
                                                     <p className="text-xs text-[#667085] mt-0.5">
-                                                        {user.username || "—"}
+                                                        {user.email || "—"}
                                                     </p>
-                                                </td>
-
-                                                {/* Email */}
-                                                <td className="px-4 py-5 text-sm text-[#475467]">
-                                                    {user.email}
                                                 </td>
 
 
                                                 {/* Platform */}
                                                 <td className="px-4 py-5 text-sm text-[#475467]">
                                                     {user.platform || "—"}
+                                                </td>
+
+                                                {/* Address */}
+                                                <td className="px-4 py-5 text-sm text-[#475467]">
+                                                    {[user.city, user.region, user.country].filter(Boolean).join(", ") || "—"}
+                                                    {user.postal_code && (
+                                                        <span className="block text-xs text-[#98A2B3]">{user.postal_code}</span>
+                                                    )}
                                                 </td>
 
 
@@ -574,7 +577,7 @@ export default function AllUsers() {
                                             </tr>
                                             {expandedRows.includes(user.user_id) && (
                                                 <tr>
-                                                    <td colSpan={13}>
+                                                    <td colSpan={14}>
                                                         <div className="mx-8 mt-6">
                                                             <div className="mx-auto mb-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                                                                 <div className="flex items-center justify-between border-b border-gray-200 bg-[#F8FAFC] px-6 py-4">
