@@ -68,45 +68,31 @@ export default function AllUsers() {
                 "Full Name",
                 "Username",
                 "Email",
-                "Login Type",
                 "Platform",
                 "Plan",
                 "Status",
-                "Timezone",
                 "XP",
                 "Last Active",
-                "Created At",
             ]],
             body: allUsers.map((user: {
                 name: string | null;
                 username: string | null;
                 email: string;
-                login_type: string;
                 platform: string | null;
                 is_premium: boolean;
                 is_deleted: boolean;
                 xp: number;
-                timezone?: string | null;
                 last_active_at?: string | null;
-                createdAt: string | null;
             }) => [
                     user.name || "N/A",
                     user.username || "—",
                     user.email,
-                    user.login_type,
                     user.platform || "—",
                     user.is_premium ? "Premium" : "Free",
                     user.is_deleted ? "Inactive" : "Active",
-                    user.timezone || "—",
                     user.xp,
                     user.last_active_at
                         ? new Date(user.last_active_at).toLocaleString("en-US", {
-                            day: "2-digit", month: "short", year: "numeric",
-                            hour: "numeric", minute: "2-digit", hour12: true,
-                        })
-                        : "-",
-                    user.createdAt
-                        ? new Date(user.createdAt).toLocaleString("en-US", {
                             day: "2-digit", month: "short", year: "numeric",
                             hour: "numeric", minute: "2-digit", hour12: true,
                         })
@@ -124,40 +110,31 @@ export default function AllUsers() {
             "Full Name",
             "Username",
             "Email",
-            "Login Type",
             "Platform",
             "Plan",
             "Status",
-            "Timezone",
             "XP",
             "Last Active",
-            "Created At",
         ];
 
         const rows = allUsers.map((user: {
             name: string | null;
             username: string | null;
             email: string;
-            login_type: string;
             platform: string | null;
             is_premium: boolean;
             is_deleted: boolean;
             xp: number;
-            timezone?: string | null;
             last_active_at?: string | null;
-            createdAt: string | null;
         }) => [
                 user.name || "N/A",
                 user.username || "—",
                 user.email,
-                user.login_type,
                 user.platform || "—",
                 user.is_premium ? "Premium" : "Free",
                 user.is_deleted ? "Inactive" : "Active",
-                user.timezone || "—",
                 user.xp,
                 user.last_active_at ? new Date(user.last_active_at).toLocaleString() : "-",
-                user.createdAt ? new Date(user.createdAt).toLocaleString() : "-",
             ]);
 
         const csvContent = [
@@ -411,23 +388,19 @@ export default function AllUsers() {
 
                 <div className="bg-white border border-gray-200 rounded-[10px] overflow-hidden">
                     <div className="w-full overflow-x-auto">
-                        <table className="min-w-[1900px] w-full text-left border-collapse">
+                        <table className="min-w-[1200px] w-full text-left border-collapse">
 
                             <TableHeader
                                 columns={[
                                     { label: "Avatar" },
                                     { label: "Name" },
                                     { label: "Email" },
-                                    { label: "Login Type" },
                                     { label: "Platform" },
-                                    { label: "Address" },
-                                    { label: "Timezone" },
                                     { label: "Plan" },
                                     { label: "Status" },
                                     { label: "Story Count" },
                                     { label: "XP" },
                                     { label: "Last Active" },
-                                    { label: "Created At" },
                                     { label: "Action", className: "text-center" },
                                 ]}
                                 isAllSelected={isAllSelected}
@@ -527,31 +500,12 @@ export default function AllUsers() {
                                                     {user.email}
                                                 </td>
 
-                                                {/* Login Type */}
-                                                <td className="px-4 py-5">
-                                                    <Tags
-                                                        text={user.login_type}
-                                                        variant="blue"
-                                                    />
-                                                </td>
 
                                                 {/* Platform */}
                                                 <td className="px-4 py-5 text-sm text-[#475467]">
                                                     {user.platform || "—"}
                                                 </td>
 
-                                                {/* Address */}
-                                                <td className="px-4 py-5 text-sm text-[#475467]">
-                                                    {[user.city, user.region, user.country].filter(Boolean).join(", ") || "—"}
-                                                    {user.postal_code && (
-                                                        <span className="block text-xs text-[#98A2B3]">{user.postal_code}</span>
-                                                    )}
-                                                </td>
-
-                                                {/* Timezone */}
-                                                <td className="px-4 py-5 text-sm text-[#475467]">
-                                                    {user.timezone || "—"}
-                                                </td>
 
                                                 {/* Plan */}
                                                 <td className="px-4 py-5">
@@ -607,33 +561,6 @@ export default function AllUsers() {
                                                     )}
                                                 </td>
 
-                                                {/* Created At */}
-                                                <td className="px-4 py-5">
-                                                    {user.createdAt ? (
-                                                        <DateTime
-                                                            date={new Date(user.createdAt).toLocaleDateString(
-                                                                "en-US",
-                                                                {
-                                                                    month: "short",
-                                                                    day: "2-digit",
-                                                                    year: "numeric",
-                                                                }
-                                                            )}
-                                                            time={new Date(user.createdAt).toLocaleTimeString(
-                                                                "en-US",
-                                                                {
-                                                                    hour: "numeric",
-                                                                    minute: "2-digit",
-                                                                    hour12: true,
-                                                                }
-                                                            )}
-                                                        />
-                                                    ) : (
-                                                        <span className="text-[#98A2B3]">
-                                                            N/A
-                                                        </span>
-                                                    )}
-                                                </td>
 
                                                 {/* Action */}
                                                 <td className="px-4 py-5 text-center">
@@ -647,7 +574,7 @@ export default function AllUsers() {
                                             </tr>
                                             {expandedRows.includes(user.user_id) && (
                                                 <tr>
-                                                    <td colSpan={17}>
+                                                    <td colSpan={13}>
                                                         <div className="mx-8 mt-6">
                                                             <div className="mx-auto mb-6 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                                                                 <div className="flex items-center justify-between border-b border-gray-200 bg-[#F8FAFC] px-6 py-4">
