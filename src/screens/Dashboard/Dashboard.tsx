@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getDashboardStats, getUserGraph, getMemberGraph } from "@/store/slices/DashboardSlice/dashboardThunk";
 import { getPopularAuthors } from "@/store/slices/PopularAuthorSlices/popularAuthorThunk";
 import { getSubscriptions } from "@/store/slices/SubscriptionSlices/subscriptionThunk";
-import { GraphPeriod } from "@/types/DashboardTypes/dashboardTypes";
+import { GraphPeriod, GrowthStats } from "@/types/DashboardTypes/dashboardTypes";
 import { proxiedImage } from "@/lib/imageProxy";
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/api$/, "");
@@ -32,6 +32,12 @@ const platformVariant = (platform: string): "blue" | "green" | "purple" => {
   if (platform === "ios") return "blue";
   if (platform === "android") return "green";
   return "purple";
+};
+
+const growthChange = (growth?: GrowthStats) => {
+  if (!growth) return 0;
+  const percent = Math.round(Math.abs(growth.change_percent) * 100) / 100;
+  return growth.trend === "down" ? -percent : percent;
 };
 
 const Dashboard = () => {
@@ -61,9 +67,9 @@ const Dashboard = () => {
   }, [dispatch]);
 
   const dashboardStats = [
-    { label: "Total Users", value: stats.total_users, change: 0, icon: <Users size={24} className="text-[#2563EB]" />, bg: "bg-[#EEF4FF]" },
-    { label: "Total Stories", value: stats.total_stories, change: 0, icon: <BookOpen size={24} className="text-[#12B76A]" />, bg: "bg-[#ECFDF3]" },
-    { label: "Total Revenue", value: `₹${stats.total_revenue}`, change: 0, icon: <IndianRupee size={24} className="text-[#F97316]" />, bg: "bg-[#FFF7ED]" },
+    { label: "Total Users", value: stats.total_users, change: growthChange(stats.users_growth), icon: <Users size={24} className="text-[#2563EB]" />, bg: "bg-[#EEF4FF]" },
+    { label: "Total Stories", value: stats.total_stories, change: growthChange(stats.stories_growth), icon: <BookOpen size={24} className="text-[#12B76A]" />, bg: "bg-[#ECFDF3]" },
+    { label: "Total Revenue", value: `₹${stats.total_revenue}`, change: growthChange(stats.revenue_growth), icon: <IndianRupee size={24} className="text-[#F97316]" />, bg: "bg-[#FFF7ED]" },
   ];
 
   return (
