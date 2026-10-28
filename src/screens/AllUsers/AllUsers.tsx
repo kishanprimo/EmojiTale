@@ -72,7 +72,7 @@ export default function AllUsers() {
                 "Plan",
                 "Status",
                 "XP",
-                "Last Active",
+                "Created At",
             ]],
             body: allUsers.map((user: {
                 name: string | null;
@@ -82,7 +82,7 @@ export default function AllUsers() {
                 is_premium: boolean;
                 is_deleted: boolean;
                 xp: number;
-                last_active_at?: string | null;
+                createdAt?: string | null;
             }) => [
                     user.name || "N/A",
                     user.username || "—",
@@ -91,8 +91,8 @@ export default function AllUsers() {
                     user.is_premium ? "Premium" : "Free",
                     user.is_deleted ? "Inactive" : "Active",
                     user.xp,
-                    user.last_active_at
-                        ? new Date(user.last_active_at).toLocaleString("en-US", {
+                    user.createdAt
+                        ? new Date(user.createdAt).toLocaleString("en-US", {
                             day: "2-digit", month: "short", year: "numeric",
                             hour: "numeric", minute: "2-digit", hour12: true,
                         })
@@ -114,7 +114,7 @@ export default function AllUsers() {
             "Plan",
             "Status",
             "XP",
-            "Last Active",
+            "Created At",
         ];
 
         const rows = allUsers.map((user: {
@@ -125,7 +125,7 @@ export default function AllUsers() {
             is_premium: boolean;
             is_deleted: boolean;
             xp: number;
-            last_active_at?: string | null;
+            createdAt?: string | null;
         }) => [
                 user.name || "N/A",
                 user.username || "—",
@@ -134,7 +134,7 @@ export default function AllUsers() {
                 user.is_premium ? "Premium" : "Free",
                 user.is_deleted ? "Inactive" : "Active",
                 user.xp,
-                user.last_active_at ? new Date(user.last_active_at).toLocaleString() : "-",
+                user.createdAt ? new Date(user.createdAt).toLocaleString() : "-",
             ]);
 
         const csvContent = [
@@ -400,7 +400,7 @@ export default function AllUsers() {
                                     { label: "Status" },
                                     { label: "Story Count" },
                                     { label: "XP" },
-                                    { label: "Last Active" },
+                                    { label: "Created At" },
                                     { label: "Action", className: "text-center" },
                                 ]}
                                 isAllSelected={isAllSelected}
@@ -536,11 +536,11 @@ export default function AllUsers() {
                                                     {user.xp}
                                                 </td>
 
-                                                {/* Last Active */}
+                                                {/* Created At */}
                                                 <td className="px-4 py-5">
-                                                    {user.last_active_at ? (
+                                                    {user.createdAt ? (
                                                         <DateTime
-                                                            date={new Date(user.last_active_at).toLocaleDateString(
+                                                            date={new Date(user.createdAt).toLocaleDateString(
                                                                 "en-US",
                                                                 {
                                                                     month: "short",
@@ -548,7 +548,7 @@ export default function AllUsers() {
                                                                     year: "numeric",
                                                                 }
                                                             )}
-                                                            time={new Date(user.last_active_at).toLocaleTimeString(
+                                                            time={new Date(user.createdAt).toLocaleTimeString(
                                                                 "en-US",
                                                                 {
                                                                     hour: "numeric",
